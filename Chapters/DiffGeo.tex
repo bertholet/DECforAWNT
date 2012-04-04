@@ -1,0 +1,292 @@
+\chapter{Describing and Measuring Surfaces. Or Differential Geometry on Meshes}
+	
+	\begin{figure}[ht]
+	\begin{center}
+	\includegraphics[width=7cm]{Imgs/2_1_curvaturezebra.eps}
+	\end{center}
+	\caption{A Zebra mesh that is colored according to its local mean curvature}
+	\end{figure}
+	
+	In Computer graphics deal with meshes all the time when we wish to describe objects. In this Thesis we want to do more with meshes than just to display them. We want to deform meshes, analyse their surfaces and define all kinds of functions on them. And we want to differentiate functions (and differential forms) on meshes. So it makes sense to take some time to think about properties of meshes.	
+	
+\section{Introduction}
+	The Goal of this Chapter is to describe local properties of meshes to lay the base for things like detection of sharp edges, local maxima, irregularities and so on. For example we want to find mesh regions that are stronger curved than others (Image). Here we will content our selves with colouring the meshes appropriately. In later chapters we will use the tools developed here to do more interesting things.
+	
+	The most usual meshes obviously are triangle meshes consisting of a set of vertices, edges and faces, used to approximate surfaces. Note that meshes can be used to describe higher dimensional volumes too. In 3d instead of using triangles one would use pyramids (tetrahedra), or more generally to describe k dimensional volumes one would use so called k-simplice. Even thought this section will only consider surface/triangle meshes, a more general definition of a mesh is given here.
+	
+	\textbf{Def (k-Simplices):} etc, image
+	
+So a single k-Simplices	can be used to describe one small portion of k-dimensional volume. 0-Simplices are points, 1-Simplices lines etc.
+	
+	\textbf{Def (k-Mesh):} etc
+	
+	In the end a mesh is a discrete approximation of some continuous object, i.e. we use finite sets of values to approximately describe  something that exists in the real world.
+	
+	Now back to the actual task of this section: the detection of local properties of meshes. Luckily there is no need to build a new theory from scratch; we can draw on the theory about continuous (non-discrete) surfaces and try to get equivalent descriptions on meshes. In order to do so in the next section the basics of Differential Geometry are introduced.
+	
+	
+	\section{A Dirty Differential Geometry Primer}
+	
+	//Write the primer and lets see how much of it can be parallelized with the introduction of the discrete Theory.
+	Motivation: Local description of Meshes. 
+	
+	In this section follows a short introduction to some basic geometric tools, most importantly the different definitions of curvature on surfaces. After reading this chapter you should have all the Differential Geometric basics needed to understand this Thesis. But please note, that many details are omitted and technical problems are ignored. There exist uncountably many good introductions to Differential Geometry, e.g. .....
+	
+	Differential Geometry deals with 2 dimensional surfaces and their properties. But in order to understand surfaces we first need to understand curves. So we start with:
+	
+	\subsection{Curves in 3D Space}
+
+	A curve is something that is locally equivalent to a line and is actually very easy to describe by some parametrization:
+	
+	\textbf{Def (Parametrized Curve):}  A parametrization of a curve is an injective mapping $ \varphi: (a,b) \subset \mathbb R \to \mathbb R^3$ with $|\phi'(t)|>0$. Often we write the curve as $\varphi(t) = (x(t), y(t), z(t))$. If the set of values of two parameterizations $\alpha, \beta$ is the same, we say the parameterizations parametrize the same curve.
+	
+A curve then is a set of points in $R^3$ for which there exist parameterizations. 
+
+	(Image)
+	
+	Note that there is a strict difference between the parametrization of the curve and the curve itself. The parametrization is merely a function that describes where the curve lies. Our goal now is to describe properties of curves that are independent from parametrizations. We are interested in the curve described, not in the way it is described! One challenge with curves (and later with surfaces) is how and if these properties can be calculated from a given parametrization. An example of such a property would be the length of a curve as clearly the length of a curve should not depend on the way the curve is described.
+	
+	\subsubsection*{Discrete Case}
+	
+	A discrete curve is simply a one mesh; a polygonal chain consisting of a set of discrete points connected by edges.	
+	
+	
+	\subsection{Properties of a curve}
+	
+	We gain interesting information by looking at derivatives of parametrizations of curves; both the first and second derivative have a clear geometric meaning.
+	
+	\subsubsection*{First Derivative: Tangential Vectors and Arclength}
+	
+	The first derivative of a parametrization describes the tangential vectors of a curve and it can be used to calculate the length of a curve.
+	
+	\begin{enumerate}
+ 		\item  If $\alpha (t)$ is a parametrization of a curve, then $\alpha'(t) = (x'(t),y'(t),z'(t))$ is the direction of a tangent vector to the curve at the position $\alpha(t)$. This should be well known, but is easy to see. From the Taylor Theorem one knows that at some fix point $\alpha(t_0)$ $\alpha(t_0) + (x'(t_0) (t-t_0),y'(t_0) (t-t_0),z'(t_0) (t-t_0))$ is locally the best linear approximation of the curve, and that is a tangent. (image)
+
+		While the length of $\alpha'(t)$ at the point $\alpha(t)$ depends on the parametrization $\alpha$ (IMAGE: if you plug in a function of $t$ into $\alpha$, e.g. $2t$, one gets a different parametrization of the curve discribed by $\alpha$ where the length doubles) the \textbf{tangential space} $span(\alpha'(t)) = \{x \in \mathbb R³: x = c \alpha'(t), c \in \mathbb R\}$ does obviously only depend of the position $\alpha(t)$ on the curve. 
+
+		\item  The length of a curve going from $\alpha(a)$ to $\alpha(b)$ is given by
+		\[l(\alpha) = \int_a^b |\alpha'(t)| dt.\]
+		First of all note, that this value is independent from the parametrization $\alpha$, this follows directly by a simple change of variables (transformation Theoremc for integrals). 
+
+		To see that $l$ is actually the length can be seen by approximating the curve by a polygon train (by sampling $t$ i.e. with $t_1,...,t_n$ and inter sample distance $\Delta t$) and take the limit of the sum of line segment length, when $\Delta t$ goes to zero. A single linesegment can be characteized by a tangential vector somewhere between the start and endpoint of the line segment and has a length proportional to $\Delta t$ and $|\alpha'(t)|$. Thus follows the formula (image).
+
+	\end{enumerate}
+
+	\subsubsection{Parametrization by Arclength}
+	To understand the second derivative of parametrizations we restrict ourselves to a special kind of parametrizations: parametrizations by arclength. 
+	
+	A curve is parametrized by arclength if $|\alpha'(t)|=1$ for all t. This means that the curve is run through with constant speed (img). The name ``parametrized by arclength'' comes from the simple fact that the length of a curve segment 
+\[l_a^b = \int_a^b |\alpha'| dt = b-a\]
+	is directly given by the parameter. It is not obvious, that such a parametrization by arclength always exists, but it does. Actually there exist always two parametrizations by arclength with different orientations (img). Note also, that even if you only have an arbitrary parametrization one can still easily calculate what the derivatives by arclength are at some given point. The first two derivatives by arclength are given by .... see the Appendix for proof and a sketch of the proof of existence of the parametrization.
+
+	\subsubsection*{Second Derivative: Normal Curvature}
+	From now on, we assume that $\alpha$ is a parametrization by arc length. As mentioned this is not a restriction, as all dervatives of a parametrization by arclength can be gained from any parametrization.
+	
+	On an intuitive level it is obvious what the second derivative should describe. It describes how fast and in what direction the tangent of the curve changes. More formally:
+
+	\begin{enumerate}
+	 \item $\frac{\partial^2 }{\partial s^2} \alpha$ is orthogonal to the tangent $\frac{\partial}{\partial s} \alpha$: because $¦\alpha'¦= 1$ is constant 
+		\[\langle \frac{\partial}{\partial s} \alpha,\frac{\partial}{\partial s} \alpha\rangle = const\]
+		\[0=\frac{\partial}{\partial s} \langle \frac{\partial}{\partial s} \alpha,\frac{\partial}{\partial s} \alpha\rangle = 2 \langle \frac{\partial^2}{\partial s^2} \alpha,\frac{\partial}{\partial s} \alpha\rangle\]
+	You can check the last equation by plugging in the definition of the dot product and using the product rule of the derivation.
+	 \item The absolute value $|\frac{\partial^2}{\partial s^2} \alpha|$ also has a geometric meaning. It is called curvature (denoted by $\kappa$) and tells how much the curve curves at a given point. You also get an other geometric interpretation for curvature by looking at the curvature radius $r= \frac{1}{\kappa}$: in the plane given by the tangent and the second derivative, this radius is the radius of the circle that approximates the curve in the best way (more precisely: the circle approximates the curve up to the second derivative; in comparision the tangent approximates the curve up to the first derivative). Image 
+	\end{enumerate}
+
+
+	\subsubsection*{Third Derivative and Torsion (optional to read)}
+	Frenetsches Dreibein. Nicht weil es gebraucht wird, aber damit ist das lokale verständnis von kurven vollständig.
+	
+	\subsubsection{Discrete Curve}
+	Treating discrete curves is not particularly interesting.
+	Possible stuff: length (trivial) curvature: not so trivial; by finite differences, by ``length minimizing property'' by fitting a circle and calculating the curvature radius.
+
+	Example use "tangent" at 2d graph to estimate the derivative..
+	
+\subsection{Surfaces}
+
+	Now, having some tools to analyze curves (calculating tangents, normals and curvature), we can analyze the local behavior of surfaces. But first we need to describe what a surface is. Similarly as with curves we do this with parameterizations. 
+	
+\subsubsection{Definition of Surfaces}	
+While with curves we ended up with a global parametrization by arc length, for surfaces in general there exists no global parameterization.
+	So Surfaces will only be asked to have local parameterizations which will be called maps. The tricky part is to get independence from parametrization. Even to get a definition of "differentiability" that is independent of the selected parametrization one must be careful with the definition. For the sake of simplicity we assume that all functions and mappings are infinitely differentiable.
+
+\textbf{Def (Map):} A map is a differentiable mapping 
+\[\phi: U \subset \mathbb R^2 \rightarrow \phi(U)\] 
+\[(u,v) \rightarrow (x(u,v),y(u,v),z(u,v))\]
+that is injective and whose Jakobimatrix has rank 2 on all $U$, where $U$ is some open subset of $\mathbb R^2$ (image).
+
+%If 2 Maps overlap, say $\phi(U) = \psi(V)$ for some sets $U,V$, the maps are compatible if there exists a bijective differentiable mapping $f:U \rightarrow V$ such that $\phi(u) = \psi(f(u))$ for all $u \in U$.	
+
+\textbf{Def (Surface)} A subset $S\subset \mathbb R^3$ is a (regular) surface, if for each point $p \in S$ there exist an open set $V\subset \mathbb R^3$ such that there is a map $\phi: U \rightarrow  V\cap S$.
+
+This definition using maps ensures that the surface locally has a structure that is equivalent to a patch on a plane. 
+These definitions could be made for arbitrary dimensions, where maps would go from $\mathbb R^k \rightarrow R^n$ with Jakobimatrices of rank $k$. We then would get Objects, that are locally equivalent to the k dimensional euclidean space; these objects would be called $k$-dimensional manifolds.
+
+Often you say that a map $\phi: U \subset \mathbb R^2 \rightarrow S$ assigns local coordinates to a surface and speak of expressing some functions $f:S \rightarrow ?$ in the local coordinates given by $\phi$. All this means is that you consider $f \circ \phi : U \subset \mathbb R^2 \rightarrow ?$ instead of $f$. (Image : local coordinates..) 
+
+
+The goal is to describe the local structure of surfaces. This goes somewhat analogously to the treatment of curves. We first define the tangential space at some point by looking at first derivative of the parametrization and then at curvature by looking at the second derivative.
+
+\subsubsection{Tangential Plane}
+
+(image)
+From intuition it is clear what a tangential plane at some point of the surface should be. The tangential plane of a surface s at a point p ($T_p S$) is:
+
+\begin{enumerate}
+	\item The plane that approximates the surface in the best way, locally at $p$.
+	\item The plane that contains the tangents of all curves on the surface that go through $p$.
+	\item For a given parametrization $\phi$ the tangential plane $T_{\phi(u_0,v_0)}$ is given by
+			\[span(\frac{\partial \phi} {\partial u}, \frac{\partial \phi} {\partial v}) = span(\begin{pmatrix}
+	\frac{\partial x} {\partial u} \\
+	\frac{\partial y} {\partial u}\\
+	\frac{\partial z} {\partial u}
+\end{pmatrix},\begin{pmatrix}
+	\frac{\partial x} {\partial v} \\
+	\frac{\partial y} {\partial v}\\
+	\frac{\partial z} {\partial v}
+\end{pmatrix})\]
+	It is easy to check, that this plane fulfills the first two properties. One could also interpret this as the $span$ of the tangents of two special curves, the curves $\phi(t, v_0)$ and $\phi(u_0, t)$
+\end{enumerate}
+
+\subsubsection{Normals and Orientation}
+
+(image)
+If we can compute tangential planes it might seem trivial to determine normals on a surface. Knowing, that $\frac{\partial \phi} {\partial u}, \frac{\partial \phi} {\partial v}$ span the tangential plane, we know that the vector given by the wedge product $\frac{\partial \phi} {\partial u} \times \frac{\partial \phi} {\partial v}$ is orthogonal to that plane.
+
+But here lies a problem; if $n$ is a normal, so $-n$ is. And, given a parametrization $\phi$, it is trivial to find parameterizations where the normal described by the wedge product points into the opposite direction, just switch the roles of u and v.
+
+What we would like is that if we select a normal direction at one point of a (connected) surface, this determines the normal direction at all other points. For this we need the notion of orientation: An oriented surface is a surface that has one (non-zero) normal associated to each surface point, such that the normals change continuously. An orientable surface is a surface where such an orientation exists. For an orientable surface you can select a normal at one position and thereby define the direction of all other normals.
+
+These are informal definitions, moreover we did not yet say what changing continuously on the surface means. A more formal definition of orientability is the following:
+
+\textbf{Def (Orientation):} Atlas of maps with map changes with positive Jacobian determinant. ...
+
+Note that there are surfaces that are not orientable, the most prominent example being the M\"obius strip. (img) In the following we will mostly ignore problems of orientability and just speak about orientable surfaces.
+
+\subsubsection{Derivatives of Functions on Surfaces}
+Before we can start analyzing the curvature of a surface we need one further element: We need to be able to calculate derivatives of functions on surfaces. Given a surface $S$ and a function $f: S \rightarrow R^n$ what does it even mean for $f$ to be differentiable? We want the differential to be something very similar to the differential $Dh$ of a function $h: \mathbb R^2 \rightarrow \mathbb R^n$. Remember: $Dh$ is the linear mapping, that locally approximates $h$ and can be used to give the directional derivative for a direction $v$
+\[h( p + tv) \approx h(p) + Dh \cdot tv\]
+We want the same for surfaces: $Df$ should be a linear mapping, that maps a direction i.e. an element from the tangential plane to a vector that describes the change of $f$ when going in that direction. This is an important point to note, that the differential $Dh$ is a mapping from the \emph{tangential spaces} to vectors. 
+This can be readily defined by using a curve $\alpha (t)$ with a tangent $\frac{\partial \alpha(0)}{\partial t} = v$ in the wished direction.
+\[Df \cdot v = \frac{\partial}{\partial t} f(\alpha(t))\]
+Then $f(\alpha(t))$ is simply a function $\mathbb R \rightarrow \mathbb R^n$ and we know how to calculate derivations of those. Still this is not very handy for any calculations; but we can express the derivative in the local coordinates given by a parametrization $\phi(u,v)$.
+
+As we have seen, a parametrization provides a base of the tangential space, namely 
+\[\frac{\partial\phi}{\partial u}, \frac{\partial\phi}{\partial u}\] 
+Curves can be expressed in this map and tangential vectors can be described in this base: $\alpha(t) = \phi(u(t),v(t))$ and $\alpha'(t) = \frac{\partial\phi}{\partial u} u' + \frac{\partial\phi}{\partial v} v'$. The function $f$ has also to be given in that map , i.e. $f(u,v) = f(\phi(u,v)) = (f_1(\phi(u,v)),...,f_n(\phi(u,v)))$. Then 
+\[Df \cdot \alpha'(t) = (\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v}) \cdot \begin{pmatrix}
+	u' \\ v'\end{pmatrix}\]
+and $Df$ is described \emph{in the local coordinates given by $\phi$} by the $ n \times 2$ matrix $(\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v})$.
+
+\subsubsection{The derivative of the Normal-Function}
+
+One important tool to analyze the local behaviour of a surface is to describe how the surface curves locally. This amounts to looking at how the surface normal changes locally. Therefore we need to have a better look at the normal function $N$, its derivative and its geometric properties. 
+
+As mentioned above, $N$ is a function that maps a point on a surface $S$ to its unit normal, so $N$ is a mapping from the surface to the unit sphere.
+
+(Image $N: S \rightarrow S^2$)
+
+We are interested to express $N$ in local coordinates for a given map $\phi$. This is easy, as we know that the normal at a given point $\phi(u,v)$ is perpendicular to the tangential plane spanned by $\phi_u, \phi_v$.
+\[N_{loc}(u,v) = \frac{\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}}{|\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}|} (u,v) \]
+
+(Image $U$ arrow phi to $S$, $N_{loc}$ U arrow S two, $N$ S arrow s two, Image $dN: T_pS \rightarrow T_{N(p)}S^2$)
+
+Now the derivative of the function $N$ maps vectors from the tangential space $T_pS$ to vectors in the tangential space $T_{N(p)}S^2$. It is important to note, that the tangential space on the sphere in the point $N(p)$ is orthogonal to $N(p)$, just as the plane $T_pS$ is. This means both are the same subspace of $\mathbb R^3$ and $dN$ can be thought of as a map $dN: T_pS \rightarrow T_pS$ from $T_pS$ onto itself. Remember that a tangential space can inherit a basis from the local map $\phi$ (i.e. $d_u \phi$ and $d_v \phi$ so can be parametrized according to the local map. And therefore $dN$ can completely be expressed in local coordinates, the coordinates of both source and image space being given by $\phi$.
+
+(Image RxR arrow Dphi to TpS arrow dN TpS gets arrow dphi R x R , on bottom arrow dN local )
+
+It turns out that $dN$ in local coordinates can be expressed solely using the coordinate function $\phi$ and its derivatives. For a deduction in detail see e.g. p114 of do carno or appendix, to decide yet. The formula is the following:
+
+\[dN_{local} = \begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{pmatrix} = - \begin{pmatrix} e & f \\ f & g \end{pmatrix} \begin{pmatrix} E & F \\ F & G \end{pmatrix}^{-1}\]
+
+Here (E,F,F,G) is the so called first fundamental form and (e,f,f,g) the second fundamental form, and they are given by
+\[\begin{pmatrix} E & F \\ F & G \end{pmatrix} = \begin{pmatrix} \langle \phi_u, \phi_u \rangle & \langle \phi_u, \phi_v \rangle \\ 
+							\langle \phi_u, \phi_v \rangle & \langle \phi_v, \phi_v \rangle \end{pmatrix}\]
+\[\begin{pmatrix} e & f \\ f & g \end{pmatrix} = \begin{pmatrix} \langle N, \phi_{uu} \rangle & \langle N, \phi_{uv} \rangle \\ 
+							\langle N, \phi_{uv} \rangle & \langle N, \phi_{vv} \rangle \end{pmatrix}.\]
+
+
+\subsubsection{Curvature on Surfaces}
+
+The curvature of a surface at some point can be treated by looking at all curves going through this point. Similarly as the tangential plane could be determined by looking at the tangents (i.e. first derivatives) of curves, we will want to treat curvature by looking at the second derivatives (by arc length) of these curves. The idea is that a curve lying on a surface has two kinds of curvatures: a curvature induced by the surface, as well as a curvature that is only depending on the curve. This intuitively makes sense: a curve lying in a plane gets no curvature induced by the plane, a curve on a sphere will always have some curvature.
+
+As seen in the section about curves, curvature of a curve is associated with a vector. We use this to define the normal curvature of a curve on a surface. The normal curvature is what you get by projecting  the curvature of the curve to the normal of the surface.
+
+(formal def: formula, expressed only with Dphi, tangent)
+
+The normal curvature of a curve at some point only depends on the direction of the curve, i.e. its tangent, which lies in the tangential space of the surface at that point (by definition).
+\begin{quote}
+\emph{First geometric definition of curvature on a surface:} The curvature of a surface at a given point is given by a function C: $T_p S \rightarrow \mathbb R$ that maps each direction (i.e. element of the tangential space) to the normal curvature of a curve in that direction.
+\end{quote}
+ Obviously the easiest case is when a curve has only normal curvature; such a curve in a given tangential direction is easily constructed by cutting the surface with the plane given by the direction and the surface normal (img)
+
+\begin{quote} 
+\emph{Second geometric definition of curvature on a surface:}
+Curvature at a point on the surface in some direction is given by the curvature of the curve you get by cutting the plane given by the direction and the surface normal with the surface. 
+\end{quote}
+
+It takes a little work to deduce how to calculate the surface curvature from a given local parametrization. 
+
+
+\subsubsection{The second Fundamental Form and Curvature}
+Now we want to express these rather informal geometric definitions of curvature with the use of a local parametrization. So the goal is to calculate the normal curvature at some point $p$ on the surface $S$ with help of the parametrization $\phi: U \subset \mathbb R^2 \rightarrow S$, fulfilling $\phi(0,0) =p$. 
+
+(image: global
+
+We translate the geometric definitions of the last section as directly as possible. For a curve parametrized by arc length $\alpha(s)$ the curvature and the curves associated normal vector are given by
+\[\kappa n = \frac{\partial^2 \alpha}{\partial s^2}\]
+For the (orientable) surface $S$ we let $N(p)$ denote the surface normal (with unit length) at the point p. As we will only be interested in the normals along the curve $\alpha(s)$, we will denote the surface normal at the point $\alpha(s)$ by $N(s)$. We chose $\phi$ as a local parameterization, with $\phi(0,0) = p$; then the unit surface normal $N(p)$ can be expressed in local coordinates by
+\[N(0,0) = \frac{\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}}{|\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}|} (0,0) \]
+because $(0,0)$ are the local coordinates of $p$ in the map $\phi$.
+
+We express $\alpha$ also in local coordinates as $\alpha (s) = \phi(u(s),v(s))$. The functions $u(s)$ and $v(s)$ describe the curve in the local coordinates given by the map $\phi$. Then normal curvature in the direction $\alpha'$ (here denoted by $\kappa_n$) is given by the projection of $\kappa n$ to the surface normal 
+\[\kappa_n = \langle\kappa n , N(0)\rangle\]
+Inserting the above definitions yields
+\[\kappa_n = \langle\frac{\partial^2 \alpha}{\partial s^2}, N(0)\rangle\]
+Using a trick , that because the tangent $\frac{\partial \alpha}{\partial s}$ is orthogonal to the surface normal $N$
+\[\langle\frac{\partial \alpha(s)}{\partial s}, N(s)\rangle = 0 \]
+\[ \frac{\partial}{\partial s} \langle\frac{\partial \alpha(s)}{\partial s}, N(s)\rangle = 0\]
+\[\langle\frac{\partial^2 \alpha(s)}{\partial s^2}, N(s)\rangle + \langle\frac{\partial \alpha(s)}{\partial s}, \frac{\partial N(s)}{\partial s}\rangle  = 0\]
+we get
+\[\kappa_n = -\langle\frac{\partial \alpha}{\partial s}, \frac{\partial N(s)}{\partial s}\rangle\]
+Stated slightly differently the normal curvature at a point $p$ in some direction $v \in T_pS$ is given by
+\[\kappa_n(v) =  -\langle v, dN(v)\rangle \]
+
+The mapping $dN$ is a linear mapping from the linear space $T_pS$ onto itself. It has a very important further property, namely that it is self adjugated which formally means that
+\[\langle v, dNw\rangle = \langle dN v, w \rangle\]
+and is equivalent to saying that it can be represented by a symmetric matrix if an orthonormal base is selected for $T_pS$. The consequence is, that $dN$ has a full set of Eigenvalues and that there is an orthonormal base of Eigenvectors. Say $\kappa_1 > \kappa_2$ are the Eigenvalues and $v_1$, $v_2$ the Eigenvectors. Note that while $dN$ is represented as a matrix in some base, the Eigenvalues of this matrix do NOT depend on the base, just as the determinant and the trace don't either. This means all curvatures introduced can be directly calculated from any local representation. And we can associate a determinant $det (dN)$  directly to the map $dN$, as well as a trace $tr(dN)$
+\begin{enumerate}
+\item $\kappa_1$ and $\kappa_2$ are called the principal curvatures and principle curvature directions. $\kappa_1$ is the largest normal curvature and $\kappa_2$ the smallest and the directions are orthogonal to each other. (Image)
+\item The mean curvature , henceforth denoted by $H$, is given by $H = (\kappa_1 + \kappa_2)/2 = spur(dN)/2$ and equals the average normal curvature at the point.
+\item The so called gauss curvature, denoted by $\kappa_G$, is given by $\kappa_G = \kappa_1 \cdot \kappa_2 = det(dN)$ and beyond other important properties captures the local structure of a surface:
+
+(IMAGE)
+ 
+\begin{enumerate}
+\item $p$ is an elliptic point if $\kappa_G >0$
+\item $p$ is a hyperbolic point if $\kappa_G <0$
+\item $p$ is a parabolic point if $\kappa_G =0$ and $dN \neq 0$
+\item $p$ is a planar point if $dN =0$
+\end{enumerate}
+\end{enumerate}
+
+Kann der Abschnitt gekuerzt werden??? ziemlich sicher...
+Weiteres... Gewisse weitere Teile werden wohl ebenfalls in den Appendix verband um die einf�hrung schneller lesbar zu machen.
+
+\subsubsection*{Further important properties of Curvature}
+
+Damit sollte genug grundlage gelegt sein um �ber 2 oder mehr d mannigfaltigkeiten, tangentialr�umen etc zu reden.
+.... der abschnitt kommt nach und nach, die dinge die sich beim weiteren schreiben noch als wichtig herausstellen.
+
+...es fehlt (?) ein abschnitt über oberflächen berechnung, (erste fundamental form kann auch als pseudo form pr�sentiert werden, pseudo formen sind eng verwandt mit differential formen,...)
+
+...totale kruemmung und gauss kruemmung
+
+...gauss kruemung als grenzwert
+
+\section{Coloring Mesh or Differential Geometry on Meshes}
+
+"Application" Coloring mesh with the different curvatures.
+	
+	\section{Planned Mathematical viewpoint on this Chapter}
+		We started by givin a discrete version of a k-manifold where the property of local homeomorphism to a k-dimensional volume is replaced by the patch-wise equivalence to k-simplices. Then there was a short introduction to very basic differential geometry and geometric properties of the differential Operators where described, that allow equivalents to be defined easily on the discrete meshes. 	

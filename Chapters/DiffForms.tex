@@ -1,0 +1,155 @@
+\chapter{Differential Forms}
+
+This Chapter is a introductionary summary about differential forms. It is more a personal overview and will have to be overworked thoroughly before being included in the thesis.
+
+\section{Differential Forms}
+
+Differential Forms are mathematical objects that allow to treat many things in a unified way and introduces formalisms that let you describe some relationships in a very compact way.
+
+They are a generalization of functions and can for example be used to describe vector fields. They can be integrated as well as differentiated and maintain some properties we are accustomated to from functions.
+
+Remember Manifolds. The important property of Manifolds is that they locally look like $\mathbb R^k$. The derivation of a function $f:M \rightarrow \mathbb R$ assigned linear mappings to all the tangential spaces of $M$. At any point $p$ the differential $D_pf: T_p M \rightarrow \mathbb R$ is a linear mapping from the Tangential space to $\mathbb R$, that assigns values (a 'rate' how fast $f$ changes) to directions (elements of the tangential space).
+This means that in its totality the derivation of $f$, denoted $df$ consists of a collection of linear mappings, namely providing at each point a mapping from $T_pM$ to $\mathbb R$. 
+
+As you see, while $f$ is a function, $df$ is quite a bit more than a function, as it assigns mappings to all the tangential spaces. This $df$ is then not a function but something called a \textbf{Differential Form}.
+
+\subsection{Formal Definition}
+Keep this example of a differential form in mind. Differential Forms assign mappings to points. While $df$ is a so called Differential 1 Form that assigns linear mapping $T_pM \rightarrow \mathbb R$ to points a differential $k$ Form assigns mappings of the type $(T_pM)^k = T_pM \times T_pM \times \cdots \times T_pM \rightarrow \mathbb R$ to points p. Aside from linearity these mappings have to fulfill some further properties namely:
+
+\subsubsection*{\textbf{Def (Skew symmetric k-Form):}}
+ A k-Form (not a differential form, mind you) on a $n$ dimensional space $\mathbb R^n$ is a mapping $\omega : \mathbb R^n \times \mathbb R^n\times \cdots \times  \mathbb R^n \rightarrow \mathbb R$ with following properties:
+\begin{enumerate}
+\item $\omega(x_1,...,x_k)$ is linear in each element, meaning that \[\omega(x_1,..,\lambda a + b,..., x_k) = \lambda \omega(x_1,..,a,..., x_k) + \omega(x_1,.., b,..., x_k)\].
+\item $\omega(x_1,...,x_k)$ is skew symmetric, meaning that switching any two variables leads to a change of sign:
+\[\omega(x_1,...,x_i,...,x_j,...,x_k) = - \omega(x_1,...,x_j,...,x_i,...,x_k)\]
+\item These properties also mean that 
+\[\omega(x_1,...,x_k) = 0 \;\text{ if }\;x_1,...,x_k \text{ are linearly dependent}\]
+\end{enumerate}
+
+At this point it is not clear why we would request that the mappings we assign at each point should be skew symmetric. But skew symmetry will play out to be very essential, as will be motivated in the next section. Note that the skew-Symmetry can not be seen in $df$, as $d_pf$ at a point $p$ is merely a 1 Form that takes one parameter, therefore no parameters can be switched. Now to the Differential $k$ Form:
+
+\subsubsection*{\textbf{Def (Differential k-Form):}}
+A Differential $k$ Form on a manifold $M$ assigns to each point $p\in M$ a skew symmetric $k$-Form such that these $k$ Forms 'vary differentially' in $p$. 
+
+What 'varying differentially' means will be clarified later, but basically it means, that the $k$-Forms assigned to neighbouring points should be similar.
+
+
+\subsection{Examples for Differential Forms}
+The easiest example for a Differential Form is a simple differential function $f:M \rightarrow \mathbb R$. This would be a 0 form, it assigns to each point a value independent of any tangential vector.
+
+Lets look at an other simple example. We set the manifold $M$ to be $\mathbb R^k$. A tangential space  at some point $p$ is simply a copy of $\mathbb R ^k$ associated to the point $p$.
+The differential $df$ is a 1 Form. From multi dimensional calculus we know how to calculate a further derivative (the gram matrix) given by the Matrix
+
+\[D^2 f = (\frac{\partial^2}{\partial x_i \partial x_j} f)_{i,j}\]
+and we could approximate f by the Taylor Formula up to the second degree via
+\[f(p+x) \approx f(p) + \nabla f (p)\cdot x + x^T D^2f(p)x \]
+where $f$ is a 0 Form and $\nabla f$ a one form. So it might be a natural question if $\omega = D^2f$ is a Differential 2 Form, where the 2 - Form at some point is given by
+\[\omega_p(x,y) = x^T D^2f(p) y\]. 
+Lets look at the definition. Here $\omega_p(x,y)$ is linear in $x$ and $y$. But it is NOT skew-symmetric but symmetric, i.e. $\omega_p(x,y) = \omega_p(y,x)$, so $D^2 f$ is not a Differential 2 Form, even thought it comes pretty close to being one.
+
+Again this might make you ask why we demand skew symmetry.
+\subsubsection*{}
+Overwork this example. Is stupid.
+One further example of something that ''feels'' much like a differential form but fails to be one:  When we calculate the arclength of a curve $\alpha$ we do this by
+\[l(\alpha) = \int_a^b |\alpha'(t)| dt.\]
+A curve is a 1 dimensional manifold. At all points we assign the absolute value to the tangential vector $\alpha'$. Is $|.|$ a differential form? No, but its nearly linear.. blabla
+Better with surface when using the absolute value of some determinant or something.
+
+Determinants are something good.
+
+Note to me: somewhere the "metric" from Riemannian Manifolds should be treated.
+
+
+\subsection{The derivation of differential forms}
+At this point we are not yet ready to introduce the derivative for differential forms, but before going on we will try to give a good motivation for skew symmetry and what we aim differentiation and integration of forms to be like.
+
+When generalizing the derivative of 1 dimensional functions in multivariate calculus the focus lies on keeping the approximation property of the derivative in one dimension:
+\[f(p+x) \approx f(p) + f'(p)x + f''(p)/2 x^2 ...\]
+For generalizing the derivation for differential forms we will focus on something else, namely we want that the fundamental theorem of integral and differential calculus still holds. The fundamental theorem tells you how integration and differentiation are related:
+\[\int_a^b f' = f(b) - f(a)\]
+You can reformulate this using the convention that the zero dimensional integral over a oriented point  $\int_{\{a\}} f = f(a)$ and  $\int_{\{'-'a\}} f = -f(a)$, where '-'a means that $a$ is negatively oriented. You don't have to fully understand this notation yet but it lets you reformulate the fundamental theorem:
+\[\int_{line(a,b)} df = \int_{border(line(a,b))} f = \int_{\{b,'-'a\}} f\]
+or in more general
+\[\int_{\Omega} df = \int_{\partial \Omega} f\]
+where $\partial$ is the 'border' Operator. The point, as you will see, why differential forms have to be skew symmetric is, that in order for this to hold, the differential forms have to respect orientation. In the easiest case the integral over a ''negatively oriented point'' has to be the negative of the integral over the positively oriented point. And in higher dimensions switching two vectors in a basis leads to a changed orientation. This is exactly what is reflected in the skew symmetry of differential forms, when switching two parameters leads to a change of sign
+\[\omega(x,y) = -\omega(y,x)\]
+Keep this in mind. When we later define a derivation for Differential form in a cleaner way, the goal is not approximation and therefore different from the goal in standard calculus. And the derivation we get will have different properties that will not make sense when translated directly to n dimensional derivation.
+
+\section{Tools for k Forms}
+
+Before getting any deeper into Differential forms some tools have to be introduced. And for now we focus on $k$ Forms, not $k$ differential Forms. 
+
+For any fixed $k$ and a fixed base space, the union of all $k$ Forms on this base space form a vector space. As you will see it is important to understand those spaces more exactly, like what dimensions they have and how they are related to each other.
+
+One important tool is the wedge product:
+
+\subsection{The Wedge Product for One-Forms}
+The wedge product is a tool to produce higher forms by 'concatenating' lower order forms, more exactly create a $k+l$ form out of a $k$ form and an $l$ from. For two one forms $\omega$ $\nu$ we set
+\[\omega \wedge \nu (x,y) = \omega(x)\nu(y) - \omega(y) \nu(x)\]
+You might note that this looks a bit like a determinant, this is no coincidence. To create a 2 Form out of the two one forms we have to combine the vectors $(\omega(x), \omega(y))$ and $(\nu(x),\nu(y))$ in a good way and the determinant is the only choice to do this (TODO: check this, reformulate)
+\[\omega \wedge \nu (x,y) = \det \begin{pmatrix} \omega(x) & \nu(x) \\ \omega(y) & \nu(y)\end{pmatrix}\]
+The wedge product of $k$ one Forms $\omega_1,...,\omega_k$ is a $k$ Form given by
+\[\omega_1 \wedge \omega_2\wedge...\wedge \omega_k (x_1,...,x_k) = \det \begin{pmatrix} 
+\omega_1(x_1) &  \cdots & \omega_k(x_1) \\ 
+\vdots & & \vdots\\
+\omega_1(x_k) & \cdots &\omega_k(x_k)\end{pmatrix}\]
+
+For the wedge product of one forms has a simple interpretation. Lets first look at one Forms and suppose these forms are defined on the $\mathbb R^n$. If we have a scalar product $\langle\cdot,\cdot\rangle$ on $\mathbb R^n$, lets say just the usual dot product then we can associate vectors to one forms. Here I want to stretch the point, that we could work with any scalar product, i.e. $\langle v, w \rangle = v^T A w$ for some symmetric matrix $A$ as later for differential forms we will have to. But for sake of simplicity we stick, for now, with the dot product.
+
+So, equipped with the dot product we can associate a vector $\hat{\omega} \in \mathbb R^n$ to the one form $\omega$ by requiring, that
+\[\omega(x) = \langle \hat{\omega}, x\rangle = \sum_{i=1}^n \hat{\omega}_i x_i\]
+This means a one Form is basically a projection on some Vector $\hat{omega}$, plus scaling the projection by the factor $||\hat{\omega}||$. Now remember that the determinant of a matrix equals calculating the signed volume spanned by the row (or column) vectors of the matrix (where the sign mirrors the orientation of these vectors). Then the wedge product of two forms can be interpreted as follows: $\omega \wedge \nu (x,y)$ equals the signed volume of $x$ and $y$ projected (and scaled) on $\hat{\omega}$ and $\hat{\nu}$ (IMAGE!).
+
+\includegraphics[scale=0.7]{imgs/wedge.eps}
+
+Thinking of Forms as something that "measures" volume is not a bad intuition, especially when we will look at how to integrate differential forms.
+
+\subsubsection*{\textbf{Properties of the Wedge Product of 1 Forms}}
+
+There are some obvious properties that follow directly from the definiton.
+\begin{itemize}
+\item Antisymmetry: $\omega_1 \wedge \omega_2 = -\omega_2 \wedge \omega_1$
+\item Linearity: $(\lambda \omega_1 + \omega_2) \wedge \nu = \lambda (\omega_1 \wedge \nu) + \omega_2 \wedge \nu  $
+\item If $\omega_1,...,\omega_k$ are linearly dependent (one of those forms can be expressed as a sum of the others) then
+\[\omega_1 \wedge \omega_2\wedge...\wedge \omega_k (x_1,...,x_k) =0\]
+\item If $k$ is greater than the dimension $n$ of the space the 1 Forms are defined on, then the 1 Forms have to be linearly dependent and therefore the wedge product is zero. I.e.
+\[\omega_1 \wedge \omega_2\wedge...\wedge \omega_k (x_1,...,x_k) =0 \text{ whenever } k>n\]
+\end{itemize}
+\subsection{Skew Symmetric K-Forms}
+As mentioned above, the $k$-Forms on $\mathbb R^n$ form a vector space over $\mathbb R$. This is because you can add $k$ Forms to each other and scale them by values from $\mathbb R$.
+It is therefore a straight forward question to ask for bases of these vector spaces and to know their dimensions.
+\subsubsection*{\textbf{1 Forms}}
+One forms form the space of linear mappings from $\mathbb R^n$ to $\mathbb R$. Because of linearity a one form is uniquely defined if you know the image of the standard base vectors: Assume you know what $\omega(e_1),...,\omega(e_n)$ are. Then for $x=(x_1,...,x_n)$ 
+\[\omega(x) = \omega(x_1e_1 + x_2e_2+...+x_ne_n) = x_1\omega(e_1) + ... + x_n\omega(e_n)\]
+To build a basis we set $dx_1,...dx_n$ to be the following special one forms:
+\[dx_k(x) = x_k\]
+So $dx_k$ maps a vector to its $k$th component. Now any one form can be expressed using these special forms.
+\[\omega(x) = \omega(x_1e_1 + x_2e_2+...+x_ne_n) = x_1\omega(e_1) + ... + x_n\omega(e_n) = \omega(e_1)dx_1(x) + ... + \omega(e_n)dx_n(x)\]
+So the space of 1 Forms has dimension $n$ and one natural base is given by $dx_1,...,dx_n$.
+
+\subsubsection*{\textbf{k Forms}}
+Similarly a $k$ form is uniquely defined if you know how it acts on any combination of $k$ base vectors. For example for a 2 Form $\omega^2(x,y)$
+\begin{eqnarray}
+\omega^2(x,y) &=& \omega^2(x_1e_1+...+x_ne_n,y_1e_1+...+y_ne_n) \\
+ &=& \sum_{i,j=1}^n x_iy_j\omega^2(e_i,e_j) \\
+ &=& \sum_{1\leq i<j\leq n}(x_iy_j-x_jy_i)\omega^2(e_i,e_j)
+\end{eqnarray}
+where we used that $\omega^2(e_i,e_i)=0$ and $\omega(e_i,e_j) = -\omega(e_j,e_i)$. But $(x_iy_j-x_jy_i)$ is nothing other than $dx_i\wedge dx_j(x,y)$ , hence
+\[\omega^2(x,y) = \sum_{1\leq i<j\leq n} \omega^2(e_i,e_j)dx_i\wedge dx_j\]
+So the $n(n-1)$ two forms $dx_i\wedge dx_j$ for $1\leq i<j\leq n$ form a basis of the space of two forms. More generally 
+\[dx_{i_1}\wedge dx_{i_2}\wedge...\wedge dx_{i_k} \text{ where } 1\leq i_1 <i_2 <...<i_k \leq n\]
+form a basis of the space of $k$ forms. It is extremely usefull to have these simple bases for all the $k$ form spaces.
+And we can answer what dimension the space of $k$ Forms has: $\begin{pmatrix} n \\k \end{pmatrix}$.
+
+This also means that the space of $n$ forms on $\mathbb R^n$ has dimension exactly $1$, meaning that up to a scalar there exists only exactly one skew symmetric one form on $\mathbb R^n$. This is the determinant, which in this context is also called the volume form.
+\subsection{The Wedge Product for $k$ Forms}
+Equipped with a base of the space of $k$-Forms we can define the wedge product
+\section{Riemanian Manifold}
+
+\section{The Pointcarré Lemma}
+\section{Stokes}
+\section{Hodge Helmholtz}
+-Statement
+-proof?
+-Example with vector fields
+-Example from question sheet.

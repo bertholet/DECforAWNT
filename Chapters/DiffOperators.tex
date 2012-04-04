@@ -1,0 +1,79 @@
+\section{The Geometry of some Differential Operators}
+
+The Goal of Discrete Differential Forms is to define discrete differential operators on Meshes, such that the retain some important geometric properties. 
+You probably have seen Operators like divergence, gradients, rotation or the Laplace Operator. They arise very naturally in many settings. Most of the time you will have seen those operators written in standard Kartesian coordinates, like
+\[\nabla = (\frac{ \partial}{\partial x_1},\frac{ \partial}{\partial x_2},\frac{ \partial}{\partial x_3})\]
+where $x_1, x_2, x_3$ are the usual coordinates. If then $f$ is expressed in such coordinates, i.e. $f = f(x_1,x_2,x_3)$ it is obvious what $\nabla f$ should be. But what if $f$ is expressed in a different set of coordinates, e.g. $f(y_1,y_2,y_3)$? But for the coordinates $f$ would still describe the same function, so there should be an operation $\tilde{\nabla}$ that does the same to $f$ in these new coordinates as $\nabla$ did in the old coordinates.
+
+Of course you can just formalize the change of coordinates and deduce what $\tilde{\nabla}$ is. We will try to give geometric coordinate free properties of these operators, which should enhance the understanding of them and which we will use to define discrete version of them, or that helps understand in what the discrete operators coincide with the continuous operators.
+
+Differential forms unify these operators more from an algebraic than a geometric point of view. Thus a general Operator might have different (even if somehow related) geometric meanings, when applied to different objects.
+
+\subsection{Divergence}
+
+The divergence Operator is defined for vector valued functions. In Kartesian coordinates it is 
+\[\nabla \cdot f = (\frac{ \partial}{\partial x_1},\frac{ \partial}{\partial x_2},\frac{ \partial}{\partial x_3})\cdot f = \frac{ \partial}{\partial x_1} f + \frac{ \partial}{\partial x_2}f + \frac{ \partial}{\partial x_3}f\]
+
+But what does that mean? One way to look at divergence is with flows. Let $f$ be a vector field that describes the velocity (i.e. direction and speed) of a ''fluid'' at any position. For a closed Volume $V$ with surface $\partial V = S$ we then can calculate the netflow into the volume: how much flows out minus how much flows into this volume.
+
+To determine this it is enough to look at the boundary of this volume and determine the flow through the boundary. This gives rise to this expression:
+
+\[\int_{\partial V} f \cdot n ds\]
+which measures the net flow, where $n$ are the surface normals at the given points. Now lets restrict $f$ to be a linear map $f(x) = A x$ with $A$ being a Matrix and $V$ be an axis aligned Volume with widths $h_1,h_2,h_3$ and base point $x_0,y_,z_0$, surface Areas $A_1, A_2, A_3$ and normals $n_1,n_2,n_3$. Then
+
+\[\int_{\partial V} f \cdot n ds = \int_{\partial V} Ax \cdot n ds = \int_{\partial V} Ax \cdot n ds\]
+\[= \int_{\partial A_x} A(x + h_xn_x) \cdot n_x ds - \int_{\partial A_x} A(x) \cdot n_x ds + ...\]
+\[= \int_{\partial A_x} A(h_xn_x) \cdot n ds + ... = \sum_{i=1}^3 h_i n_i^TA n_i Area(A_i) = \sum_{i=1}^3 n_i^TA n_i Vol(V) = Tr(A) Vol(V)\]
+So you see that the Trace of $A$ describes the netflow of a linear vector field. 
+
+Back to the Divergence. Any function $f$ an locally be described with its Jacobi Matrix $Df$
+\[Df = (\partial f_i / \partial f_j)_{i,j}\]
+by 
+\[f \approx f(x_0) + Df \cdot (x-x_0) \]
+If we then look at local netflow at some point by letting shrink a Volume $V$ to the point  
+\[\lim_{Vol(V) \rightarrow 0}\frac{\int_{\partial V} f \cdot n ds}{Vol(V)}\]
+and approximate $f$ by its Jacobian, we get
+\[\lim_{Vol(V) \rightarrow 0}\frac{\int_{\partial V} Df \cdot n ds}{Vol(V)} = Tr(Df)= \frac{ \partial}{\partial x_1} f + \frac{ \partial}{\partial x_2}f + \frac{ \partial}{\partial x_3}f\]
+which actually is the divergence of $f$! This means the Divergence of a vectorvalued function $f$ is geometrically the local netflow.
+
+\subsection{Gradient}
+The gradient of a real valued function is fairly easy.
+
+\subsection{Rotation}
+Rotation is often denoted as $rot$ or $\nabla \times$ and is defined for vector valued functions and returns a vector valued function.  In Kartesian Coordinates this is
+\[\nabla \times f = \left( \frac{ \partial f_3}{\partial x_2}- \frac{ \partial f_2}{\partial x_3}, \frac{ \partial f_1}{\partial x_3}- \frac{ \partial f_3}{\partial x_1}, \frac{ \partial f_2}{\partial x_1}- \frac{ \partial f_1}{\partial x_2}\right)\]
+And what does this one do? The name already tells it; it measures the rotation of the vector field around some axis. One coordinate free way to describe it is
+\[n\cdot rot(A) = \lim_{Area(F)\rightarrow 0 } \frac{\int_{\partial F} A \cdot dx}{Area(F)} \]
+This maybe needs some explanation.... (image) That this extends the definition in cartesian coordinates directly follows from stokes Theorem, as the divergence Definition would have as well.
+
+
+\subsection{Laplacian}
+Deserves an own chapter.
+
+Closedness and coclosedness of the laplace beltrami Operator. Riemann surfaces by Farkas and Kra..
+
+The Laplacian is given by
+\[\delta d + d \delta\]
+and a form is said to be harmonic if
+\[\delta d + d \delta f = 0\]
+An important property is that $f$ is harmonic if and only if
+\[df = 0\]
+\[\delta f = 0\]
+This is an extremely strong property and somewhat easier to understand geometrically. What is nice also is that it is very easy to show. We already know that
+\[\langle \delta \omega,\phi\rangle = \langle \omega, d\phi\rangle\]
+i.e. that $\delta$ and $d$ are adjoint. But then
+\[\delta d + d \delta f = 0 \Rightarrow \langle \delta d + d \delta f, f\rangle = 0\]
+and
+\[0 = \langle \delta d + d \delta f, f\rangle = \langle \delta d f, f\rangle  + \langle d \delta f, f\rangle  = \langle d f, d f\rangle +\langle \delta f, \delta f\rangle\]
+As the inner product of a form with itself is not negative both these terms have to be zero. And therefore
+\[df = 0\]
+\[\delta f = 0\]
+But what does that mean geometrically? Well this depends on the form we are looking at. For Vector fields (1 Forms) in $\mathbb R^3$ this means they are divergence and rotation free. For a harmonic 2 Form (''Pseudo Vector Field'') this means.... for a 0 Form this means... constant???? wtf?
+See e.g. %http://en.wikipedia.org/wiki/Hodge_dual#The_codifferential about the adjointness and http://en.wikipedia.org/wiki/De_Rham_cohomology about harmonic forms.
+Fact is the adjointness is the root of my problem and HAS to be true only conditionally!. Or the innerproduct may be degenerated on open or infinite sets..???? I dont know
+
+But consider an integral over Rn of a harmonic form ... its not defined. Over open Sets...? ...... domt lmpw. would expect it to be ok.
+It might be that this adjointness only holds on compact or borderless manifolds or when 0 or constant on border. This here is a major hitch in my understanding...! 
+
+Ahahahahaha! this is also mentioned on p 370 in my smart book (the yello one, you know which one.)
+-As trace of the hesse, or derivative of the determinant of the ... or sth.

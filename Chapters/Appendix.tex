@@ -1,0 +1,46 @@
+
+\chapter{Appendix}
+\section{Curves and Parametrization by Arclength}
+ Even it might not be that easy to explicitly give the formula for a parametrization by arclength of a given curve one can show that there always is such a parametrization.
+
+Given an arbitrary parametrization $\alpha$, from the definition we know, that $|\alpha'(t)| > 0$ for all $t$. Therefore $s = l_\alpha(t)$ is strictly monotonously growing and its derivation $|\alpha'(t)|$ is strictly greater 0. From the inverse function theorem follow that $l_alpha$ has an inverse which is also as differentiable as $l_\alpha$; it actually has a global inverse. It then turns out, that $\alpha(l_\alpha^{-1}(s))$ then is parametrized by arclength. 
+
+TODO: check all that. Seen in Robert Osserman A survey of minimal surfaces, I think.
+
+\subsubsection{Jumping from an arbitrary Parametrization to a Parametrization by Arc Length}
+As mentioned above even thought a parametrization by arclength always exists we can not always easily give a formula for it. In this subsection we will see that only with having an arbitrary parametrization we still can calculate what the derivatives of a parametrization by arclength would be at given points \emph{on the curve}.
+ 
+This subsection is not very interesting. But it shows that it is not that a big practical restriction to say something holds for the derivations of a curve parametrized by arc length. And that if working with an arbitrary parametrization there really HAS to be some additional to be work done. //unclear
+
+Assume an arbitrary parametrization $\alpha(t): (a,b) \to R^3$ of a curve is given. We now want to calculate derivatives of the parametrization by arclength which traverses the curve in the same direction as $\alpha$ i.e. starting at $\alpha(a)$ and ending at $\alpha(b)$. This is rather easy, if we remember that with 
+\[l_\alpha(t) = \int_a^t |\alpha'(s)| ds\]
+we get a parametrization by arclength via $s \to \alpha(l_\alpha^{-1}(s))$.
+ 
+\begin{enumerate}
+\item First derivative. This one would not need much of a Herleitung. To get a bit familiar with the $\partial$ notation we will still do one.
+
+We just calculate $\frac{\partial}{\partial s} \alpha(l_\alpha^{-1}(s)) = \alpha'(l_\alpha^{-1}(s)) \frac{\partial}{\partial s} l_\alpha^{-1}(s)$. Using $\frac{\partial}{\partial s} l_\alpha^{-1}(s) = 1/(\frac{\partial}{\partial t} l_\alpha(t)$ and $\frac{\partial}{\partial t} l_\alpha(t) = |\alpha'(t)|$ we get
+\[\frac{\partial}{\partial s} \alpha(l_\alpha^{-1}(s)) = \frac{\alpha'(t)}{|\alpha'(t)|}
+\] 
+or in a more compact notation using $ s = l_\alpha(t)$ to denote the arclength (or conversely $t = l_\alpha^{-1}(s)$:
+\[
+\frac{\partial}{\partial s} \alpha(t) = \frac{\partial}{\partial t} \alpha(t) \frac{\partial t}{\partial s} = \frac{\partial}{\partial t} \alpha(t) \frac{1}{\frac{\partial s}{\partial t}} = \frac{\alpha'(t)}{|\alpha'(t)|}
+\]
+Now this is not in the least surprising, as we know that the derivative of a parametrization by arclength has to have norm 1 and has to be a tangent, just as $\alpha'(t)$.
+\item Second derivative: We will only use the shortened notation here. There is not much more going on here than in the calculation above.
+\[
+\frac{\partial^2}{\partial s^2} \alpha(t) = \frac{\partial}{\partial s}(\frac{\partial}{\partial t} \alpha(t) \frac{\partial t}{\partial s}) = \frac{\partial}{\partial s}(\frac{\partial}{\partial t} \alpha(t))\frac{\partial t}{\partial s} + \frac{\partial}{\partial t} \alpha(t) \frac{\partial^2 t}{\partial s^2}
+\]
+\[= ( \frac{\partial t}{\partial s} \frac{\partial}{\partial t} \frac{\partial}{\partial t} \alpha(t))\frac{\partial t}{\partial s} + \frac{\partial}{\partial t} \alpha(t) \frac{\partial^2 t}{\partial s^2}\] 
+\[= \frac{\partial^2}{\partial^2 t} \alpha(t)(\frac{\partial t}{\partial s})^2 + \frac{\partial}{\partial t} \alpha(t) \frac{\partial^2 t}{\partial s^2}\] 
+Don't forget that the goal is to write this expression as derivatives from $s$ (not from $t$) as the inverse of $l$ is not explicitly known. Above we used the rule about differentiation of the first derivative of an inverse \[l^{-1\prime} = 1/l'\] which translated nicely to $\partial t/\partial s = 1/(\partial s/\partial t)$. Deducing a similar rule to translate $\frac{\partial^2 t}{\partial s^2}$ can be done easily, starting wit the rule for the first derivative, but it translates less nicely into
+\[\frac{\partial^2 t}{\partial s^2} = \frac{\partial^2 s}{\partial t^2}(\frac{\partial t}{\partial s})^3\]
+
+The bottom line of this is that the second derivative in respect to arclength can be calculated from an arbitrary parametrization by
+\[
+\frac{\partial^2}{\partial s^2} \alpha(t) = \frac{\partial^2}{\partial^2 t} \alpha(t)(\frac{\partial t}{\partial s})^2 + \frac{\partial^2 s}{\partial t^2}(\frac{\partial t}{\partial s})^3
+\]
+where $\frac{\partial t}{\partial s}$ can be replaced by $1/\frac{\partial s}{\partial t}$.
+(Of course further derivatives could be derived the same way, but actually this is not needed)
+TODO: check all that. Seen in Robert Osserman A survey of minimal surfaces, I think.
+\end{enumerate}

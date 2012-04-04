@@ -1,0 +1,153 @@
+\chapter{Introduction}
+
+The goal of this Thesis is to present an easy to understand introduction to Discrete External Calculus (DEC) without assuming more than some basic knowledge of linear Algebra and standard Calculus. After reading this tutorial like Thesis you should have enough theoretical background and enough practical knowledge to understand DEC and apply it to problems.
+
+But before getting started, you need to get a glimpse at what Discrete External Calculus and what it is good for. DEC is, broadly speaking, a way to state and treat a large class of differential equations on meshes. 
+
+You most probably have already worked with some differential Operators. Some of the most common of them being the usual partial derivative $\frac{\partial}{\partial x_i}$, the gradient $\nabla = (\frac{\partial}{\partial x_1},\frac{\partial}{\partial x_2},...,\frac{\partial}{\partial x_n})$ or the Laplace Operator $\Delta = \frac{\partial^2}{\partial x_1^2} + \frac{\partial^2}{\partial x_2^2} +... + \frac{\partial^2}{\partial x_n^2}$. External Calculus provides a framework to treat those operators in a very clean and unified way. And it allows you to define and use these Operators on curved surfaces without much work.
+
+But why should you care about this? As you probably know these operators are extremely powerful tools to describe all kind of problems. Examples---
+And (non-discrete) external Calculus gives you tools to state and treat these problems very neatly.
+
+You now might say that okay, external calculus is probably a nice way to write down equations that else would seem more cluttered and okay, it might help you describe problems even on curved surfaces, but how does this help with actual practical applications and computations? And this is what Discrete External Calculus is about: it provides a consistent and straight forward way to adapt the operators for the use on meshes for computations. 
+
+\begin{figure}[bht]
+\begin{center}
+\includegraphics[width=6cm]{Imgs/1_1_line.eps}
+\includegraphics[width=6cm]{Imgs/1_1_spline.eps}
+\end{center}
+\caption{Left: the discrete mesh you have to work with. Right: Splines are used to associate a differentiable function to the discrete set of points; saying this is a good way to approximate the underlying function makes assumptions about the underlying sampled function}
+\label{fig::1_1_linevsspline}
+\end{figure}
+
+Consider this very simple situation: you have a 1-D function on a discrete set of points and want to calculate its derivative (Fig. \ref{fig::1_1_linevsspline}). Here you already encounter a problem. Obviously mathematically it is less than clear what derivatives should be on the pointset. You have different options. One would be to assume the points represent a differentiable curve which has a closed formula (depending on the pointset) such that a derivative can be calculated at any point. Another would be to embrace the situation, take the non-differentiable piecewise linear line and accept that you know only average values of the derivative on each line segment. I.e. you would say the derivative is the set of differences $f_{i+1} - f_i$ associated to the line segments $i$.
+
+Both possibilities have advantages and drawbacks. While the first option (which leads to Finite Element like methods (FEM)) provides you a value for the derivative everywhere, the assumption that the spline is a good approximation of the ''real'' curve might be wrong and introduce errors. The second option gives you only a discrete set of values but you do not make any assumptions about the underlying curve, as for any differentiable function $f$ taking the values $f_i$, the averaged value is
+\[\int_{line\;segment\;i} f^\prime dx = f_{i+1} - f_i\] 
+So the second option never gives a wrong result. 
+
+Discrete External Calculus is based on the second option. It takes the position that differential operations like taking the derivative on a discrete surface gives a discrete set of values (which have a true meaning for any underlying continuous function) and that interpolation is a somewhat independent problem.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=6cm]{Imgs/1_1_1dLap.eps}
+\includegraphics[width=6cm]{Imgs/1_1_1dLapSmoothing.eps}
+\end{center}
+\caption{An example illustrating how the DEC Laplace operator conserves a geometric property of the continuous Laplacian: When the Laplace operator is applied to the coordinates of the surface it is defined on, it defines an area minimizing flow. The image depicts the initial line with the initial Laplacian vectors (left) and the deformation of the line according to the Laplacian flow, where the border is fixed.}
+\label{fig::1_1_1dSmoothing} 
+\end{figure}
+
+But the great strength of DEC is yet another one. Differential operators mostly are of a very geometric nature and have geometric properties. The gradient of a function for example always points in the direction of the highest local ascent. External Calculus is very well suited to capture some key geometric properties of those operators. 
+
+While the piecewise linear line considered above does not allow differential operators to give concise values at all (or any) points, the geometric properties of the operators often are still meaningful. 
+You can define the Laplace Operator $\Delta$ on and for surfaces; for now just assume that this is done somehow. If you then have a function defined ON the curve, you can apply $\Delta$ to this function (if both the surface and the function are 'nice' enough).  Some special functions that are defined on the line are the functions that assign coordinates to every point on the line, i.e. for a line in 2d the functions $x(p), y(p)$. 
+The Laplace Operate has many very important properties. One of its (maybe less essential but rather plastic) geometric properties is that, if applied to the coordinate functions, it defines an area minimizing flow, as shown in Fig. \ref{fig::1_1_1dSmoothing}. This means that the vectors returned by the Laplacian point in a direction such that, if you move all points according to them, the area of the surface gets minimized in an optimal way.
+
+While we can not calculate the usual Laplacian on the piecewise linear curve of Fig. \ref{fig::1_1_1dSmoothing} (it would be undefined between every two line segments and 0 everywhere else) the geometric property of area minimization stays meaningful. Thus this property can be directly used to define a discrete Laplacian. This discrete Laplacian then not merely approximates the continuous Laplacian, it also preserves some of its geometric properties \emph{exactly}.
+
+And this is the fundament of DEC: differential operators are not merely approximated; some geometric key features from the continuous counterparts are identified and DEC is then designed to respect them exactly on a piecewise linear mesh. And, as you will see, external calculus serves you some rather deep geometric relations of these operators on a golden tablet.
+
+% Define block styles
+%\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+%   text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+%\tikzstyle{block} = [rectangle, draw, fill=blue!10, text width=7em, text centered, rounded corners, minimum height=4em]
+%\tikzstyle{line} = [draw, -latex']
+%\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+%    minimum height=2em]
+
+
+%\begin{tikzpicture}[node distance = 4cm, auto]
+% Place nodes
+%\node [block] (step1) {Identify Geometric Key Property};
+%\node [block, right of= step1] (step2) {Formulate Property for Meshes};
+%\node [block, right of= step2] (step3) {Define Operator such that the property is preserved};
+% Draw edges
+%\path [line] (step1) -- (step2);
+%\path [line] (step2) -- (step3);
+%\end{tikzpicture}    
+
+
+
+\section{A Short Tour of this Thesis}
+Before you lie dozens of pages full of incredible fun and full of mysteries which will be unravelled before your eyes. But so you don't have to take my word for it: take the small tour of this Thesis.
+
+(TODO/REDO this is conceptual. Idea: about one or two sentences per theme and a nice looking image where a keyfeature is depicted. Plus the Text should have like different modules so it is easy to skip parts if you are more or less familiar with them)
+
+To get started some mathematical background is covered. Smooth manifolds (i.e. curved surfaces) are introduced so we can later define differential operators ON them. Important notions are tangential spaces; as all applications presented here will take place on meshes (i.e. 2d surfaces embedded in 3d space) some basic notions from differential geometry are repeated; if you are more or less familiar with these notions you can skip this part.
+
+
+What needs to be introduced:
+\begin{enumerate}
+\item Some basics about Manifolds
+	\begin{enumerate}
+		\item Manifolds and Tangential Spaces
+		\item Tangential Spaces, 
+		\item Orientations
+		\item how manifolds get a differential structure i.e. how differential Operators like a derivative can be defined ON surfaces
+	\end{enumerate}
+\item Some basic Differential Geometry
+	\begin{enumerate}
+		\item Curves and Tangents
+		\item curvatures, curvature tensor
+		\item how manifolds get a differential structure i.e. how differential Operators like a derivative can be defined ON surfaces
+	\end{enumerate}
+\item Basics about Meshes
+	\begin{enumerate}
+		\item Simplices
+		\item Orientations, Border Operator and Wind Edge structure
+		\item dual meshs (and their orientations)c
+	\end{enumerate}
+\item Differential forms:
+	\begin{enumerate}
+		\item What they are and how they arise
+		\item How they form a linear space
+		\item Operations: Stokes Theorem and the differential Operator.
+		\item Identifying the linear spaces with vector fields etc,
+		\item Mapping the differential operator d to classical differential operators
+		\item The Hodge Star and the codifferential Operator
+		\item Thingy when something is a closed form.
+		\item The Hodge Decomposition
+		\item DeRham Komplex: topological constraints to harmonic fields.
+	\end{enumerate}
+\item Basic Properties of differential Operators:
+	\begin{enumerate}
+		\item Divergence
+		\item Gradient
+		\item Curl
+		\item Laplace Operator
+	\end{enumerate}
+\item Discrete Differential Forms
+	\begin{enumerate}
+		\item What they represent (avg values)
+		\item How they are introduced
+		\item Derivation of discrete d 
+		\item dual mesh mesh stuff
+	\end{enumerate}
+\item Applications
+	\begin{enumerate}
+		\item Differential Geometry: Curvatures to analyse the local structure of a mesh, Smoothing, remeshing
+		\item Conformal Maps
+		\item Vector Field Design
+		\item Fluid Simulation
+	\end{enumerate}
+\end{enumerate}
+Oh lord, what shall i do...? Write a short! summary for each topic (MAX one Paragraph each), place them in a good order,work them out in a second iteration. Explain math without proofs, write proofs where helpfull later.
+
+The next part 
+The first practical part describes one or two applications where notions from differential geometry are discretized
+First of all the smooth mathematical counterparts are treated. How to describe them and properties. Then 
+
+What is contained in this Thesis: (TODO/REDO after the rest is written)
+\begin{enumerate}
+\item An explanation of the geometric nature of differential operators
+\item Some basic properties of Manifolds i.e. curved surfaces.
+\item The basics of external Calculus and refresh your knowledge of differential Geometry 
+\item See how Discrete External Calculus is developed and which key features it tries to conserve.
+\item Application of DEC to a group of problems out of various fields.
+\item Cookbook recipe ?
+\end{enumerate}
+What is not treated in this Thesis but should not be ignored:
+\begin{enumerate}
+\item Other standard methods like finite differences or finite element method, even thought DEC is closely related to those and one would benefit of a closer look at FEM and its error analysis.
+\item An analysis how well DEC methods perform in contrast to these standard methods or any Error Analysis of FEM.
+\end{enumerate}

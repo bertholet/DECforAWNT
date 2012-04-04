@@ -1,0 +1,7 @@
+*.dvi
+*.aux
+*.pdf
+*.txt
+*.ps
+imgs/*
+*.synctex*

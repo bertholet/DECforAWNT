@@ -1,0 +1,52 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}
+\contentsline {section}{\numberline {1.1}A Short Tour of this Thesis}{7}
+\contentsline {chapter}{\numberline {2}Describing and Measuring Surfaces. Or Differential Geometry on Meshes}{11}
+\contentsline {section}{\numberline {2.1}Introduction}{11}
+\contentsline {section}{\numberline {2.2}A Dirty Differential Geometry Primer}{12}
+\contentsline {subsection}{\numberline {2.2.1}Curves in 3D Space}{12}
+\contentsline {subsection}{\numberline {2.2.2}Properties of a curve}{13}
+\contentsline {subsubsection}{Parametrization by Arclength}{13}
+\contentsline {subsubsection}{Discrete Curve}{15}
+\contentsline {subsection}{\numberline {2.2.3}Surfaces}{15}
+\contentsline {subsubsection}{Definition of Surfaces}{15}
+\contentsline {subsubsection}{Tangential Plane}{16}
+\contentsline {subsubsection}{Normals and Orientation}{16}
+\contentsline {subsubsection}{Derivatives of Functions on Surfaces}{16}
+\contentsline {subsubsection}{The derivative of the Normal-Function}{17}
+\contentsline {subsubsection}{Curvature on Surfaces}{18}
+\contentsline {subsubsection}{The second Fundamental Form and Curvature}{19}
+\contentsline {section}{\numberline {2.3}Coloring Mesh or Differential Geometry on Meshes}{21}
+\contentsline {section}{\numberline {2.4}Planned Mathematical viewpoint on this Chapter}{21}
+\contentsline {chapter}{\numberline {3}Smoothing Meshes. Or a Geometric Introduction to the Laplace Operator}{23}
+\contentsline {chapter}{\numberline {4}How to map Textures to Surfaces or Conformal Mappings and harmonic Differential forms}{25}
+\contentsline {section}{\numberline {4.1}A closer look at coordinate functions}{25}
+\contentsline {subsection}{\numberline {4.1.1}Vector Fields and Coordinates}{25}
+\contentsline {section}{\numberline {4.2}Some Basic Topology}{26}
+\contentsline {section}{\numberline {4.3}Problems with Texture Mappings Or a short introduction to topology}{26}
+\contentsline {chapter}{\numberline {5}Differential Forms}{27}
+\contentsline {section}{\numberline {5.1}Differential Forms}{27}
+\contentsline {subsection}{\numberline {5.1.1}Formal Definition}{27}
+\contentsline {subsection}{\numberline {5.1.2}Examples for Differential Forms}{28}
+\contentsline {subsection}{\numberline {5.1.3}The derivation of differential forms}{29}
+\contentsline {section}{\numberline {5.2}Tools for k Forms}{30}
+\contentsline {subsection}{\numberline {5.2.1}The Wedge Product for One-Forms}{30}
+\contentsline {subsection}{\numberline {5.2.2}Skew Symmetric K-Forms}{31}
+\contentsline {subsection}{\numberline {5.2.3}The Wedge Product for $k$ Forms}{33}
+\contentsline {section}{\numberline {5.3}Riemanian Manifold}{33}
+\contentsline {section}{\numberline {5.4}The Pointcarré Lemma}{33}
+\contentsline {section}{\numberline {5.5}Stokes}{33}
+\contentsline {section}{\numberline {5.6}Hodge Helmholtz}{33}
+\contentsline {chapter}{\numberline {6}(Theoretical chapter) Building a more general Framework or Discrete Differential forms}{35}
+\contentsline {section}{\numberline {6.1}Differential Forms}{35}
+\contentsline {section}{\numberline {6.2}(optional to read)The Laplace Operator expressed directly in DEC or: Codifferential and Hodge star}{35}
+\contentsline {chapter}{\numberline {7}(Optional to read) Understanding the problems in Texture Mapping or: The Hodge Star Operator, Cohomology classes, Harmonic functions and Topology}{37}
+\contentsline {chapter}{\numberline {8}More general Texture Mapping. Or Singular Continuity}{39}
+\contentsline {chapter}{\numberline {9}Fluid Dynamics}{41}
+\contentsline {section}{\numberline {9.1}The Geometry of some Differential Operators}{41}
+\contentsline {subsection}{\numberline {9.1.1}Divergence}{41}
+\contentsline {subsection}{\numberline {9.1.2}Gradient}{42}
+\contentsline {subsection}{\numberline {9.1.3}Rotation}{42}
+\contentsline {subsection}{\numberline {9.1.4}Laplacian}{43}
+\contentsline {chapter}{\numberline {10}Appendix}{45}
+\contentsline {section}{\numberline {10.1}Curves and Parametrization by Arclength}{45}
+\contentsline {subsubsection}{Jumping from an arbitrary Parametrization to a Parametrization by Arc Length}{45}
