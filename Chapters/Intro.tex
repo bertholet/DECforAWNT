@@ -69,21 +69,38 @@ And this is the fundament of DEC: differential operators are not merely approxim
 
 
 \section{A Short Tour of this Thesis}
-Before you lie dozens of pages full of incredible fun and full of mysteries which will be unravelled before your eyes. But so you don't have to take my word for it: take the small tour of this Thesis.
+Before you lie dozens of pages full of incredible fun and full of mysteries which will be unravelled before your eyes. But so you don't have to take my word for it: take the small tour of this Thesis. 
 
-(TODO/REDO this is conceptual. Idea: about one or two sentences per theme and a nice looking image where a keyfeature is depicted. Plus the Text should have like different modules so it is easy to skip parts if you are more or less familiar with them)
+\textcolor{red}{(TODO/REDO this is conceptual. Idea: about one or two sentences per theme and a nice looking image where a keyfeature is depicted. Plus the Text should have like different modules so it is easy to skip parts if you are more or less familiar with them)}
 
-To get started some mathematical background is covered. Smooth manifolds (i.e. curved surfaces) are introduced so we can later define differential operators ON them. Important notions are tangential spaces; as all applications presented here will take place on meshes (i.e. 2d surfaces embedded in 3d space) some basic notions from differential geometry are repeated; if you are more or less familiar with these notions you can skip this part.
+To get started some basics are covered; if you are already familiar with them you can skip them without any loss.
+To begin with the geometric objects we want to work with are presented: smooth surfaces and meshes. Or more generally manifolds and simplicial complexes. Manifolds are any curved hyper-surfaces that are inbedded in a higher dimensional space and simplicial complexes are the higher dimensional equivalents of triangle meshes, including for example tetrahedra meshes.
+
+Then the basics of differential geometry are treated; we look at local properties of surfaces and various kinds of curvature. We then try to define the equivalent on triangle meshes, which will lead to defining a Laplacian on meshes. As an application meshes get smoothed.
+
+In the next section  differential forms are introduced and explained. This is the heart of the matter and explains why the core concepts of discrete differential forms make sense. Differential forms being a concept you might not have met as such this chapter is a crucial one. It will lead to Stokes Theorem which encodes the geometry of the differential Operator and also forms the heart of DEC.
+\[\int_{\partial\Omega} \phi = \int_{\Omega} d\phi\]
+
+The rest are various aspects, applications and refinements, where we will paralelly deepen the theory about differential forms (i.e. External Calculus) to understand aspects of practical problems and derive further parts of the discrete exterior calculus to computationally solve these problems.
+
+
+%Smooth manifolds (i.e. curved surfaces) are introduced so we can later define differential operators ON them. Important notions are tangential spaces; as all applications presented here will take place on meshes (i.e. 2d surfaces embedded in 3d space) some basic notions from differential geometry are repeated; if you are more or less familiar with these notions you can skip this part.
 
 
 What needs to be introduced:
 \begin{enumerate}
-\item Some basics about Manifolds
+\item Some basics about Manifolds (Background of the continuous Objects the Theory is based on)
 	\begin{enumerate}
 		\item Manifolds and Tangential Spaces
 		\item Tangential Spaces, 
 		\item Orientations
 		\item how manifolds get a differential structure i.e. how differential Operators like a derivative can be defined ON surfaces
+	\end{enumerate}
+\item Basics about Meshes (About the Objects we are making computations on) HANDS ON
+	\begin{enumerate}
+		\item Simplices
+		\item Orientations, Border Operator and Wind Edge structure
+		\item dual meshs (and their orientations) Either here or later.
 	\end{enumerate}
 \item Some basic Differential Geometry
 	\begin{enumerate}
@@ -91,11 +108,10 @@ What needs to be introduced:
 		\item curvatures, curvature tensor
 		\item how manifolds get a differential structure i.e. how differential Operators like a derivative can be defined ON surfaces
 	\end{enumerate}
-\item Basics about Meshes
+\item Differential Geometry on the Mesh: HANDS ON
 	\begin{enumerate}
-		\item Simplices
-		\item Orientations, Border Operator and Wind Edge structure
-		\item dual meshs (and their orientations)c
+		\item Discrete Mean curvature
+		\item Other curvatures
 	\end{enumerate}
 \item Differential forms:
 	\begin{enumerate}
@@ -104,19 +120,19 @@ What needs to be introduced:
 		\item Operations: Stokes Theorem and the differential Operator.
 		\item Identifying the linear spaces with vector fields etc,
 		\item Mapping the differential operator d to classical differential operators
-		\item The Hodge Star and the codifferential Operator
-		\item Thingy when something is a closed form.
+		\item The Hodge Star and the codifferential Operator (maybe later)
+		\item Thingy when something is a closed form. (these things will be introduced when needed)
 		\item The Hodge Decomposition
 		\item DeRham Komplex: topological constraints to harmonic fields.
 	\end{enumerate}
-\item Basic Properties of differential Operators:
+\item Basic Properties of differential Operators: (good question where to put this in, its quite important)
 	\begin{enumerate}
 		\item Divergence
 		\item Gradient
 		\item Curl
 		\item Laplace Operator
 	\end{enumerate}
-\item Discrete Differential Forms
+\item Discrete Differential Forms HANDS ON
 	\begin{enumerate}
 		\item What they represent (avg values)
 		\item How they are introduced
