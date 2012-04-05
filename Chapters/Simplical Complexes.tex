@@ -1,0 +1,78 @@
+\newpage
+\section{Meshes and Simplicial Complexes}
+
+In the last sections we had a look at the geometric objects exterior calculus will be defined on, i.e. smooth surfaces and manifolds. The next step is to introduce the discrete analogues we want to work with: triangle Meshes, or more generally simplices and simplicial complexes. Simplices are for example points (0 dimensional), lines (1 dimensional) triangles (2 dimensional) and tetrahedra (3 dimensions). Simplicial complexes are 'meshes' made out of them.
+
+\subsection{Simplices and Simplicial Complexes}
+
+\begin{figure}[b]
+\begin{center}
+\includegraphics[width = 10cm]{Imgs/2_3_simplices.eps}
+\end{center}
+\caption{A 0-simplex (point) 1-simplex (line) 2-simplex (triangle) and 3-simplex (tetrahedra) }
+\label{fig::2_3_simplices}
+\end{figure}
+
+A $k$ simplex is the most basic geometric object with a $k$ dimensional volume: the convex hull of $k+1$ points, as depicted in Fig. \ref{fig::2_3_simplices}. You also have to make sure that no point lies in the convex hull of the others, as else no $k$ dimensional volume is spanned, else you would call the simplex degenerated.
+
+\begin{definition}[Simplex]: A non degenerated $k$ simplex is the convex hull of $k + 1$ points $p_1,...,p_{k+1}$, where the $k$ vectors $p_2 -p_1, p_3,-p_1, ..., p_{k+1} -p_1$ are linearly independent. It is represented as a tuple of its corner vertices $\{p_1,...,p_{k+1}\}$.
+\end{definition}
+
+Every simplex has faces of various dimensions: any combination of $l$ of its corner vertices forms an $l$ dimensional face. For example the tetrahedra has 4 2-dimensional faces (triangles), 6 1-dimensional faces (edges) and 4 0-dimensional faces (vertices). A 4-Simplex (living at least in $\mathbb R^4$) would have 5 tetrahedral faces and so on.
+
+Out of this simplices one can make simplicial complexes, just as you can build meshes out of triangles. The restrictions are the usual: the interior of any two simplices should not overlap, and if the intersection of two simplices is not empty, the intersection has to be a face of both simplices. (image) A simplicial complex then is a list of simplices. Formally, when a $k$-simplex is listet, its faces are not yet in the list; this situation we don't want to have. If a simplicial complex contains a  $k$-simplex we demand that the faces of those $k$- simplices are. This looks like a tedious technical detail; but you will later see that we really want to connect values to faces of simplices. In a triangle mesh for example we will need to keep track not only of triangles and vertices but also of the edges; see section \ref{sec::2_handsOnSimplicialComplexes}
+
+\begin{definition}[Simplicial Complex]
+A simplicial  complex is a collection $\kappa$ of simplices, such that if a simplex is contained in $\kappa$, all its faces are too. Furthermore the intersection of any two simplices in  $\kappa$ is either empty or a common face.
+\end{definition}
+
+Lastly we do not want our discrete Manifolds  to have the analogue of dangling triangles (image: wheel, dangling). To ensure this formally one has to make a restriction that is similar to the definition of Manifolds. While we ensured that a (border less) $k$ Manifold locally looks like the $\mathbb R^k$,i.e. every point has a ball like $k$ dimensional environment, we want to make sure our discrete manifold (with border) looks locally like either a $k$-dimensional ball or a $k$-dimensional half-ball. This is just a technicality to get rid of dangling things (image).
+
+\begin{definition}[Discrete Manifold]
+A $k$-dimensional discrete Manifold is a simplicial complex where for every simplex in $\kappa$ the union of all bordering simplices forms a $k$-dimensional ball or a $k$-dimensional half ball
+\end{definition} 
+(defs from the computational modeling paper)
+
+
+\subsection{Orientations of simplicial complexes}
+As with Manifolds we have to deal with orientations in discrete manifolds; as we will later see they will be quite of some practical importance and can be a notorious source of switched sign errors when implementing things using discrete exterior calculus. So here we treat not only with a mere technicality.
+
+We can assign one of two orientations to any simplex of any dimension. For edges it is the most intuitive what this means: we simply assign a direction to the edge. Note that for an edge or any line lying in a higher dimensional space there is not a 'positive' or a 'negative' orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as
+\[-\{p_1,p_2\} = \{p_2,p_1\}\]
+You can say the orientation of a $k$-simplex also depends on the way its corner vertices are enumerated. Two enumerations of corner vertices result in the same orientation if they are related by an even permutation. A permutation is called even, if it can be reproduced by switching two vertices an even time. E.g.
+\[\{a,b,c,d\} \sim \{c,a,b,d\}\]
+\[\{a,b,c,d\} \rightarrow \{c,b,a,d\}\rightarrow \{c,a,b,d\}\]
+You can also use the determinant to determine the sign of the permutation; just calculate the determinant of the permutation matrix
+\[\{a,b,c,d\} \rightarrow \{c,a,b,d\}\]
+\[\begin{pmatrix} 0 & 0 & 1 &0 \\ 1 &0&0&0 \\ 0&1&0&0 \\ 0&0&0&1 \end{pmatrix}\]
+Or again you can use simplex to induce a base to the affine space it is alligned to
+\[p_2 -p_1,...,p_{k+1}-p_{1}\]
+and two enumerations induce the same orientation if these bases have the same orientation.
+
+Anyway as long as you stick with calculations in $\mathbb R^3$ it stays pretty simple to determine if two orientations a simplex are the same, if you stick with triangle meshes it is trivial. Just make sure you always remember to respect orientations.
+
+(image: line with direction)
+
+\subsection{Border Operations}
+
+(TODO/REDO) This is something that was not introduced with manifolds; the definitions above only treat manifolds without border. It is very possible to treat manifolds with bordersIt has quite some similarities with how borders for simplicial complexes are introduced..  if you are interested you can read it up in---- (maybe with stokes there will be something more to say but we will see....)
+
+Anyway you can assign a border to a simplex etc etc schaga.
+\subsection{Dual meshes}
+
+\section{Hands On 1: Simplicial Complexes}
+\label{sec::2_handsOnSimplicialComplexes}
+
+All applications will either be done for 2 dimensional simplicial complexes (meshes) or 3 dimensional simplicial complexes (tetrahedra meshes), so it is enough to implement those (or use libraries implementing those). Some notes on what you need to be able to do: ...
+
+
+\section{Differential Geometry on Meshes}
+
+
+\section{Hands On 2: Surface Fairing}
+
+
+
+\section{Planned Mathematical viewpoint on this Chapter/Short summary}
+		We started by introducing $k$-manifolds and  some basic differential geometry, including the notions of local maps, tangential spaces, orientation, derivative of functions on Manifolds and, for 2 dimensional surfaces, gauss, mean and principal curvatures. Then as a discrete version of k-manifolds simplicial complexes where treated, where the property of local homeomorphism to a k-dimensional volume is replaced by the patch-wise equivalence to k-simplices. In the end, the Operators from differential geometry where defined for meshes, which also gave rise to a geometric definition of the Laplace Operator for functions on Meshes.
+
