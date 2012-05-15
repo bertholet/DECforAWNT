@@ -1,4 +1,4 @@
-\chapter{Describing and Measuring Surfaces. Or Differential Geometry on Meshes}
+\chapter{Differential Geometry and Meshes}
 	
 	\begin{figure}[ht]
 	\begin{center}
@@ -7,9 +7,17 @@
 	\caption{A Zebra mesh that is colored according to its local mean curvature}
 	\end{figure}
 	
+	
+
+
+In this chapter we will have a closer look at the basic objects we will deal with throughout this text. The first type of objects are meshes (and more generally Simplicial Complexes) as they lie at the heart of discrete Exterior Calculus and of all our tools and applications. The second type of objects are so called ''manifolds'' which describe smooth surfaces and more generally smooth spaces embedded in higher dimensional spaces.
+	
 	In Computer graphics deal with meshes all the time when we wish to describe objects. In this Thesis we want to do more with meshes than just to display them. We want to deform meshes, analyse their surfaces and define all kinds of functions on them. And we want to differentiate functions (and differential forms) on meshes. So it makes sense to take some time to think about properties of meshes.	
 	
+
+	
 \section{Introduction}
+ 
 	The Goal of this Chapter is to describe local properties of meshes to lay the base for things like detection of sharp edges, local maxima, irregularities and so on. For example we want to find mesh regions that are stronger curved than others (Image). Here we will content our selves with colouring the meshes appropriately. In later chapters we will use the tools developed here to do more interesting things.
 	
 	The most usual meshes obviously are triangle meshes consisting of a set of vertices, edges and faces, used to approximate surfaces. Note that meshes can be used to describe higher dimensional volumes too. In 3d instead of using triangles one would use pyramids (tetrahedra), or more generally to describe k dimensional volumes one would use so called k-simplice. Even thought this section will only consider surface/triangle meshes, a more general definition of a mesh is given here.

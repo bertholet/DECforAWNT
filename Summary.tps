@@ -24,15 +24,15 @@ Class=CLatexEdit
 Document=Summary.tex
 
 [Frame0_Row0]
-cyCur=497
+cyCur=230
 cyMin=10
 
 [Frame0_Col0]
-cxCur=1711
+cxCur=924
 cxMin=10
 
 [Frame0_View0,0]
-Cursor.row=264
-Cursor.column=198
-TopSubLine=310
+Cursor.row=0
+Cursor.column=0
+TopSubLine=3
 

@@ -1,0 +1,391 @@
+\chapter{The Basic Objects: Meshes, Manifolds and Sparse Matrices}
+
+So lets get started. In this chapter we will have a closer look at the basic objects we will deal with throughout this text.  We start with the description of so called ''manifolds'' which describe smooth surfaces and more generally smooth spaces embedded in higher dimensional spaces.
+In the second section we have a closer look at the meshes (and more generally Simplicial Complexes) that we use in practice in the place of manifolds. The third section explains how to implement meshes and simplicial complexes in a way that is convenient for DEC purposes. 
+
+The third section is the actual hands-on section, whereas the first two sections provide the background and the foundations of Exterior Calculus and Discrete Exterior Calculus.
+\begin{figure}[ht]
+\begin{center}
+	\begin{longtable}{|p{4cm}|p{4cm}|p{4cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+		Smooth Manifolds (Surfaces)
+		\begin{packed_itemize}
+		\item[-] Maps and Coordinates
+		\item[-] Tangential Space
+		\item[-] Orientations
+		\item[-] Bordered Manifolds
+		\end{packed_itemize}
+		&
+		Discrete Manifolds
+		\begin{packed_itemize}
+		\item[-] Simplices and Simplicial Complexes
+		\item[-] Discrete Manifolds
+		\item[-] Orientations
+		\item[-] Border Operator, Border Matrix
+		\end{packed_itemize}
+		&
+		Meshes
+		\begin{packed_itemize}
+		\item[-] Winged Edge Structure
+		\item[-] General Complexes
+		\item[-] Sparse Matrices
+		\item[-] Simple Geometric Operations
+			\begin{packed_itemize}
+				\item[-] Manifold Check
+				\item[-] Border Computation
+			\end{packed_itemize}
+		\end{packed_itemize} \\
+%			Smooth Surfaces & Meshes & General Meshes\\
+%			-Maps and Coordinates & & \\
+%			-Tangential Space & -Simplices / Simplicial Complexes & -Winged edge / Incidence\\
+%			-Orientations & -Orientations& -Simple geometric operations:\\
+%			-Functions on Surfaces & -Border Operator & --Orientation\\
+%			-Derivative on Surfaces & & --Iterating over Neighborhoods\\
+%			& & --Wellformedness \\
+%			& & --Finding Border Components\\
+%			& & Notes on Sparse Matrices\\
+		\hline
+	\end{longtable}
+	\caption{Overview of the topics of this chapter}
+\end{center}
+\end{figure}
+
+\section{Manifolds}
+		This section is an introduction to general surfaces. The whole thesis is about things you can do on or with smooth (hyper) surfaces, so it is important to understand their mathematical model. While no application in this thesis actually exceeds 3 dimensions, Discrete Exterior Calculus (DEC) and Exterior Calculus provide tools for arbitrary dimensions, without any complications. So there is no reason to stick with two and three dimensional spaces. 
+		
+\subsection{Describing Manifolds}	
+		You have already seen various manifolds in your life. Spheres are manifolds.any smooth curve without self intersections are 1 manifolds, or most things you would call 'surface' are manifolds (e.g.  Fig. \ref{fig::2_1_manifold} depicts a two dimensional manifold). Generally A $k$ dimensional manifold in $\mathbb R^n$ is simply a geometric object in $\mathbb R^n$  that locally looks like $\mathbb R^k$.  Formally this is done by assuring that at every point on the manifold we have a 'map' linking the manifold to $\mathbb R^k$.
+		
+For the sake of simplicity we assume that all functions and mappings are infinitely differentiable.
+		
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=10cm]{imgs/2_1_manifold.eps}
+		\caption{A simple 2-manifold}
+		\label{fig::2_1_manifold}
+	\end{center}
+\end{figure}
+		
+\begin{definition}[Map] A $k$ dimensional map is a differentiable mapping 
+\[\phi: U \subset \mathbb R^k \rightarrow \phi(U)\] 
+\[\begin{pmatrix}
+	u_1\\ \vdots \\ u_k
+\end{pmatrix} \rightarrow \begin{pmatrix}x_1(u_1,...,u_k)\\x_2(u_1,...,u_k)\\ \vdots \\ \vdots \\ x_n(u_1,...,u_k)\end{pmatrix}\]
+that is injective and whose Jakobimatrix has rank $k$ on all $U$, where $U$ is some open subset of $\mathbb R^2$ (image).
+		
+\end{definition} 
+
+A map is exactly like the maps you have in an atlas; they link the surface of the world locally to a flat 2d surface. Now a $k$ manifold is an object where at any point you can find a map of its neighborhood:
+
+\begin{definition}[Manifold] A subset $S\subset \mathbb R^n$ is a (regular) $k$ manifold, if for each point $p \in S$ there exist an open set $V\subset \mathbb R^k$ such that there is a map $\phi: U \rightarrow  V\cap S$.
+\end{definition} 
+
+	
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=12cm]{imgs/2_1_mapping.eps}
+		\caption{An example for a 2d map $\phi$}
+		\label{fig::2_1_mapping}
+	\end{center}
+\end{figure}
+
+This definition using maps ensures that the surface locally has a structure that is equivalent to a patch in $\mathbb R^k$. Note that this definition does not allow borders to occur. \note{(Does that need explanation?)}
+
+You can also say that a map $\phi: U \subset \mathbb R^k \rightarrow S$ assigns local coordinates to a surface. The tuple $u=(u1_,...,u_k)\in U$ are the local coordinates of the point $\phi(u)$. You then can speak of expressing some functions $f:S \rightarrow ?$ in the local coordinates given by $\phi$. All this means is that you consider $f \circ \phi : U \subset \mathbb R^k \rightarrow ?$ instead of $f$. %(Image : local coordinates..) 
+
+\subsubsection*{A Note on Coordinates}
+Note that there are two types of coordinates here. Lets look at a 2-Manifold. You can have the local coordinates given by and depending on the local parametrisations you chose (giving you (u,v) coordinates). Then you have the global coordinates of the surrounding space $\mathbb R^3$, assigning (x,y,z) coordinates to every point.
+
+But in the end all coordinates are just descriptive tools; the geometric object we describe is assumed to exist independently of all these parameters. The 'tricky' part then is to get independence of parametrizations when we want to describe geometric properties of our manifolds. Even to get a definition of 'differentiability' on the manifold that is independent of the selected parametrization one must be careful with the definition.
+
+In fact in later applications  we will play around with coordinates, (with surface smoothing in chapter ... the global coordinates, with conformal maps in chapter ... the local coordinates). Rather than taking coordinates as describing the manifolds we take them as something associated to the geometric object to work with them or solve for them.
+
+External calculus (introduced in chapter...) will provide tools and results that do not use parametrizations.
+
+
+	
+\subsection{Tangential Spaces}		
+Manifolds have tangential spaces.
+For curves calculating tangents is easy. If you have a parametrization $\alpha(t): I \subset \mathbb R \to \mathbb R^n$, then $\alpha'(t) = (x_1'(t),x_2'(t),...,x_n'(t))$ is the direction of a tangent vector to the curve at the position $\alpha(t)$. 
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=10cm]{imgs/2_1_tangent.eps}
+\end{center}
+\caption{A parametrized curve, the vector $\alpha'$ and the tangential space $T_{\alpha(t_0)}$ at $t_0$}
+\end{figure}
+
+		While the length of $\alpha'(t)$ at the point $\alpha(t)$ depends on the parametrization $\alpha$ (for example $\alpha(2t)$ is a different parametrization of the curve $S$ described by $\alpha$ where the length doubles) the \textbf{tangential space} $ T_{\alpha(t)}S = span(\alpha'(t)) = \{x \in \mathbb R^3: x = c \alpha'(t), c \in \mathbb R\}$ does obviously only depend of the position $\alpha(t)$ on the curve. 
+		
+We can do the same for a $k$ dimensional manifold $M$. The tangential space $T_p M$ at a point $p$ is:
+
+\begin{enumerate}
+	\item The space that approximates the surface in the best way, locally at $p$.
+	\item The space that contains the tangents of all curves on the surface that go through $p$.
+	\item For a given parametrization $\phi: \mathbb R^k \to \mathbb R^n$, $\phi(u) = (\phi_1(u),...,\phi_n(u))$ the tangential plane $T_{\phi(u)}$ is given by
+			\[span(\frac{\partial \phi} {\partial u_1},..., \frac{\partial \phi} {\partial u_k}) = span(\begin{pmatrix}
+	\frac{\partial \phi_1} {\partial u_1} \\
+	\frac{\partial \phi_2} {\partial u_1}\\
+	\vdots\\
+	\frac{\partial \phi_n} {\partial u_1}
+\end{pmatrix},...,\begin{pmatrix}
+	\frac{\partial \phi_1} {\partial u_1} \\
+	\frac{\partial \phi_2} {\partial u_1}\\
+	\vdots\\
+	\frac{\partial \phi_n} {\partial u_1}
+\end{pmatrix})\]
+	One could also interpret this as the $span$ of the tangents of a set of special curves, the curves $\phi(t, u_2,...,u_k)$, $\phi(u_1, t,...,u_k)$ ,..., $\phi(u_1, ...,u_{k-1},t)$, where $u_1,..,uk$ are fixed values.
+\end{enumerate}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=12cm]{imgs/2_1_mapping_coords.eps}
+\end{center}
+\caption{A map $\phi$ of a 2 manifold $M$ is used to determine the tangential space $T_{p}M$ at some point $p$}
+\label{fig::2_1_mapping_coords}
+\end{figure}
+
+The tangential spaces $T_p M$ are the vector spaces containing all tangential vectors at a point $p$. Every point on a manifold gets an associated vector space. While the vector space itself is depending solely on $p$ the choice of a basis of this vector space is open. Choosing the basis $\frac{\partial \phi}{\partial u_i}$ obviously is dependent on $\phi$. Note that, just as in Fig. \ref{fig::2_1_mapping_coords}, these vectors are in general not orthogonal and if we want to define and use a scalar product consistently in all tangential spaces we will have to take care.
+\note{Reformulate last sentence, what do i want to say?}.
+
+One special example of a manifold is $\mathbb R^k$ seen as a manifold parametrized by $\mathbb R^k$ with $\phi = id$. Then the tangential space $T_p \mathbb R^k$ at any point $p$ is again $\mathbb R^k$. But still: the vectors in one tangential space $T_p \mathbb R^k$ and the vectors of another tangential space $T_q \mathbb R^k$ can not be mixed; every point gets its own proper tangential space, not shared with any other point.
+		
+\subsection{Orientations}
+We do not want to talk about just any Manifolds but only about a subgroup: orientable manifolds. Orientation is easy to define; it is to assign a sign to the volume you are treating. Either your volume is positive or negative. Which orientation is positive and which negative is arbitrary. 
+
+For a vector space you can encode orientation in the ordering of basis vectors. Two ordered bases $v_1,...v_k$ and $w_1,...,w_k$ describe the same orientation if the matrix that describes the change of bases has a positive determinant (see Fig. \ref{fig::2_1_orientation2d}). The determinant actually measures signed volume spanned by a set of vectors.
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[width = 10cm]{imgs/2_1_orientation2d.eps}
+\caption{Three bases orienting $\mathbb R^2$, the first two describe the same orientation, the third a different one }
+\label{fig::2_1_orientation2d}
+\end{center}
+\end{figure}
+
+In the last section we introduced tangential spaces and emphasized the point that every point gets its own proper tangential vector space. Tangential spaces of points that are very close together are very similar and it makes sense to ask if they have the same orientation.
+
+%In the last section we introduced tangential spaces and 
+
+We saw that parametrizations can provide bases on tangential spaces. One single parametrization actually induces consistent orientations for the tangential spaces of all points it hits. Now we say that a Manifold can be oriented if all tangential spaces can be oriented consistently.
+
+\begin{definition}[Oriented Manifold] A manifold can be oriented if the exists a set of maps $A = \{\phi: U_\phi \to \phi(U_\phi) \subset M\}$ such that the maps describe the whole manifold and any two maps $\phi$, $\psi$ which describe a common patch $\psi(U_\psi) \cap \phi(U_\phi)$ result in the same orientations i.e. for the base change matrix $C$ from the base $D\phi$ to $D\psi$ has positive determinant
+\[det(C) >0\]
+A manifold is oriented if for all tangential spaces a consistent orientation has been chosen.
+
+\end{definition}
+
+For 2d manifolds in 3d space this is the same as saying that you should be able to consistently chose a surface normal, as depicted in Fig. \ref{fig::2_1_mobius}.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width = 6cm]{imgs/2_1mobius.eps}
+\caption{The Moebius strip, the pathological example of a not orientable manifold}
+\label{fig::2_1_mobius}
+\end{center}
+\end{figure}
+
+\subsection{Manifolds with Border}
+Up to now we have only looked at manifolds without borders, like the surface of a sphere or a torus. But treating borders is a central part of DEC so we extend our notions now. While up to now we required that a manifold looks locally like $\mathbb R^k$, we now allow it to alternatively look like $\mathbb H^k$, where $\mathbb H^k$ denotes the $k$ dimensional half space $\mathbb H^k = \{x = (x_1,...,k_k)\in \mathbb R^k: x_k \geq 0\}$.
+
+\begin{definition}[Bordered Manifold] $M \subset \mathbb R^n$ is a $k$ dimensional manifold with border, if for any point $p \in M$ either conditions hold:
+\begin{enumerate}
+\item There are two open sets $p \in V\subset \mathbb R^n$ and $0\in U \subset \mathbb R^k$ and a differentiable injective map $U\to V$ whose Jacobi matrix has rank $k$ such that 
+\[h(U\cap \mathbb H^k) =  V\cap M\]
+\item  There are two open sets $p \in V\subset \mathbb R^n$ and $U \subset \mathbb R^k$ and a differentiable injective map $U\to V$ whose Jacobi matrix has rank $k$ such that 
+\[h(U) =  V\cap M\]
+\end{enumerate}
+\end{definition}
+
+\note{This definition might not be rigorously correct.} This just makes sure that every point on bordered $k$ manifold either is inside the manifold or on a $k-1$ dimensional border. Actually the border of a $k$ manifold is a $k-1$ dimensional manifold without border. \note{(Image! Hk and bordermap)}.  We denote the border of a manifold $M$ by $\delta M$ and call $\delta$ the border operator.
+
+While nothing changes for tangential spaces of non-border points, at border points $p$ two tangential spaces are present. One is the tangential space of the manifold $T_pM$ and $k$ dimensional, the other one is the $k-1$ dimensional tangential space of the border manifold $T_p \delta M$ (Fig. \ref{fig::2_1_borderManifold}, left) . The important thing is that an oriented manifold induces an orientation to its border. Remember that orientation is defined by the orientation of the tangential spaces, so inducing an orientation to the border means inducing an orientation in $T_p\delta M$ using the orientation of $T_p M$. This happens defining normals on the border.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = 13cm]{imgs/2_1_borderedManifold_combined.eps}
+\end{center}
+\label{fig::2_1_borderManifold}
+\caption{A bordered manifold with tangential spaces $T_pM$, $T_p\delta M$ and the border normal $N$ (left image). The right image depicts how an orientation of the manifold given by bases oriented like ($b_1$,$b_2$) induces an orientation to the border: $N$ and a vector following the border orientation build a basis oriented like $b_1,b_2$.}
+\end{figure}
+
+For any border point you can define a surface normal $N$. The surface normal $N$ is the vector in $T_p N$ with:
+\begin{itemize}
+\item $N$ is orthogonal to $T_p \delta N$
+\item $N$ has length 1
+\item $N$ points 'outside'
+\end{itemize}
+Pointing outside is defined formally using the map $h$ at the border; $Dh$ is a linear bijective map from $\mathbb R^k$ to $T_pM$, so $N$ can be pulled back to $\mathbb R^k$ and it points 'outside' if the $k$th component of $Dh^{-1} N$ is negative \note{(Image?)}.
+
+We defined orientation by the enumeration of basis vectors. So if a basis $b_1,...,b_k$ gives the orientation of $T_pM$,
+a basis $\widetilde{b_1},...,\widetilde{ b_{k-1}}$ of the tangential space of the border $T_p\delta M$ is oriented according to the manifold if prepending the normal $N$ to the basis $N,\widetilde{b_1},...,\widetilde{ b_{k-1}}$ has the same orientation as $b_1,...,b_k$. This is also shown in Fig. \ref{fig::2_1_borderManifold}.
+
+
+\subsection{Functions and Derivatives on Manifolds}
+\note{	Tangential Spaces and Differential structure. Maybe put it in next chapter; here its all about geometry, not about functions.}
+
+\input{"Chapters/Simplical Complexes.tex"}
+
+\newpage
+\section{Implementation: Mesh and basic operations}
+This is the hands-on part of this chapter. The implementation chapters provide a guideline of what you need to implement to get DEC and the later applications up and running. The components needed are described and some of the more tricky details are mentioned.
+
+\subsection{A word on Sparse Matrices}
+The point of DEC is to reformulate differential equations with sparse matrices. Therefore the implementation is somewhat centered around sparse matrices.
+
+If you plan to implement your DEC framework you should start by looking for a sparse matrix solver. For all results in this thesis the sparse Solver from the Pardiso-Project of the University of Basel has been used as a black box solver. Unfortunately it is not free-ware but any other sparse solver will do as well.
+
+Sparse matrices are matrices where most entries are zero. Instead of storing all $n\times m$ values of a matrix, you choose to only store the non-zero values and their indices. There are different ways to do this; the pardiso solver uses the so called Yale format.
+
+The Yale format uses 3 vectors to describe an arbitrary $n\times m$ matrix $A$. The first vector $a$ stores all non-zero values of $A$, enumerated by row. The second vector $ja$ stores the column indices of the non-zero values, again enumerated by row. The third vector $ia$ stores for every row the index $i$, such that $a(i)$ and $ja(i)$ describe the value and the row of the first element in the row. Additionally one appends the number of values in $a$ (or $ja$) to $ia$.
+
+For example 
+\[\begin{pmatrix}
+1 & 0 & 0 &3 \\
+ 0 & 0 & 0 &2 \\
+ 0 & 4&2&0
+\end{pmatrix} \Rightarrow \begin{cases} a &= [1,3,2,4,2] \\ ia &= [0,2,3,5]  \\ ja &= [0,3,3,1,2]\end{cases}\]
+Iterating over the values and indices of the $k$th row then amounts to
+\begin{algorithmic}
+\FOR{i = ia(k):ia(k+1)}
+	\STATE out $\gets (k,ja(i))$   //the index pair
+	\STATE out $\gets a(i)$  //of this value
+\ENDFOR
+\end{algorithmic}
+
+Whatever implementation of sparse matrices you choose to use or implement, the usual basic operations need to be implemented:
+\begin{itemize}
+\item multiplication of matrices
+\item transposing matrices
+%\item iterate over the column indices and values of any row
+\item adding matrices
+\item inverting the elements of a matrix (replace the non zero values $a$ by $1/a$)
+\item multiplication of vectors
+\end{itemize}
+
+\subsection{Implementing a Mesh for DEC}
+\label{sec::2_handsOnSimplicialComplexes}
+Most application in this thesis focus 2-complexes i.e. classical triangle meshes, you might not need any more general implementation so we treat general $k$ complexes separately in the next section. 
+
+For DEC we need the complete geometric information of meshes; we explicitly keep lists of vertices, edges and faces, the full information about their incidence and border relations, as well as their assigned orientations. Edges are stored once, with an arbitrary chosen orientation.
+
+For 2d meshes a winged edge structure is a convenient choice of representation. You could also choose to represent the mesh just by keeping lists of vertices, edges and faces plus the incidence matrices, as mentioned in the next section. \note{There might be better choices... what? References?}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=8cm]{imgs/2_1_wingedEdge.eps}%	
+\end{center}
+\caption{The information stored on a winged structure edge}%
+\label{figs::2_1_wingedEdge}%
+\end{figure}
+
+In a winged edge structure you have the following three objects:
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width = 11cm]{imgs/2_2_wingedEdge2.eps}
+\caption{Impementation of a winged edge structure}
+\end{center}
+\end{figure}
+
+With this information present it is easy to do things like iterating over the incident edges or faces of a vertex.
+
+%\subsection{Implementing the Border Operator}
+%\note{mention this here or include it in the border section?}
+
+
+%\newpage
+\subsection{Implementing k-Simplicial Complexes for DEC}
+
+\begin{figure}%
+	\begin{center}
+	\includegraphics[width=10cm]{imgs/2_1_Complex.eps}%	
+	\end{center}
+	\caption{Implementation of a $k$ Complex; use tuple of ordered indices to characterize a simplex}%
+	\label{fig::2_1_Complex}%
+\end{figure}
+
+Chances are you do not need simplicial complexes of higher dimensions other than tetrahedral meshes embedded in $\mathbb R^3$. 
+	
+Never the less one straight forward and for DEC suitable way to implement arbitrary $k$ complexes is to store lists of simplices and represent the incidence information explicitly as sparse matrices. The incidence matrices (border operator matrices) play a central role in DEC and need to be set up anyway.
+
+An implementation of a $k$-complex then might look like this: the vertices (0-Simplices) are stored in a list and contain their positions. A single $j$-Simplex is then represented by a $j$ tuple of vertex indices. A $k$ complex consists then of $k+1$ simplex lists; for every dimension one list, as sketched in Figure \ref{fig::2_1_Complex}.
+
+Setting up the border operator matrices $\delta_j$ for complexes of arbitrary dimensions is not completely trivial, as to compute relative orientations of simplices you need to find the sign of some permutation. It gets much easier if the index tuples describing the simplices are sorted i.e.
+\[(i_1,i_2,...,i_j): i_1 < i_2 <...<i_j.\] 
+With sorted indices we can directly use the definition of the border operator from Section \ref{sec::2_borderOrientation} to compute the relative orientation of a $j-1$ simplex $(v_0,...,\widehat{v_l},..., v_{j-1})$ lying on the border of a $j$ simplex $(v_0,...,\widehat{v_l},..., v_{j})$:
+\[Orientation = (-1)^l\]
+
+But while it is easier to compute relative orientations if the indices of your simplices are sorted, you loose the ability to store arbitrary simplex orientations using the ordering of vertices. For all but the $k$ simplices this does not matter, even for oriented discrete $k$-manifolds, as there is nor 'right' or 'wrong' orientation and all that matters is that you consistently use the same orientation all the time. But for the $k$ simplices in an oriented $k$ manifold you really need to be able to chose the orientation, so you have to keep track of the orientation independently in an additional variable (as is done in Figure \ref{fig::2_1_Complex}).
+
+So when you resort the tuple of a $k$-simplex in a $k$-manifold you need to determine if an index tuple describes the same orientation as the sorted index tuple. This can be done using a so called inversion table. Lets say the tuple $(1,2...,n)$ is scramble to the tuple $(i_1,...,i_n)$. An inversion is then an index pair $(i_l,i_k)$, where $l<k$ but $i_l >i_k$, i.e. the order of $i_l,i_k$ was inverted. The number of inversions of a single index is then the number of indices left to it that are greater than the index. The relative orientation of a simplex represented by a scrambled tuple to a simplex with the sorted tuple is $(-1)^{\#inversions}$ where $\#inversions$ is the total number of inversions.
+
+Example: 
+\begin{eqnarray*}
+3,2,5,4,1 \\
+0,1,0,1,4
+\end{eqnarray*}
+The first line represents the permuted indices the lower the number of inversions of every index. The total number of inversion is 6 and the relative orientation of
+$\{3,2,5,4,1\}$ to $\{1,2,3,4,5\}$ is $(-1)^6 = 1$ which would meant that both tuples represent simplices with the same orientation.
+
+Setting up a $k$ complex  and all the border matrices $\delta_j$ might then look like this: start with the $k$ simplices; resort their indices if needed and adapt the stored orientation.
+Then enumerate all occuring $k-1$ simplices (sort their indices, you do not need to adapt the orientation) and set up the border matrix $\delta_k$. Proceed with enumerating all $k-2$ simplices occuring as borders of $k-1$ simplices and the set up of the $\delta_{k-1}$ matrix and so on.
+
+		
+\subsection{Implementing Basic Mesh Operations}
+\note{IMAGE of the bad teapot that has dangling triangles, an unexpected border and multiple components}
+To get later applications working you will need most of the following tools. For the applications presented in this thesis they do not need to perform extremely fast, as these operations will occur only once when setting up an application.
+
+\subsubsection{Setup a DEC mesh from a Wireframe Mesh Representation}
+The usual representation of meshes as e.g. with .obj files is by just giving a list of vertex positions and a list of faces; you need to set up the winged edge structure or $k$ complex from these.
+	
+\subsubsection{Set Up Border Matrices}
+If you chose a winged edge structure to implement 2-complexes, you additionally need to set up the border matrices $\delta_2$ and $\delta_1$. Store them directly with your mesh. These matrices play a central role in DEC; you could say that this whole thesis is about these matrices, so test them well. If you have an oriented discrete manifold, you can also use the relation $\delta_{k}\cdot \delta_{k+1} = 0$ (the border of the border of an oriented manifold is empty) to check their correctness. Implementing the other tools in this section will test these matrices further.
+
+\subsubsection{Check if a DEC Mesh is a Discrete Manifold}
+\begin{figure}[tb]
+	\begin{center}
+	\includegraphics[width=12cm]{imgs/2_3_danglingTeapot.eps}
+	\end{center}
+	\caption{A teapot mesh that on the first look seems to be a discrete borderless 2 manifold but turns out to be a mesh with border and dangling triangles, which makes it a non-manifold mesh and therefore not suited for some DEC applications}
+\end{figure}
+
+To avoid singular matrices and to eliminate the possibility that bugs occur due to the ill-formedness of a $k$-complex or mesh (as in Fig. \ref{fig::2_2_dangling} and \ref{fig::2_2_borderUnoriented}) it is handy to have such a test method. I.e. you should test for orientation errors and the connectedness to avoid dangling simplices.
+The orientation needs to be checked for $k$ simplices only, which would be for example the faces for a 2D-mesh. 
+
+That a $k$-complex is oriented can be checked by looking at $\delta_k$. Any column has to have either exactly one entry or two entries that sum up to zero. This checks exactly the condition we gave in \ref{sec::2_orientedDiscreteMF}: Any 1 simplex is either on the border (therefore being part of exactly one $k$ simplex) or between 2 $k$-simplices, having once positive and once negative orientation.
+
+If you are sticking with the winged edge mesh, finding dangling faces is fairly simple; at every vertex iterate over all edges and make sure that exactly 2 or no edges have only one neighbour face.
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=7cm]{imgs/2_3_danglingTriangles.eps}
+	\vspace{0.5cm}
+	
+	\includegraphics[width=10cm]{imgs/2_3_DanglingTetrahedra.eps}
+	\end{center}
+	\caption{Top: On the left all 2-simplices (triangles) can be reached indirectly by hopping from triangle to triangle where every hopping pair shares a 1-simpex (considering only triangles that neighbour the marked vertex). On the right the manifold property is violated. Bottom: two 3-simplices that share a common face (no dangling), that share an edge (dangling) and that share a vertex (dangling)}
+	\label{fig::2_3_dangling}
+\end{figure}
+Detecting dangling $k$-simplices in a $k$-complex needs slightly more work. Formally dangling was prevented by asking that at any vertex, the incident $k$-simplices form either a ball or a half ball. This is equivalent to asking that any two $k$ simplices neighbouring some vertex $v_0$ are connected via $k$ simplices neighbouring $v_0$ that share $k-1$ faces, as depicted in Figure \ref{fig::2_3_dangling}.  So to check wellformedness at a vertex, take all neighbour $k$-simplices, choose one and put it on a stack. Pop the stack and push all $k$-simplices that share a $k-1$ face with the popped simplex. Keep on popping and pushing like this. If any $k$ simplex remains you have a dangling situation. \note{(Clear enough?)}
+	
+	
+Note that these non-manifold detection algorithms will not detect non-manifoldness due to self intersections (like the most right situation in Fig. \ref{fig::2_2_dangling}), as such problems do not show in the incidence matrices. But for most applications it is enough that we have well-formed incidence matrices and do not care if such self intersections occur.
+	
+\subsubsection{Find Borders}
+Given an oriented discrete $k$-manifold: find the $(k-1)$-complex that represents its border. Finding the border can be easily done by applying the border Operator $\delta_k$ to the $(1,1,1,1,1...)$ vector. The resulting vector then exactly represents the border manifold. This also tests the correctness of your border matrix and the correctness of the orientation of your discrete $k$-manifold.
+	
+\subsubsection{Get Connected Components of a set of K-Simplices}
+It also comes in handy to be able to identify the different connected components of a mesh, as the different components a mesh often need to be treated independently from each other as separate objects.
+	
+Given a list of $k$-simplices which forms one or more discrete manifolds you should identify the different connected components. You can also apply this
+to the border of a $k$ manifold with multiple borders to get the various border components as in Figure \ref{fig::2_3_bunnyBorder}.
+	
+\begin{figure}[t]
+	\begin{center}
+	\includegraphics[width=7cm]{imgs/2_3_bunny_borders.eps}
+	\end{center}
+	\caption{A mesh with multiple border components.}
+	\label{fig::2_3_bunnyBorder}
+\end{figure}
+

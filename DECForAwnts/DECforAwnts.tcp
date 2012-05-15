@@ -3,7 +3,7 @@ Type=TeXnicCenterProjectInformation
 Version=4
 
 [ProjectInfo]
-MainFile=Summary.tex
+MainFile=DECforAwnts.tex
 UseBibTeX=0
 UseMakeIndex=0
 ActiveProfile=LaTeX => DVI

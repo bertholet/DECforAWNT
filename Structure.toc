@@ -1,0 +1,47 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {subsection}{\numberline {1.1}General Setting}{2}
+\contentsline {subsection}{\numberline {1.2}A Glimpse of DEC}{2}
+\contentsline {subsection}{\numberline {1.3}A Tour to this Thesis}{2}
+\contentsline {subsection}{\numberline {1.4}What this thesis is and what it is not}{3}
+\contentsline {section}{\numberline {2}The Basic Objects: Meshes, Manifolds and Sparse Matrices}{4}
+\contentsline {subsection}{\numberline {2.1}Manifolds}{4}
+\contentsline {subsection}{\numberline {2.2}General Meshes}{4}
+\contentsline {subsection}{\numberline {2.3}Implementation: Mesh and basic operations}{4}
+\contentsline {section}{\numberline {3}Two Dimensional Surfaces}{5}
+\contentsline {subsection}{\numberline {3.1}Differential Geometry}{5}
+\contentsline {subsection}{\numberline {3.2}Discrete Curvature, A Discrete Laplacian}{5}
+\contentsline {subsection}{\numberline {3.3}Implementation: discrete $\Delta $ and curvatures}{5}
+\contentsline {subsection}{\numberline {3.4}Implementation: surface smoothing}{5}
+\contentsline {subsection}{\numberline {3.5}Implementation: remeshing (?)}{5}
+\contentsline {section}{\numberline {4}Differential Forms}{6}
+\contentsline {subsection}{\numberline {4.1}Motivation: The perfect thing to integrate}{6}
+\contentsline {subsection}{\numberline {4.2}Forms and Differential Forms}{6}
+\contentsline {subsection}{\numberline {4.3}What Forms are in $\mathbb {R}^3$}{6}
+\contentsline {subsection}{\numberline {4.4}Integrating Forms}{6}
+\contentsline {subsection}{\numberline {4.5}Discrete Forms}{6}
+\contentsline {subsubsection}{\numberline {4.5.1}Sampling Forms}{6}
+\contentsline {section}{\numberline {5}External Calculus \& Discrete External Calculus}{7}
+\contentsline {subsection}{\numberline {5.1}Gradient, Curl, Divergence}{7}
+\contentsline {subsection}{\numberline {5.2}Differential Operator}{7}
+\contentsline {subsection}{\numberline {5.3}Stokes Theorem}{7}
+\contentsline {subsection}{\numberline {5.4}Discrete Differential Operator}{7}
+\contentsline {subsection}{\numberline {5.5}Duality: We want more}{7}
+\contentsline {subsection}{\numberline {5.6}Dual Mesh and Star Operator}{7}
+\contentsline {subsection}{\numberline {5.7}The 0 Form Laplacian from the beginning}{7}
+\contentsline {section}{\numberline {6}Application: Mesh Parametrization}{8}
+\contentsline {subsection}{\numberline {6.1}Embeddings}{8}
+\contentsline {subsection}{\numberline {6.2}Conformal Maps}{8}
+\contentsline {subsection}{\numberline {6.3}Implementaion: Conformal Embedding}{8}
+\contentsline {subsection}{\numberline {6.4}Dimension of Harmonic Space?}{8}
+\contentsline {section}{\numberline {7}Application: Vectorfield Design and the general Laplacian}{9}
+\contentsline {subsection}{\numberline {7.1}Point Carre Lemma}{9}
+\contentsline {subsection}{\numberline {7.2}General Laplacian}{9}
+\contentsline {subsection}{\numberline {7.3}Hodge Decomposition}{9}
+\contentsline {subsection}{\numberline {7.4}Application: Vector Field Design}{9}
+\contentsline {subsection}{\numberline {7.5}Border Constraints}{9}
+\contentsline {section}{\numberline {8}A Fluid Simulation with DEC}{10}
+\contentsline {subsection}{\numberline {8.1}The Euler Equations}{10}
+\contentsline {subsection}{\numberline {8.2}The Algorithm}{10}
+\contentsline {subsection}{\numberline {8.3}Interpolation and Pathtracing}{10}
+\contentsline {subsection}{\numberline {8.4}Border Constraints}{10}
+\contentsline {subsection}{\numberline {8.5}Influence of Mesh choice and parameter choice}{10}

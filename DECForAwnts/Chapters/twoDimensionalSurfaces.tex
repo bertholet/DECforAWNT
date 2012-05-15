@@ -1,0 +1,49 @@
+\newpage
+\chapter{Two Dimensional Surfaces}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width = 7cm]{imgs/3_1_curvaturezebra.EPS}
+\end{center}
+\caption{A zebra mesh that is coloured according to its local mean curvature}
+\end{figure}
+
+In this chapter we focus completely on two dimensional surfaces. The theory here is not vital to understand DEC and if you are in a hurry you may skip this chapter. Nevertheless as surfaces and triangle meshes play a vital role in many applications it is worth to get acquainted with ways to describe and compute local mesh properties, as developed here.
+
+In this chapter we start with a short differential geometry primer where we introduce basics like curvatures and a 'metric', a scalar product consistently defined on all tangential spaces. In the second section we will then thrive to get a notion of curvatures on meshes and thereby have a first encounter with a Laplace operator defined on a surface. The third section again is the practical section where we give some implementation details for curvatures and present surface smoothing as an application.
+
+\begin{figure}[b]
+\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+\hline
+Smooth Theory& Discrete Theory& Implementation (Notes)\\
+\hline
+Differential Geometry & Discrete Diff. Geo. & Implementation\\
+-Curves & - A geometric go at the DEC $\Delta$ & -Implement mean curv by splitting matrices\\
+-Curvatures & - Mean curv, principle curv etc.& -Application: Surface Smoothing\\
+-Euler Characteristic? & & -Application: Remeshing? \\			
+\hline
+\end{longtable}
+%\caption{The topics treated in this chapter}
+\end{figure}
+
+\section{Differential Geometry}
+Differential geometry studies local and global properties of 2 dimensional surfaces embedded in $\mathbb R^3$. This section represents a dirty introduction to the basic notions of differential geometry, such as curvature. Many (not unimportant) details are omitted and technical problems ignored, be aware of this when reading. There are many good books introducing differential geometry, for example .... if you are interested in a clean introduction.
+
+Differential geometry deals with surfaces, but in order to understand surfaces we need to understand curves. So we start with:
+
+\subsection{Curves in $\mathbb R^3$}
+Curves are 1-manifolds but somewhat special in that curves can be parametrized by one global map, while with higher dimensional manifolds you have to fall back on local maps.
+
+Here we focus on 2d surfaces, introducing curvature etc and maybe the euler characteristic.
+
+\section{Discrete Curvature, A Discrete Laplacian}
+Geometric approach via minimal surfaces to define mean curvature and at the same time also the DEC Laplacian
+		
+\section{Implementation: discrete $\Delta$ and curvatures}
+Split up the Laplacian into star and neighborhood matrices for implementation
+
+\section{Implementation: surface smoothing}
+Using the Laplacian flow to smoothe a surface
+
+\section{Implementation: remeshing (?)}
+You could use the laplacian also for remeshing to get very even meshes. These meshes would be nice enough for fluid simulations as described...

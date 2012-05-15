@@ -3,5 +3,7 @@
 *.pdf
 *.txt
 *.ps
+*.log
 imgs/*
 *.synctex*
+DECForAwnts/Imgs/*

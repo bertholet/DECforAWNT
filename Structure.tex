@@ -1,0 +1,299 @@
+\documentclass{scrartcl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+
+%\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usepackage{longtable}
+\usetikzlibrary{shapes,arrows}
+
+\title{Structure: Discrete Differential Calculus for Academics with No Time}
+\author{Peter Berhtolet}
+
+\newenvironment{definition}[1][]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries Definition (#1)}]\begin{itshape}}{\end{itshape}\end{trivlist}}
+
+\newenvironment{packed_enum}{
+\begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
+
+\begin{document}
+
+	\maketitle
+	\tableofcontents
+	
+\section{Introduction}
+	
+	\subsection{General Setting}
+		\begin{itemize}
+			\item From equations to Meshes.
+		\end{itemize}
+	\subsection{A Glimpse of DEC}
+		\begin{itemize}
+			\item Derivative as a simple example 
+			\item vs FEM 
+			\item show a picture of the deRahm complex saying that this diagram helps you translate Differential Operators into Matrices.
+		\end{itemize}
+
+	\subsection{A Tour to this Thesis}
+		\begin{itemize}
+		\item	Structure of this Thesis: Goal: acquire founded knowledge about DEC. The Thesis as three pillars: smooth Theory, discrete theory and application/implementation of example problems. The Smooth Theory we try to discretize is introduced alongside the corresponding discrete version of the Theory, such that you understand  the reasons and assumptions behind it. With an emphasis to get an intuitive understanding of the smooth theory rather than giving a rigorous mathematical introduction. Every chapter gets a table describing what is introduced and where it belongs to.
+		
+		\item Short trailer like chapter by chapter overview, one image per chapter.
+		\end{itemize}
+		
+	\subsection{What this thesis is and what it is not}
+		Disclaimer, no error analysis, no FEM.
+	
+\newpage	
+\section{The Basic Objects: Meshes, Manifolds and Sparse Matrices}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Smooth Surfaces & Meshes & General Meshes\\
+			-Maps and Coordinates & & \\
+			-Tangential Space & -Simplices/Simplicial Complexes & -Windedge /Incidence\\
+			-Orientations & -Orientations& -Simple geometric operations:\\
+			-Functions on Surfaces & -Border Operator & --Orientation\\
+			-Derivative on Surfaces & & --Iterating over Neighborhoods\\
+			& & --Checking well-formedness \\
+			& & --Finding Border Components\\
+			& & Notes on Sparse Matrices\\
+		\hline
+	\end{tabular}
+	\subsection{Manifolds}
+		Give an introduction to general surfaces, emphasis on 2d in 3d.
+		Notes on orientations. Notes on bordered Manifolds?
+		Tangential Spaces and Differential structure.
+	\subsection{General Meshes}
+		Describe general meshes, i.e. simplicial complexes as well as orientations and border operations.
+	\subsection{Implementation: Mesh and basic operations}
+		This is the hands-On part...
+		Use sparse incidence matrices to implement wind edge Meshes. Notes on sparse Matrices. Implementation of simple geometric Operations: Find Border, 
+		connected components, check orientation, well-formedness in a connectivity kind of way. 
+\newpage	
+\section{Two Dimensional Surfaces}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Differential Geometry & Discrete Diff. Geo. & Implementation\\
+			-Curves & - A geometric go at the DEC $\Delta$ & -Implement mean curv by splitting matrices\\
+			-Curvatures & - Mean curv, principle curv etc.& -Application: Surface Smoothing\\
+			-Euler Characteristic? & & -Application: Remeshing? \\			
+		\hline
+	\end{longtable}
+	\subsection{Differential Geometry}
+		Here we focus on 2d surfaces, introducing curvature etc and maybe the euler characteristic.
+	\subsection{Discrete Curvature, A Discrete Laplacian}
+		Geometric approach via minimal surfaces to define mean curvature and at the same time also the DEC Laplacian
+		
+	\subsection{Implementation: discrete $\Delta$ and curvatures}
+		Split up the Laplacian into star and neighborhood matrices for implementation
+	\subsection{Implementation: surface smoothing}
+		Using the Laplacian flow to smoothe a surface
+	\subsection{Implementation: remeshing (?)}
+		You could use the laplacian also for remeshing to get very even meshes. These meshes would be nice enough for fluid simulations as described...
+\newpage
+\section{Differential Forms}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Differential Forms: \begin{itemize}
+			  \setlength{\itemsep}{1pt}
+			  \setlength{\parskip}{0pt}
+				\setlength{\parsep}{0pt}
+				\item[-]Diff Form motivation
+				\item[-]Forms (multilinear mappings) and the dimension of k Form space 
+				\item[-]Differential Forms 
+				\item[-]Riemann Integral of Diff Forms 
+				\item[-]Interpretation of Diff Forms in $\mathbb R^3$ 
+			\end{itemize}
+			&
+			\begin{packed_enum}
+				\item[-] Discrete Form
+				\item[-] Sampling Forms
+			\end{packed_enum}
+			 & - none
+			 \\		
+		\hline
+	\end{longtable}
+	\subsection{Motivation: The perfect thing to integrate}
+		Have a look at what you need when taking an integral: an either symmetric or antisymmetric form taking
+		vectors from the tangential space
+	\subsection{Forms and Differential Forms}
+		Concretize The space of multilinear antisymmetric functions: bases, dimension, wedge. Define Differentialforms
+	\subsection{What Forms are in $\mathbb{R}^3$}
+		Using a metric (or simply by saying we look only at embedded manifolds with induced metric) we can associate
+		Vector fields etc to Forms.
+	\subsection{Integrating Forms}
+		Now again lets have a look at integration of Diffforms.
+	\subsection{Discrete Forms}
+		What discrete forms are and where they live
+	\subsubsection{Sampling Forms}
+		How you sample vectorfields etc / what the sampled values mean. Here the duality of forms already emerges.
+	
+\newpage		
+\section{External Calculus \& Discrete External Calculus}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			External Calculus
+			\begin{packed_enum}
+				\item[-] Gradient, Curl and Divergence
+				\item[-] d
+				\item[-] Stokes Theorem
+				\item[-] Star and DeRham Complex
+			\end{packed_enum}
+			&
+			Discrete External Calculus
+			\begin{packed_enum}
+				\item[-] Discrete d
+				\item[-] Dual Mesh
+				\item[-] Show also intuitive match to curl etc
+			\end{packed_enum}
+			 & 
+			 A look at the Laplacian from chapter 2
+			 \begin{packed_enum}
+				\item[-] The DEC matrices (and tests)
+			\end{packed_enum}
+			 \\		
+		\hline
+	\end{longtable}
+	\subsection{Gradient, Curl, Divergence}
+		Geometric Definition of gradient, curl and divergence, maybe plus reduction to 'standard' $\nabla$ operator when using apporpriate coordinates.
+	\subsection{Differential Operator}
+		The operators above take a form of one type and return an other.
+		Introduce the $d$.
+	\subsection{Stokes Theorem}
+		To what depth this is proven is open, as this needs bordered manifolds and i don't know if I want to look at them
+		Maybe proof SKETCH, because this result is astonishing.
+		Known examples and special cases. Cases where it does not hold.
+	\subsection{Discrete Differential Operator}
+		Using stokes Theorem we introduce the discrete $d$ as the conjugate of the border operator
+	\subsection{Duality: We want more}
+		Not all operators can be built yet. Introduce Star, duality
+	\subsection{Dual Mesh and Star Operator}
+		Discrete Version of this.
+	\subsection{The 0 Form Laplacian from the beginning}
+		Now easy to write that guy down.
+\newpage		
+\section{Application: Mesh Parametrization}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Conformal Maps
+			\begin{packed_enum}
+				\item[-] Conformal Maps with Exterior Calculus
+			\end{packed_enum}
+			&
+			Existance of Embeddings, The thingy theorem
+			\begin{packed_enum}
+				\item[-] Dimension of result spaces depending on topology?
+			\end{packed_enum}
+			 & 
+			 Implementing it with DEC
+			 \begin{packed_enum}
+				\item[-] The equation
+				\item[-] Border Constraints
+				\item[-] Results
+			\end{packed_enum}
+			 \\		
+		\hline
+	\end{longtable}
+	In this chapter we are all about 0 Forms.
+	\subsection{Embeddings}
+	Taking coordinates as functions associated to the Surface and not the other way round. The thingy theorem for graphs
+	\subsection{Conformal Maps}
+	Conformal maps properties, EC formulation
+	\subsection{Implementaion: Conformal Embedding}
+		How its done. Pretty straight forward if you have the machinery. Different Border Constraints. Mention MeanValue Weights?
+	\subsection{Dimension of Harmonic Space?}
+		Looking at results and topology. Genus, Bettinumbers, DeRham Complex?	Would be nice..
+		Mention cutting algorithms like the quad mesh paper..
+\newpage	
+\section{Application: Vectorfield Design and the general Laplacian}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Important External Calculus Results:
+			\begin{packed_enum}
+				\item[-] Point Carre Lemma
+				\item[-] Laplace Beltrami Operator: $d$ and $\delta$ free.
+				\item[-] Hodge Decomposition
+				\item[-] Here on the dim of harmonic spaces?
+			\end{packed_enum}
+			&
+			The same as the smooth ones.
+			\begin{packed_enum}
+				\item[-] Properties still hold exactly.
+				\item[-] Laplacian in Least square sence
+				\item[-] Border Constraints
+				\item[-] One Form interpolation
+			\end{packed_enum}
+			 & 
+			 Implementing it with DEC
+			 \begin{packed_enum}
+				\item[-] Vector Field Design
+				\item[-] =Least square harmonic 1 Form solving
+			\end{packed_enum}
+			 \\		
+		\hline
+	\end{longtable}
+	\subsection{Point Carre Lemma}
+	When is a form d or delta of another form?
+	\subsection{General Laplacian}
+	The Laplacian is as well d as delta of another form...
+	\subsection{Hodge Decomposition}
+	Splitting Forms
+	\subsection{Application: Vector Field Design}
+	Using all this for Vector Field Design
+	\subsection{Border Constraints}
+	How borders can be treated but it affects everything.
+\newpage
+\section{A Fluid Simulation with DEC}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			\begin{packed_enum}
+				\item[-] Introduction to the fluid equations and reformulation in DEC.
+			\end{packed_enum}
+			&
+			\begin{packed_enum}
+				\item[-] Second approach to Borderconstraints.
+				\item[-] Reformulation / solving for rot part etc.
+			\end{packed_enum}
+			 & 
+			 Implementing Fluid Sim with DEC
+			 \begin{packed_enum}
+				\item[-] Solving for Exact harmonic 1 Form
+				\item[-] continuous Vfield interpolation
+				\item[-] pathtracing
+				\item[-] Results
+			\end{packed_enum}
+			 \\		
+		\hline
+	\end{longtable}
+	All theory but the Fluid Simulation dependent theory is introduced, so this is a demonstration of DEC in use.
+	\subsection{The Euler Equations}
+	Short introduction to the meaning of the equation
+	\subsection{The Algorithm}
+	Approach and general Algorithm
+	\subsection{Interpolation and Pathtracing}
+	As it says. Issues on curved meshes.
+	\subsection{Border Constraints}
+	Need for exact Harmonic solution $=>$ Equation.
+	\subsection{Influence of Mesh choice and parameter choice}
+	Results and problems.
+\end{document}
