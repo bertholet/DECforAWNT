@@ -29,39 +29,48 @@
 \contentsline {chapter}{\numberline {3}Two Dimensional Surfaces}{27}
 \contentsline {section}{\numberline {3.1}Differential Geometry}{28}
 \contentsline {subsection}{\numberline {3.1.1}Curves in $\mathbb R^3$}{28}
-\contentsline {section}{\numberline {3.2}Discrete Curvature, A Discrete Laplacian}{28}
-\contentsline {section}{\numberline {3.3}Implementation: discrete $\Delta $ and curvatures}{28}
-\contentsline {section}{\numberline {3.4}Implementation: surface smoothing}{28}
-\contentsline {section}{\numberline {3.5}Implementation: remeshing (?)}{28}
-\contentsline {chapter}{\numberline {4}Differential Forms}{29}
-\contentsline {subsection}{\numberline {4.0.1}Motivation: The perfect thing to integrate}{29}
-\contentsline {subsection}{\numberline {4.0.2}Forms and Differential Forms}{29}
-\contentsline {subsection}{\numberline {4.0.3}What Forms are in $\mathbb {R}^3$}{29}
-\contentsline {subsection}{\numberline {4.0.4}Integrating Forms}{29}
-\contentsline {subsection}{\numberline {4.0.5}Discrete Forms}{29}
-\contentsline {subsubsection}{Sampling Forms}{30}
-\contentsline {section}{\numberline {4.1}External Calculus \& Discrete External Calculus}{31}
-\contentsline {subsection}{\numberline {4.1.1}Gradient, Curl, Divergence}{31}
-\contentsline {subsection}{\numberline {4.1.2}Differential Operator}{31}
-\contentsline {subsection}{\numberline {4.1.3}Stokes Theorem}{31}
-\contentsline {subsection}{\numberline {4.1.4}Discrete Differential Operator}{31}
-\contentsline {subsection}{\numberline {4.1.5}Duality: We want more}{31}
-\contentsline {subsection}{\numberline {4.1.6}Dual Mesh and Star Operator}{31}
-\contentsline {subsection}{\numberline {4.1.7}The 0 Form Laplacian from the beginning}{31}
-\contentsline {section}{\numberline {4.2}Application: Mesh Parametrization}{32}
-\contentsline {subsection}{\numberline {4.2.1}Embeddings}{32}
-\contentsline {subsection}{\numberline {4.2.2}Conformal Maps}{32}
-\contentsline {subsection}{\numberline {4.2.3}Implementaion: Conformal Embedding}{32}
-\contentsline {subsection}{\numberline {4.2.4}Dimension of Harmonic Space?}{32}
-\contentsline {section}{\numberline {4.3}Application: Vectorfield Design and the general Laplacian}{33}
-\contentsline {subsection}{\numberline {4.3.1}Point Carre Lemma}{33}
-\contentsline {subsection}{\numberline {4.3.2}General Laplacian}{33}
-\contentsline {subsection}{\numberline {4.3.3}Hodge Decomposition}{33}
-\contentsline {subsection}{\numberline {4.3.4}Application: Vector Field Design}{33}
-\contentsline {subsection}{\numberline {4.3.5}Border Constraints}{33}
-\contentsline {section}{\numberline {4.4}A Fluid Simulation with DEC}{34}
-\contentsline {subsection}{\numberline {4.4.1}The Euler Equations}{34}
-\contentsline {subsection}{\numberline {4.4.2}The Algorithm}{34}
-\contentsline {subsection}{\numberline {4.4.3}Interpolation and Pathtracing}{34}
-\contentsline {subsection}{\numberline {4.4.4}Border Constraints}{34}
-\contentsline {subsection}{\numberline {4.4.5}Influence of Mesh choice and parameter choice}{34}
+\contentsline {subsubsection}{Parametrization by Arc Length}{28}
+\contentsline {subsubsection}{Curvature}{28}
+\contentsline {subsubsection}{Torsion}{29}
+\contentsline {subsection}{\numberline {3.1.2}Curvatures on Surfaces}{29}
+\contentsline {subsubsection}{Normals and Orientation}{30}
+\contentsline {subsubsection}{Derivatives on surfaces}{30}
+\contentsline {subsubsection}{The derivative of the Normal-Field}{31}
+\contentsline {subsubsection}{Curvature on Surfaces}{33}
+\contentsline {subsubsection}{A metric on a surface}{35}
+\contentsline {section}{\numberline {3.2}Discrete Curvature, A Discrete Laplacian}{35}
+\contentsline {section}{\numberline {3.3}Implementation: discrete $\Delta $ and curvatures}{35}
+\contentsline {section}{\numberline {3.4}Implementation: surface smoothing}{35}
+\contentsline {section}{\numberline {3.5}Implementation: remeshing (?)}{35}
+\contentsline {chapter}{\numberline {4}Differential Forms}{37}
+\contentsline {subsection}{\numberline {4.0.1}Motivation: The perfect thing to integrate}{37}
+\contentsline {subsection}{\numberline {4.0.2}Forms and Differential Forms}{37}
+\contentsline {subsection}{\numberline {4.0.3}What Forms are in $\mathbb {R}^3$}{37}
+\contentsline {subsection}{\numberline {4.0.4}Integrating Forms}{37}
+\contentsline {subsection}{\numberline {4.0.5}Discrete Forms}{37}
+\contentsline {subsubsection}{Sampling Forms}{38}
+\contentsline {section}{\numberline {4.1}External Calculus \& Discrete External Calculus}{39}
+\contentsline {subsection}{\numberline {4.1.1}Gradient, Curl, Divergence}{39}
+\contentsline {subsection}{\numberline {4.1.2}Differential Operator}{39}
+\contentsline {subsection}{\numberline {4.1.3}Stokes Theorem}{39}
+\contentsline {subsection}{\numberline {4.1.4}Discrete Differential Operator}{39}
+\contentsline {subsection}{\numberline {4.1.5}Duality: We want more}{39}
+\contentsline {subsection}{\numberline {4.1.6}Dual Mesh and Star Operator}{39}
+\contentsline {subsection}{\numberline {4.1.7}The 0 Form Laplacian from the beginning}{39}
+\contentsline {section}{\numberline {4.2}Application: Mesh Parametrization}{40}
+\contentsline {subsection}{\numberline {4.2.1}Embeddings}{40}
+\contentsline {subsection}{\numberline {4.2.2}Conformal Maps}{40}
+\contentsline {subsection}{\numberline {4.2.3}Implementaion: Conformal Embedding}{40}
+\contentsline {subsection}{\numberline {4.2.4}Dimension of Harmonic Space?}{40}
+\contentsline {section}{\numberline {4.3}Application: Vectorfield Design and the general Laplacian}{41}
+\contentsline {subsection}{\numberline {4.3.1}Point Carre Lemma}{41}
+\contentsline {subsection}{\numberline {4.3.2}General Laplacian}{41}
+\contentsline {subsection}{\numberline {4.3.3}Hodge Decomposition}{41}
+\contentsline {subsection}{\numberline {4.3.4}Application: Vector Field Design}{41}
+\contentsline {subsection}{\numberline {4.3.5}Border Constraints}{41}
+\contentsline {section}{\numberline {4.4}A Fluid Simulation with DEC}{42}
+\contentsline {subsection}{\numberline {4.4.1}The Euler Equations}{42}
+\contentsline {subsection}{\numberline {4.4.2}The Algorithm}{42}
+\contentsline {subsection}{\numberline {4.4.3}Interpolation and Pathtracing}{42}
+\contentsline {subsection}{\numberline {4.4.4}Border Constraints}{42}
+\contentsline {subsection}{\numberline {4.4.5}Influence of Mesh choice and parameter choice}{42}
