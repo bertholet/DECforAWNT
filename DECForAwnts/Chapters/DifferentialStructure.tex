@@ -1,0 +1,69 @@
+\section{Differential Structure and Differential Calculus on Manifolds}
+
+What we have seen up to here actually amounts to defining manifolds and providing them a differential structure. This means that manifolds become more than geometric objects that are measured and described. They become spaces on which you can define functions for which derivatives and other operations can be calculated directly ON the manifold. While all operations are defined by mapping everything back to $\mathbb R^n$, this differential structure exists on its own right.
+
+The differential structure is 'glued' on a manifold using maps, as seen in the subsection Derivatives on Surfaces. Differentiability is then defined in the following way:
+
+\begin{definition}[Differentiability] If $M^k$ and $N^l$ are two manifolds and $f: M^k \rightarrow N^l \subset \mathbb R^n$ is a continuous mapping we call $f$ differentiable if for every map $h:\mathbb R^k \rightarrow M^k$ the map $f \circ h :  \mathbb R^k \rightarrow \mathbb R^n$ is differentiable.
+\end{definition}
+
+As seen the differential of a function at some point is a linear mapping between two tangential spaces.
+\[D_pf: T_p M^k \rightarrow T_{f(p)} N^l\]
+A slightly more abstract way of viewing this is looking at $T M^k$ : the space of all tangential spaces, called the tangential bundle. Given a map $h:\mathbb R^k \rightarrow M^k$ we can get a local map of the tangential bundle 
+\[h_* : \mathbb R^k \times \mathbb R^k \rightarrow T M^k\]
+\[h_*(x,v) = (h(x), Dh\, v)\]
+suggesting that the tangential bundle actually is $2k$-manifold. The differential of a function $f: M^k \rightarrow N^l$ then is a mapping between the two tangential bundles $T M^k$ and $T N^l$ which are a $2k$ and a $2l$ manifold.
+
+For our first steps of differential calculus on manifolds we also need vector fields (which we will later generalize to Forms).  A vectorfield $\mathcal V$ on a manifold $M^k$ is simply the assignment of a vector from the tangential space to every point of $M^k$.
+\begin{definition}[Vector Field]
+A vector field is an assignment $\mathcal V: M^k \rightarrow T M^k$ with $\mathcal V(x) \in T_x M^k$.
+\end{definition}
+Using that the tangential bundle actually is a manifold with a differential structure we can ask from a vector field that it is smooth or differentiable.
+
+We can then define a vectorfield in a coordinate/ map dependent way. We do this with a simple example taken from [Thomas Friedrich, Global Analysis].
+
+\subsubsection{An example Vector Field} Taking $\mathbb R^2$ as a manifold parametrized by the identity map $\phi(u,v) = ID$, i.e. para-metrized with euclidean coordinates. The tangential spaces get the bases $\frac{\partial \phi}{\partial u}$ , $\frac{\partial \phi}{\partial v}$ which form simply the standard basis $(1,0), (0,1)$ at any point. We can use the (for now a bit alianating) notation $  \frac{\partial}{\partial u}$, $\frac{\partial}{\partial v}$ for the two bases vectors, dropping the $\phi$. We can the define a vector field
+\[\mathcal V(u,v) = u \frac{\partial }{\partial v} - v \frac{\partial }{\partial u}.\]
+Note that $\frac{\partial }{\partial v}$ really only is a strange notation for $\frac{\partial \phi}{\partial v} = (0,1)$ and the same for $\frac{\partial }{\partial u}$. We can now try to express the vector field $\mathcal V$ in a different map; in polar coordinates:
+\[h(r,\omega) = (r \cos (\omega), r \sin (\omega))\]
+The base of an arbitrary tangential space induced by this map is then
+\[\frac{\partial}{\partial r} = (\cos(\omega), \sin(\omega)) \]
+\[\frac{\partial}{\partial \omega} = (-r \sin(\omega), r\cos(\omega))\]
+again using the fancy notation $\frac{\partial}{\partial r}$ to denote a vector. Expressed in euclidean coordinates given by $\phi$ these two vectors are
+\[\frac{\partial}{\partial r} = \frac{1}{\abs{(u,v)}} ( u \frac{\partial }{\partial u} + v \frac{\partial }{\partial v} ) \]
+\[\frac{\partial}{\partial \omega} = u \frac{\partial }{\partial v} - v \frac{\partial }{\partial u}\]
+such that $\mathcal V$ expressed in polar coordinates is simply
+\[\mathcal V = \frac{\partial}{\partial \omega}\]
+
+\note{Image}
+
+\subsection{Derivatives, Vectorfields and Differential Operators}
+On manifolds you can calculate derivatives relative to a vector field. This is simply the directional derivative relative to the vector field's direction. Given a function $f$ we denote the derivative with respect to the vector field $\mathcal V$ as $\mathcal V (f)$. Geometrically we already did that, if $\alpha$ is a curve with $\alpha(0) = p$ and $\alpha'(0)= v = \mathcal V (p)$, then
+\[\mathcal V (f) (p) = \frac{\partial }{\partial t} f \circ \alpha(t)\]
+Now if $\mathcal V(u)$ is written in some map $\phi$ as $\sum_i v_i(u) \frac{\partial}{\partial u_i}$, again using the $\frac{\partial}{\partial u_i}$ as fancy notations of the induced base vectors the derivative with respect to the vector field becomes
+\[\mathcal V (f) = \sum_i v_i(u)\frac{\partial(f \circ \phi)}{\partial u_i}\]
+which motivates the 'strange' vector notation. \note{further reasoning needed?}
+
+\subsection{Riemannian Metric}
+From standard calculus we are used to that the gradient of a function $f:\mathbb R^k \rightarrow \mathbb R$ is a vector field with vectors pointing in the direction where $f$ has the largest increase. But in fact the gradient of a function $f$ is in fact only a linear mapping that approximates $f$ via $f(x + h) \approx f(x) + grad_x(f) (h)$ and the vector is merely a representation of the gradient. What actually happens here is that we represent the gradient using a vector AND a scalar product:
+\[grad_x(f) (h) = \langle grad, h\rangle\]
+
+To do the same on manifolds $M^k$ we need a scalar product on all tangential spaces. As we consider manifolds as objected embedded in a higher dimensional space $M^k \subset \mathbb R^n$ all tangential spaces are subspaces of the embedding space such that they inherit a scalar product. So if $\phi: \mathbb R^k \rightarrow M^k \subset \mathbb R^n$ is a local map inducing the local bases $\frac{\partial \phi}{\partial u_i}$, $i= 1...k$ to the tangential spaces and we have two vectors $v, w$ in some tangential space $T_p M^k$ expressed in the local bases as
+\[v= v_1 \frac{\partial \phi}{\partial u_1} +...+ v_k\frac{\partial \phi}{\partial u_k} \]
+\[w = w_1 \frac{\partial \phi}{\partial u_1} +...+ w_k\frac{\partial \phi}{\partial u_k}\]
+the scalar product induced by the embedding space is
+\[\langle v,w \rangle = \sum_{i,j = 1}^k v_iw_j\langle \frac{\partial \phi}{\partial u_i},\frac{\partial \phi}{\partial u_j}\rangle.\]
+So if $v = (v_1,...,v_k)$ and $w = (w_1,...,w_k)$ in the map induced base, the induced scalar product is represented by the matrix
+\[G= \begin{pmatrix}\langle \frac{\partial \phi}{\partial u_1},\frac{\partial \phi}{\partial u_1}\rangle &\cdots& \langle \frac{\partial \phi}{\partial u_1},\frac{\partial \phi}{\partial u_k}\rangle \\
+\vdots &&\vdots\\
+\langle \frac{\partial \phi}{\partial u_k},\frac{\partial \phi}{\partial u_1}\rangle &\cdots& \langle \frac{\partial \phi}{\partial u_k},\frac{\partial \phi}{\partial u_k}\rangle \end{pmatrix} = (D\phi)^T D\phi\]
+This set of scalar products that is consistently defined for all tangential spaces $T_p M^k$ is the so called Riemannian metric.
+
+Equipped with the Riemannian metric we can define a gradient and a gradient vector field for functions as well as divergience and a laplacian. \note{We will generalize these later but it is worth seeing them once for themselves before the generalization. TODO}
+
+Note the Riemannian metric can also be used to measure volumes and angles. Angles are quite obvious; if we have two curves $\alpha$ and $\beta$ intersecting at some point $p$ with tangents $v$ and $w$, the angle between the curves is $\langle v,w\rangle$. The volume comes from the fact that $det(A A^T)$ equals the volume spanned by $A$'s row vectors squared. The determinant $det(G)$ then is the volume spanned by the column vectors of $D\phi$ squared and the $k$-dimensional volume of some subset $\phi(U) \subset M^k$ covered by a map $\phi$ is
+\[vol(\phi(U))= \int_U \sqrt{det(G)}\;du_1,...,du_k\]
+This measures 'absolute' orientation independent volume.
+
+
+
