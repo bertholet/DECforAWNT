@@ -1,4 +1,4 @@
-\documentclass[]{scrbook}
+\documentclass[draft]{scrbook}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -12,7 +12,7 @@
 \usetikzlibrary{shapes,arrows}
 
 \title{Discrete Differential Calculus for Academics with No Time}
-\author{Peter Berhtolet}
+\author{Peter Bertholet}
 
 \newenvironment{definition}[1][]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries Definition (#1)}]\begin{itshape}}{\end{itshape}\end{trivlist}}
@@ -31,7 +31,7 @@
 }{\end{itemize}}
 
 
-\newcommand{\note}[1]{\textcolor{red}{\textit{#1}}}
+\newcommand{\note}[1]{\textcolor{red}{\textit{(#1)}}}
 \newcommand{\abs}[1]{\left| #1 \right|}
 
 \begin{document}
@@ -47,6 +47,8 @@
 \input{Chapters/BasicObjects.tex}	
 
 \input{Chapters/TwoDimensionalSurfaces.tex}
+\input{Chapters/DifferentialStructure.tex}
+
 
 \newpage
 \chapter{Differential Forms}

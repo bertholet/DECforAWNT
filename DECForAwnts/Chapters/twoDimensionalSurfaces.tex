@@ -207,18 +207,126 @@ and is equivalent to saying that it can be represented by a symmetric matrix if 
 
 \note{ introduce  maybe the euler characteristic?}
 
-\section{Discrete Curvature, A Discrete Laplacian}
+\section{Discrete Curvature and a Discrete Laplacian}
 In this part we will translate the notion of curvature to 2D meshes. We will follow the approach given in \note{...} There are quite a few different approaches to define curvature on meshes, the problem is not trivial. \note{Could reference a few papers and approaches here.}
 
+\note{Assuming knowledge about differential structure and the laplacian defined on surfaces i will now motivate mean curvature flow. Rewrite/reformulate appropriately later}.
+
+The main idea in the approach described in \note{chagah} is to use a relation between mean curvature with the Laplacian operator on surfaces that exposes a geometric property of the mean curvature that can be  used directly to get a meaningful mean curvature definition on the mesh, alongside a motivation for a Laplacian operator.
+
+\subsection{Minimal Surfaces and the Mean Curvature Flow}
+The geometric key property of mean curvature and the Laplacian that is exploited is the so called area minimizing flow. Minimal surfaces are a quite complex field; a quite readable introduction is given in [Osserman survey of minimal surfaces 1986], a rather advanced introduction is given in [T. H. Colding and W. Mincozzi] and an excellent introduction is given in [Konrad Polthier Computational Aspects of Discrete Minimal Surfaces]. To explain what the mean curvature flow is and how it relates to the Laplacian we sketch two 'facts' and their implications.
+
+The first fact considers the relation between the manifold-Laplacian, the spacial coordinates of the manifold and the mean curvature normal. As we have seen, some manifolds can get a differential structure and we can define a divergence, a gradient and a Laplace operator on the manifold. These differential operators can be applied to any (smooth) function on the surface. One special smooth function are the coordinate functions: every point on the manifold $M^k \subset \mathbb R^n$ has a spacial position $(x_1,...,x_n)$ and the function that assigns every point $p\in M^k$ its $j$-th coordinate is a smooth function; the $j$th coordinate function. \note{img}
+
+The manifold Laplacian applied by element to the coordinates $x$ of the manifold then turns out to be exactly the curvature normal:
+\[\Delta_{M^2}x= -H\cdot n\]
+The second fact considers surface area as a function of the manifold's coordinates.
+\[area(M^2)\]
+Area is a functional and from a functional we can take a so called variational derivative. What follows is merely a sketch, for a clean reproduction of these arguments see e.g. [osserman or t.h.colding and W.minicozzi]. A variation is gotten by perturbing the function / object the functional is measuring. Here we take an arbitrary vector field of NON tangential vectors $V$ on the manifold and consider the area of the manifold after perturbing the coordinates by $tV$, where $t$ is a scalar. Denoting '$M^2 + tV$' by $M^2_t$ the area of the perturbed manifold is:
+
+\[area(M^2_t)\]
+
+This is a function in $t$ so we can calculate a derivative
+\[\frac{\partial}{\partial t}area(M^2_t).\]
+Setting $t=0$ then turns out to produce
+\[\frac{\partial}{\partial t}area(M^2_t)|_{t=0} = \int_{M^2}H\langle V, N \rangle\]
+where $N$ is the surface normal field of $M^2$ and $H$ is the mean curvature. This has various implications: if the mean curvature vanishes everywhere on a surface the surface is a so called minimal surface: perturbing it locally always increases the surface area. (Well, this is not completely true: you would have to look at the second variational derivative to make this sure, but this is of no importance for us)
+
+The second implication is that selecting $V = -H\cdot N$ leads to
+
+\[\frac{\partial}{\partial t}area(M^2_t)|_{t=0} = -\int_{M^2}H^2\langle N, N \rangle\]
+which is always negative, meaning that perturbing any manifold in the direction $-H\cdot N$ will minimize its area. The deformation of a surface according to the mean curvature normal is therefore also called 'area minimizing flow'.
+\note{Image}
+
+An other implication is that taking $V= N$ and and looking only at a small neighborhood $U \subset M$ of a point $p$ we get
+\[\frac{\partial}{\partial t}area(U_t)|_{t=0} = -\int_{U}H\]
+and therefore mean curvature at a point $p$ can also be obtained by
+\[ H=\lim_{area(U) \rightarrow 0}\frac{\frac{\partial}{\partial t}area(U_t)|_{t=0}}{area(U)}\]
+
+\subsection{Discrete Mean Curvature}
+
+Now we can define a discrete mean curvature on meshes at vertex positions. In the last section we identified a geometric property of mean curvature that retains a concise meaning for meshes: area minimization. In comparison: in the Differential Geometry section mean curvature arises as the average of the two principal curvatures, i.e. the maximal and minimal normal curvature that occurs at some point. On a mesh this definition is meaningless, as curves on the mesh going through a vertex will not be differentiable and have no well defined curvature at vertex positions.
+
+At any vertex $v$ consider the area of the one neighbourhood of $v$.
+\[area_{v}= \sum_{T:neighbour\;triangle (v)} area(T)\]
+this can be expressed as a function of the vertex positions. Fixing all vertex positions but $v$'s position $x_v$, this area is a function of $x_v$ and we can calculate the gradient
+\[grad(area(x_v)) = \nabla area(x_v)\]
+which turns out to be
+\begin{equation}\frac{1}{2}\sum_{j\in N_1(v)} (\cot \alpha_{ij} + \cot \beta_{ij})(x_v-x_j) \label{eqn::cotan1}\end{equation}
+\note{$\alpha \beta$ image}
+as is done in detail in the Appendix of [Desbrun et Al.]. The question then is how, given a  mesh that samples a continuous 2 manifold, how this quantity relates to the mean curvature of the actual 2 manifold. In [Desbrun et Al.] it is shown that this quantity describes $\int_{\mathcal A} Hn$
+\[\int_{\mathcal A} Hn = \frac{1}{2}\sum_{j\in N_1(v)} (\cot \alpha_{ij} + \cot \beta_{ij})(x_v-x_j)\]
+where $\mathcal A$ is an area around $v$ corresponding to an area on the mesh $\mathcal A_v$ around the vertex $v$ with the following two properties:
+\begin{itemize}
+\item $\mathcal A_v$ is completely contained in the triangles of the one ring of $v$.
+\item The border of $\mathcal A_v$ cuts all incident edges at their mid points.
+\end{itemize}
+\note{image} 
+and the right way to estimate $Hn$ at $v$ is
+\[Hn (v) = \frac{1}{2\mathcal A_v}\sum_{j\in N_1(v)} (\cot \alpha_{ij} + \cot \beta_{ij})(x_v-x_j)\] 
+The question that remains open is what area $\mathcal A_v$ is optimal. [Desbrun et Al.] do an error estimation between $\int_{\mathcal A} Hn\; dA$ (the value you get by the cotangent formula \ref{eqn::cotan1}) and $\mathcal A_v \cdot Hn(v)$ (the correct value). The total error
+\begin{eqnarray*}E &=& \sum_{i}||\int_{\mathcal A_{v_i}} Hn(x)\; dA - \mathcal A_{v_i} \cdot Hn(v_i)||^2 \\
+&=&\sum_{i}||\int_{\mathcal A_{v_i}} Hn(x) - Hn(v_i)\; dA||^2 \\
+&\leq & C \sum_{i}\int_{\mathcal A_{v_i}} ||x - v_i||^2\; dA
+\end{eqnarray*}
+where $C$ is some constant depending only on the mean curvature normal field $Hn$ and not the choice of areas $\mathcal A_v$. This motivates that choosing areas  minimizing $\int_{\mathcal A_{v_i}} ||x - v_i||^2\; dA$ gives optimal error bounds. This is fulfilled by choosing Voronoi areas $\mathcal  A_v = \mathcal A_{vornoi}$. 
+
+\note{In Text image}
+
+As long as triangles are non-obtuse this works well. For obtuse triangles this fails because, \note{...} This is why an alternative to Voronoi areas is introduced: mixed Areas.
+
+\note{etc, TODO}
+
+\note{WHERE IS THE FACTOR 2 in $2 HN$ = $\Delta$ ???}
+
+\subsection{Discrete Gauss Curvature, Principle Curvatures}
+For the sake of completeness we present the discrete Gaussian and principle curvatures, as introduced in [desbrun et Al.], such that all the curvature operators introduced in the differential geometry section get some discrete analogues. While the discrete mean curvature performs very well and because of its strong relation to the Laplacian fits perfectly in the discrete differential forms setting introduced in the next chapters, the Gaussian as well as the principal curvatures use an independent approach. In the experiments done by [desbrun et Al.] they did also perform less well than or at best comparatively well as other approaches. 
+\note{Is this Section needed?Claude's Opinion? Do it later if so....}
 
 
-Geometric approach via minimal surfaces to define mean curvature and at the same time also the DEC Laplacian
-		
-\section{Implementation: discrete $\Delta$ and curvatures}
-Split up the Laplacian into star and neighborhood matrices for implementation
+\section{Implementation}
+This is the hands-on section. In the first section some details on an implementation of the discrete mean curvature normal are given, mainly because in the perspective of later chapters it makes sense to split up the calculation of the mean curvature normal in multiple matrices. In the second section surface smoothing after [desrbun paper2] is presented as a nice application of the things implemented up to here.
 
-\section{Implementation: surface smoothing}
+\subsection{Discrete $\Delta$ and Mean Curvature}
+The discrete mean curvature is given by
+\[Hn (v) = \frac{1}{2\mathcal A_{voronoi}}\sum_{j\in N_1(v)} (\cot \alpha_{vj} + \cot \beta_{vj})(x_v-x_j)\] 
+which is the discrete Laplacian \note{motivate, say that more explicitly}  applied to the vertex coordinates. This is a linear function in the vertex coordinates and the calculation of all mean curvature normals at once can be expressed using matrices. Instead of storing the Laplacian in one matrix we will split it in 4 simpler matrices; these matrices can be reused in later chapters.
+
+We first note that the term $\cot \alpha_{vj} + \cot \beta_{vj}$ arises once for every edge; we store these weights in a (sparse) diagonal matrix of dimension $\# edges$ and call it $\star_1$, for fun.
+\[\star_1 = \begin{pmatrix}
+\cot \alpha_{edge_1} + \cot \beta_{edge_1} & & \\
+& \ddots & \\
+& & \cot \alpha_{edge_{\#e}} + \cot \beta_{edge_{\#e}}
+\end{pmatrix}\]
+The values $x_j$ are defined per vertex (the $x_j$ consist of three coordinates; every one has to be treated separately), $(x_v-x_j)$ are defined per edge. This is exactly what we get when we apply the incidence Matrix $\delta_1^T$ (the transposed border matrix from the edges) to the coordinates of the vertices.
+\[\delta_1^T \cdot \begin{pmatrix}
+x_1 \\
+\vdots\\
+x_{\#v}
+\end{pmatrix}\]
+such that the terms $(\cot \alpha_{vj} + \cot \beta_{vj})(x_v-x_j)$ are represented by 
+\[\star_1\cdot \delta_1^T \cdot x\]
+Summing up over all incident edges  of a vertex can be achieved simply by applying the border matrix $\delta_1$ to the values defined by edge \note{note?}, and the quantity $\sum_{j\in N_1(v)} (\cot \alpha_{vj} + \cot \beta_{vj})(x_v-x_j)$ is given by vertex via
+\[\delta_1\cdot\star_1\cdot \delta_1^T \cdot x\]
+Lastly we have to take care of the normalisation factors $\frac{1}{2 \mathcal A_{voronoi}}$. We put the Voronoi areas $\mathcal A_{voronoi}$, which represent per vertex weights, again in a diagonal matrix of dimension $\# vertices$ and call it $\star_0$.
+\[\star_0 =\begin{pmatrix}
+\mathcal A_{voronoi}(vertex_1) & & \\
+& \ddots & \\
+& & \mathcal A_{voronoi}(vertex_{vertex_{\#v}})
+\end{pmatrix}\] 
+the matrix to compute all curvature normals $Hn$ is then given by
+\[Hn = \frac{1}{2} \star_0^{-1}\cdot\delta_1\cdot\star_1\cdot \delta_1^T \cdot x .\]
+The inversion of $\star_0$ is obviously trivial. In the hands- on section of chapter \note{ } $\delta_1$ was already implemented, such that the only missing components are the matrices $\star_0$ and $\star_1$.
+
+\subsubsection*{Computing Cotan and Voronoi areas}
+
+
+\subsection{Implementation: surface smoothing}
 Using the Laplacian flow to smoothe a surface
 
-\section{Implementation: remeshing (?)}
+\subsection{Implementation: remeshing (?)}
 \note{You could use the laplacian also for remeshing to get very even meshes. The implementation is simple. These meshes would probably be nice enough for fluid simulations as described... This section is a 'nice to have' section i maybe do if everything else is done.}
+
+\section{Note: Discrete Laplacian in a Finite Element Setup}
+So what actually happened here is that we used an energy (the area) minimization to define mean curvature or a laplacian on the mesh, which is a piecewisely linear object. This can be looked at more generally; a variational definition of differential operators allows the differential operators to stay meaningful when working with objects and functions that have a lower regularity (not or not often differentiable functions/surfaces). In such a setting you can get a Laplacian on the space of piecewisely linear functions. Dirichelet energy etc
