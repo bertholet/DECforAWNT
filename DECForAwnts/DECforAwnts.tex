@@ -39,104 +39,26 @@
 	\maketitle
 	\tableofcontents
 	
-	%\begin{abstract}
-	%	Discrete Exterior Calculus...
+%	\begin{abstract}
+%		Discrete Exterior Calculus...
 %\end{abstract}
 	
 \input{Chapters/Intro.tex}
 \input{Chapters/BasicObjects.tex}	
 
 \input{Chapters/TwoDimensionalSurfaces.tex}
+
 \input{Chapters/DifferentialStructure.tex}
 
 
-\newpage
-\chapter{Differential Forms}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			Differential Forms: \begin{itemize}
-			  \setlength{\itemsep}{1pt}
-			  \setlength{\parskip}{0pt}
-				\setlength{\parsep}{0pt}
-				\item[-]Diff Form motivation
-				\item[-]Forms (multilinear mappings) and the dimension of k Form space 
-				\item[-]Differential Forms 
-				\item[-]Riemann Integral of Diff Forms 
-				\item[-]Interpretation of Diff Forms in $\mathbb R^3$ 
-			\end{itemize}
-			&
-			\begin{packed_enum}
-				\item[-] Discrete Form
-				\item[-] Sampling Forms
-			\end{packed_enum}
-			 & - none
-			 \\		
-		\hline
-	\end{longtable}
-	\subsection{Motivation: The perfect thing to integrate}
-		Have a look at what you need when taking an integral: an either symmetric or antisymmetric form taking
-		vectors from the tangential space
-	\subsection{Forms and Differential Forms}
-		Concretize The space of multilinear antisymmetric functions: bases, dimension, wedge. Define Differentialforms
-	\subsection{What Forms are in $\mathbb{R}^3$}
-		Using a metric (or simply by saying we look only at embedded manifolds with induced metric) we can associate
-		Vector fields etc to Forms.
-	\subsection{Integrating Forms}
-		Now again lets have a look at integration of Diffforms.
-	\subsection{Discrete Forms}
-		What discrete forms are and where they live
-	\subsubsection{Sampling Forms}
-		How you sample vectorfields etc / what the sampled values mean. Here the duality of forms already emerges.
-	
+%\newpage
+\input{Chapters/DifferentialForms.tex}
+
+%\newpage		
+\input{Chapters/DifferentialCalculus.tex}
+
 \newpage		
-\section{External Calculus \& Discrete External Calculus}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			External Calculus
-			\begin{packed_enum}
-				\item[-] Gradient, Curl and Divergence
-				\item[-] d
-				\item[-] Stokes Theorem
-				\item[-] Star and DeRham Complex
-			\end{packed_enum}
-			&
-			Discrete External Calculus
-			\begin{packed_enum}
-				\item[-] Discrete d
-				\item[-] Dual Mesh
-				\item[-] Show also intuitive match to curl etc
-			\end{packed_enum}
-			 & 
-			 A look at the Laplacian from chapter 2
-			 \begin{packed_enum}
-				\item[-] The DEC matrices (and tests)
-			\end{packed_enum}
-			 \\		
-		\hline
-	\end{longtable}
-	\subsection{Gradient, Curl, Divergence}
-		Geometric Definition of gradient, curl and divergence, maybe plus reduction to 'standard' $\nabla$ operator when using apporpriate coordinates.
-	\subsection{Differential Operator}
-		The operators above take a form of one type and return an other.
-		Introduce the $d$.
-	\subsection{Stokes Theorem}
-		To what depth this is proven is open, as this needs bordered manifolds and i don't know if I want to look at them
-		Maybe proof SKETCH, because this result is astonishing.
-		Known examples and special cases. Cases where it does not hold.
-	\subsection{Discrete Differential Operator}
-		Using stokes Theorem we introduce the discrete $d$ as the conjugate of the border operator
-	\subsection{Duality: We want more}
-		Not all operators can be built yet. Introduce Star, duality
-	\subsection{Dual Mesh and Star Operator}
-		Discrete Version of this.
-	\subsection{The 0 Form Laplacian from the beginning}
-		Now easy to write that guy down.
-\newpage		
-\section{Application: Mesh Parametrization}
+\chapter{Application: Mesh Parametrization}
 	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
 		\hline
 		Smooth Theory& Discrete Theory& Implementation (Notes)\\
