@@ -146,7 +146,7 @@ The exterior derivative has the following properties that are more or less strai
 \item $d(d\omega^k) = 0$
 \item $f^*(d\omega^k) = d(f^* \omega^k)$
 \end{enumerate}
- The third and fourth property are the most note worthy.  Applying $d$ two times in a row always leads to zero (as you can check by simply writing it down). And the exterior derivative commutes with pullbacks. This means that you can freely chose where and in what map you want to work and calculate derivatives; just pull everything to a space where you want to have it.
+ The third and fourth property are the most noteworthy.  Applying $d$ two times in a row always leads to zero (as you can check by simply writing it down). And the exterior derivative commutes with pullbacks. This means that you can freely chose where and in what map you want to work and calculate derivatives; just pull everything to a space where you want to have it.
 
 
 \subsection{$d$ in another base}
@@ -228,19 +228,213 @@ and the border operator and the exterior operator play an equivalent role.
 Stokes Theorem captures the geometry of the exterior derivative. And we can now define the discrete exterior derivative to conserve this geometric property i.e. conserve Stokes theorem. We can directly translate Stokes Theorem to the discrete setting:
 \[[\Omega,d\omega] = [\delta \Omega, \omega]\]
 becomes
-\[\langle \sigma, d_{discrete}^k\textbf{w}^k \rangle = \langle \delta_k \sigma, \textbf{w}^k \rangle\]
+\[\langle \sigma, d_{discrete}^k\textbf{w}^k \rangle = \langle \delta_{k+1} \sigma, \textbf{w}^k \rangle\]
 as integrals are simply scalar products in the discrete setting. But this relation \emph{defines} the yet unknown $d_{discrete}$; it has to be the transposed of the border-operator matrix:
 \[d_{discrete} = \delta^T\]
-By discretizing the exterior derivative we get at once consistent discretizations of all its special cases: gradient, divergence and curl.
+By discretizing the exterior derivative we get at once consistent discretizations of all its special cases: gradient, divergence and curl. \note{ref...}
 
 \subsection{Examples}
-For example we know that $d$ applied to $0$ forms is the gradient. Our discrete realisation of the exterior derivative for $0$-forms is  
+For example we know that $d$ applied to $0$ forms is the gradient. Our discrete realisation of the exterior derivative for $0$-forms is the matrix
+\[d_{discrete}^0 = \delta_1^T\]
+which has size $(\# edges \times \#vertices)$. Applying this matrix to a discrete $0$-form yields a vector of dimension $\# edges$, a discrete $1$-form. As $\delta_1^T$ is the incidence matrix of the edges, it assigns the value $\textbf{w}^0(v_1) - \textbf{w}^0(v_0)$ to an edge $(v_0,v_1)$. So the gradient is simply realized as a difference.
 
-\section{Duality: We want more}
-Not all operators can be built yet. Introduce Star, duality. The star could also be motivated with the obvious relation between k and n-k forms.
-\section{Dual Mesh and Star Operator}
-Discrete Version of this.
+Another example is the curl operator, depicted in Figure \ref{fig::6_1_curl}. As seen in Section \note{...}, the curl operator is a realisation of $d$ applied to differential $1$-forms. In the discrete setting curl therefore is realised as
+\[d_{discrete}^1 = \delta_2^T\]
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height = 4cm]{imgs/6_4_curl.eps}
+\end{center}
+\caption{Curl is realised as the incidence matrix of the faces. By applying this matrix the values on the border edges of a face are summed up according to the orientation of the face (thus $-g_1$)}
+\label{fig::6_1_curl}
+\end{figure}
+
+As this is the incidence matrix of faces, applying $d_1$ to a one Form sums up the values of the discrete $1$-form on edges along a face and assigns the sum to the face. 
+
+\subsection{Correctness}
+Suppose that $\textbf{w}^0$ samples $\omega^0$; then $\delta_1^T \textbf{w}^0$ is exactly what you would get if you sampled $d\omega^0$:
+\[\int_{[v_0,v_1]} d\omega^0 = \omega^0(v_1) - \omega^0(v_0)= \textbf{w}^0(v_1) - \textbf{w}^0(v_0)\] 
+meaning that applying $d_{discrete}^0$ does not introduce any new errors. But, by design, this is true for all $d_{discrete}^k$: suppose $\textbf{w}^k$ samples $\omega^k$, then
+\[\int_{\sigma^{k+1}} d\omega^k  = \int_{\delta \sigma^{k+1}} \omega^k = \langle \delta_{k+1}(\sigma^{k+1}), \textbf{w}^k\rangle = (d_{discrete}^{k} \textbf{w}^k) (\sigma^{k+1})\]
+This means that $d_{discrete}$ does not introduce any new errors. It is consistent with the way we interpret discrete forms and sample differential forms- you can take the exterior derivative before sampling or the discrete exterior derivative after sampling, it does not matter.
+
+\section{Duality: The Hodge Star}
+By having a discrete exterior derivative, we have a discretization of all the operators that arise as special cases of the exterior derivative (see Figures \ref{fig::6_1_SC2d} and \ref{fig::6_1_SC3d}). But there is still an important element missing. For example we would like to apply the divergence operator to the gradient of a function $div(grad(f))$ to get the Laplacian, as it is done in standard calculus:
+\[\Delta = div\circ grad\]
+Looking at Figure $\ref{fig::6_1_SC3d}$ tells us that (on 3-dimensional manifolds at least) $grad$ is $d_0$ (i.e. $d$ applied to $0$-sorms) and $div$ is $d_2$ (i.e. $d$ applied to a 2-forms).   This is a problem: $d_0$ takes a $0$-Form and maps it to a $1$-Form and we can not apply $d_2$ to $1$-Forms!
+
+The key to this 'problem' lies in the duality of forms. As we have seen: different forms have the same representation; e.g. in three dimensions: differential $0$ and differential $3$-forms can be represented as real valued functions, $1$-forms and $2$-forms as vectorfields. So it should not come as a surprise that you can somehow make $2$ form out of a $1$-form, a $0$-form out of a $3$-form and vice versa. To explain this we have to go back to the spaces of Forms $\Lambda(\mathbb R^l)$.
+
+\subsection{Intuition}
+Basically we want to treat differential $k$ forms like differential $n-k$ form. But while $k$ forms measure $k$-dimensional volumes $n-k$ forms measure $n-k$ dimensional volume.
+We can use a trick: given a small $k$-dimensional cube $c$ we can associate the $n-k$-dimensional cube $c^\perp$ that is perpendicular and has the same volume as $c$ to $c$ i.e.
+\[vol_k(c) = vol_k(c^\perp)\] 
+Then, if we want to calculate an approximate integral of a $k$-form over a set of $n-k$-dimensional cubes $\{c_1^{\perp},...,c_l^{\perp}\}$('treating the $k$-form like an $n-k$-form'), the sum
+\[\sum_{j} \text{''}\omega^k(c_j^\perp)\text{''}\]
+is instead calculated as 
+\[\sum_{j} \omega^k(c_j)\]
+, see the sketch in Figure \ref{fig::6_1_dualIntegral}. Bottom-line: given an $k$-form $\omega^k$ we want to associate a $n-k$-form $\star\omega^k$ to it, that behaves like described, i.e. in a very dirty notation
+\[\star\omega^k(c) \approx  \omega^k(c^\perp)\]
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height = 4cm]{Imgs/6_4_dualiIntegral.eps}
+\end{center}
+\caption{Intuition for duality in $\mathbb R^3$: We have a one form $\omega$ that can be evaluated on lines and would like a $2$-Form $\star \omega$ that can be evaluated on 2D regions. And this is how it should behave: $\star \omega$ evaluated on a  'small square' should exactly give the value as $\omega$ evaluated on an orthogonal complement of the small square with 'same volume', i.e. a line with length $area(square)$. }
+\label{fig::6_1_dualIntegral}
+\end{figure}
+
+\subsection{Dual Forms}
+We will now formally define the dual of a form and then examine how it fits the 'intuition' developed above. 
+
+\subsubsection{Definition of $\star$}
+The spaces of forms $\Lambda^k(\mathbb R^n)$ and $\Lambda^{n-k}(\mathbb R^n)$ have the same dimension (see Section \note{...}) namely
+\[\dim(\Lambda^k(\mathbb R^n)) = \begin{pmatrix}
+n \\ k
+\end{pmatrix}= \begin{pmatrix}
+n \\ n-k
+\end{pmatrix} = \dim(\Lambda^{n-k}(\mathbb R^n))\]
+As they have the same dimension we can find a bijective linear mapping between these two spaces. Now, first of all we define a scalar product on the space $\Lambda^k$: we select an orthogonal basis of $\mathbb R^n$ (with respect to the euclidean scalar product\footnote{Note that the whole duality thing is usually done in respect to some arbitrary scalar product, but for us this is enough}): $e_1,...,e_n$ and define for two $k$-forms $\omega, \nu$
+\[\langle \omega^k, \nu^k \rangle = \sum_{i_1 <...<i_k} \omega^k(e_{i_1},...,e_{i_k})\cdot \nu^k(e_{i_1},...,e_{i_k})\]
+this does NOT depend on the choice of base. If both forms are written in the base given by the $de_i$'s this is
+\[\omega^k = \sum_{i_1<...<i_k}w_{i_1,..,i_k} de_{i_1}\wedge ...\wedge de_{i_k}\]
+\[\nu^k = \sum_{i_1<...<i_k}v_{i_1,..,i_k} de_{i_1}\wedge ...\wedge de_{i_k}\]
+\[\langle \omega^k, \nu^k\rangle = \sum_{i_1<...<i_k} v_{i_1,..,i_k} \cdot w_{i_1,..,i_k}\]
+i.e. the euclidean scalar product of the vectors of describing elements $v$ and $w$. This IS a scalar product: it is linear in both parameters and symmetric.
+Then, we have a special $n$-form: the volume form $dVol$. We then define the dual $\star\omega^k$ of a $k$-form $\omega^k$ as the $n-k$-form that fulfils
+\[\langle\star\omega^k, \nu^{n-k}\rangle dVol  = \omega^k \wedge \nu^{n-k} \text{ for all $(n-k)$-forms $\nu^{n-k}$}\] 
+ 
+ By this relation $\star$ is well defined. The $\star$ is called the hodge-star. And it is a linear mapping from $\Lambda^k$ to $\Lambda^{n-k}$:
+ \[\star(\omega_1^k + \lambda \omega_2^k) = \star\omega_1^k + \lambda \star\omega_2^k \]
+
+\subsubsection{Understanding $\star$}
+We can try to understand the hodge operator by looking at how it acts on basis elements $de_{i_1}\wedge...\wedge de_{i_k}$ (for a positively oriented orthonormal basis $e_1,...,e_n$). As any $k$-form can be built as sum of basis elements and the $\star$ is linear knowing how it acts on a basis is enough.
+\[\star (de_{i_1}\wedge...\wedge de_{i_k}) = sign \cdot de_{j_1}\wedge...\wedge de_{j_{n-k}} \]
+where $j_1,...,j_{n-k}$ is the complement of the indices $i_1,...,i_k$ in the set $1,...n$ and sign is the sign in the relation
+\[de_{i_1}\wedge...\wedge de_{i_k} \wedge de_{j_1}\wedge...\wedge de_{j_{n-k}} = sign \cdot de_1\wedge de_2 \wedge ... \wedge de_n \]
+For example in a three dimensional setting with a orthonormal basis $e_1, e_2, e_3$
+\[\star de_1 =  de_2 \wedge de_3\]
+and 
+\[\star de_2 =  - de_1 \wedge de_3 =  de_3 \wedge de_1\]
+where we have a minus because
+\[de_2 \wedge de_1 \wedge de_3 = - de_1 \wedge de_2 \wedge de_3\]
+This does pretty much what we intended to do;  suppose $v = a \times b$ for vectors $a$,$b$,$v$ expressed in the base $e_1,e_2,e_3$ , i.e $a = (a_1,a_2,a_3)$ etc. Then $a,b$ span a patch perpendicular to $v$ with an area equalling the length of $v$. Furthermore 
+\[de_1(v) = v_1 = (a_2b_3 -a_3b_2)\] 
+and 
+\[\star de_1 (a,b)= (de_2 \wedge de_3)(a,b) = a_2b_3 -a_3b_2 \]
+so $\star de_1$ing the patch spanned by $a,b$ is like $de_1$ing the 'line' v.
+
+\vspace{0.5cm}
+\begin{center}
+\includegraphics[height = 4cm]{imgs/6_4_staromega1.eps}
+\end{center}
+
+\subsubsection{Interpretation of $\star$}
+In two and three dimensions we did look at how differential Forms relate to objects from standard calculus. In a 3D setting differential $1$ and $2$ forms can be identified with vector fields while $0$ and $3$ forms were functions. Lets see how the $\star$-operator acts on these presentations.
+
+The dual of a zero form $f$ is simply $f dVol$ and the dual of an $n$-form $f dVol$ is simply $f$- so the $\star$ operator does in this case simply mean that we change the interpretation of a function $f$ from a $0$-form to an $n$-form and vice versa.
+
+In three dimensions the same is true for vector fields interpreted as $1$ or $2$ forms - applying the hodge operator to the one form associated to a vectorfield leads to the two form associated to the vectorfield (where the 'associations' are made as described in Section \note{...}).
+
+With all the representations considered, something special happens only for differential $1$-forms in a 2D setting. On 1-forms in a 2D setting the $\star$ acts like the following (with orthonormal coordinates x,y):
+\[\star dx = dy\]
+\[\star dy = -dx\]
+as $dy\wedge dx = - dx \wedge dy$, following the way to calculate $\star$ as described in the last section. This means that $\star$ applied to a vector $(a,b)$ representing the form $adx + bdy$ is $(b,-a)$ , i.e. $bdx - ady$. Therefore $\star$ would be represented as a rotation by $90^\circ$ (according to orientation) of the vectorfield; which in orthonormal coordinates is simply
+\[\begin{pmatrix}
+0 & 1 \\
+-1 & 0
+\end{pmatrix}\]
+It also follows that $\star \star \omega^1 = -\omega^1$ in a 2D setting; as rotating a $2D$ vector twice by $90^\circ$ changes its orientation. Note that this is directly related to the two sampling schemes for $1$-forms described in Section \note{...}. Once the vector field is sampled as $\int_{edge} \omega^1$, once as $\int_{edge} \star \omega^1$, see also image \note{TODO}.
+
+As a last comment: differential $1$-forms on $2$-dimensional manifolds are not that special, considering their behaviour under the Hodge star. By using the last section you can easily show that
+\[\star\star \omega ^k = (-1)^{k(n-k)}\omega^k\]
+i.e. applying $\star$ twice will switch the orientation of $\omega^k$ exactly when $k(n-k)$ is not even. Restricting $n= 2,3$, the pair $n=2$ and $k=1$ is the only one where $k(n-k)$ is not even. On $n=4$ dimensional manifolds $\star$-ing would affect the orientation of $1$ and $3$-forms.
+
+\section{Exterior Calculus}
+We put some effort in getting the $\star$-operator and in the end, translated in standard calculus terms, it turned out to be pretty trivial being often nothing more than a change of interpretation. Was it worth the time? Yes! For exterior calculus the Hodge $\star$ plays an important role, as without it you could not describe analogues to the Laplace operator with higher order derivatives: applying $d$ once has only simple partial derivatives; applying $d$ twice is zero $dd=0$. 
+
+But now, with $\star$, $d$, $\wedge$ and also $^\#$ and $^\flat$ (these two were introduced in Section \note{...} as a way to get form $1$-Forms to vectors), we have a very elegant and powerful language at hand, even thought it takes some time introduce everything. With $\star$ and $d$ we can build the so-called deRham complex, depicted in Figure
+\ref{fig::deRhamComplex}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height = 5cm]{imgs/6_4_exteriorCalculus}
+
+\includegraphics[height = 5cm]{imgs/6_4_standardCalculus}
+\end{center}
+\caption{Top: the deRham complex for an $n$-dimensional manifold (we write 'Form' but actually mean differential form). Bottom: the realisation of the deRham complex in standard calculus. This schematic view is very handy to translate standard calculus to exterior calculus. The dashed arrows represent Laplacians defined by concatenating operators. The translation of the vectorfield Laplacian would be $\star d \star d + d \star d \star$.}
+\label{fig::deRhamComplex}
+\end{figure}
+
+This complex can be seen as a summary of exterior calculus and we will meet quite a few important relations on this conglomerate of differential-form spaces and the operators $d$ and $\star$. With this we have introduced all notations and abstract mathematical objects we need. The remaining of this thesis (after having introduced the a discrete star) we will reap the fruits of our labour.
+
+\begin{figure}
+\begin{center}
+\includegraphics[height = 5cm]{imgs/6_4_standardCalculusn2}
+\end{center}
+\end{figure}
+
+%Not all operators can be built yet. Introduce Star, duality. The star could also be motivated with the obvious relation between k and n-k forms.
+\section{Dual Mesh and a Discrete Star}
+What is left is finding a discrete star operator and finding a way to represent discrete dual forms $\star \textbf{w}$. If $\textbf{w}^k$ is a discrete $k$ form associated to $k$-simplices i.e. discrete objects of $k$-dimensional volume, the dual should be a discrete $n-k$ form, therefore associated to $n-k$-dimensional objects. For this we use a \textbf{dual mesh}. We will use Voronoi duality, because it facilitates the definition of a discrete $\star$:
+
+\subsection{Dual Mesh}
+Suppose we have a discrete $k$-manifold. Then the (Voronoi) dual of a $k$-simplex is its circumcenter, and the dual of a $j$-simplex is the $k-j$ dimensional cell spanned by the incident $k$-simplices, as depicted for $n=2$ in the inlined image. From now on we will always make the difference the primal mesh consisting of primal vertices, edges, faces etc and the dual mesh consisting of dual vertices, edges and so on. If $\sigma$ is a simplex, we will denote its dual cell by $\star \sigma$
+
+\begin{center}
+\includegraphics[height=5cm]{imgs/6_4_dualMesh}
+\end{center}
+
+\subsubsection{Border Operator and Orientation of the dual mesh}
+
+In principle the border -relation on a dual complex is simply the incidence relation of the primary mesh; a dual $j$ cell $\star \sigma^{n-j}$ is on the border of the dual $j+1$-cell $\star \sigma^{n-j-1}$ exactly if $\sigma^{n-j-1}$ is on the border of $\sigma^{n-j}$. \note{Image}
+
+
+But the dual border-matrix is not directly given by the primary incidence matrix $\delta^T$; we have to take care of orientations of the dual cells, as a dual cell $\star \sigma$ on the dual mesh gets an orientation induced by the primary simplex $\sigma$ (if the primary mesh is an oriented manifold). Bottom line is that
+\[\delta_{n-k+1}^{dual} = (-1)^{k} (\delta_k^{primal})^T\]
+We give a proof of this in the Appendix and give examples for $n=2$ and $n=3$ here. \note{TODO}
+
+
+
+
+\subsection{Discrete Dual Forms and Star Operator}
+While in the continuous case the dual of a differential form is again a differential form, in the discrete case we treat the dual of a discrete form differently than the discrete form. While the discrete primary forms are defined on the simplices of the primary mesh, the dual discrete forms are defined on the dual mesh.
+We 'sample' dual forms on the dual mesh. The value of the discrete dual form $\star \textbf{w}$ sampling $\star \omega$ on the dual simplex $\star \sigma$ can be interpreted as
+\[\star \textbf{w}(\star \sigma) = \int_{\star \sigma^k}  \star \omega^k\]
+The discrete exterior derivative  on the dual mesh is given by
+\[d^{dual}_{n-k} = (\delta^{dual}_{n-k+1})^T \]
+just as we defined the discrete exterior derivative on the primary mesh, to preserve the geometry of $d$ revealed by Stokes Theorem. Expressed with primal matrices this is
+\[d^{dual}_{n-k}= (-1)^k(\delta_k^{primal}) = (-1)^k(d^{primal}_{k-1})^T \]
+
+What is left is the question how to get form a discrete form $\textbf{w}^k$ to its dual $\star \textbf{w}^k$, i.e. how the two integrals
+\[\int_{\star \sigma^k} \star \omega^k ,\;\;\; \int_{\sigma^k} \omega^k\]
+relate. If $\omega^k$ is constant on $\sigma^k$ and $\star \sigma^k$, then because of the way the hodge star is defined and because $\star \sigma$ is orthogonal to $\sigma$ (as we use the Voronoi dual)
+\[\int_{\star\sigma} \star\omega^k =  \frac{Vol_{n-k}(\star \sigma^k)}{Vol_k(\sigma^k)}\int_{\sigma} \omega^k\]
+Therefore we will use the diagonal matrix
+\[\star^{discrete}_k = \begin{pmatrix}
+\frac{Vol_{n-k}(\star \sigma^k_1)}{Vol_k(\sigma_1^k)} \\
+&\frac{Vol_{n-k}(\star \sigma_2^k)}{Vol_k(\sigma_2^k)} \\
+& & \ddots \\
+& & & \frac{Vol_{n-k}(\star \sigma_m^k)}{Vol_k(\sigma_m^k)}
+\end{pmatrix}\]
+as a discrete version of the $\star$ operator to get the dual 
+\[\star\textbf{w}^k  = (\star\textbf{w}^k(\star\sigma^k_1),...,\star\textbf{w}^k(\star\sigma^k_m))\]
+from
+\[\textbf{w}^k = (\textbf{w}^k(\sigma^k_1),...,\textbf{w}^k(\sigma^k_m))\]
+i.e.
+\[\star \textbf{w}^k = \star^{discrete}_k \textbf{w}^k\]
+This discrete $\star$ operator is NOT compatible with our sampling scheme i.e. the dual of discrete form $\textbf{w}^k$ sampling $\omega^k$ only approximates a correctly sampled $\star \omega^k$. But if the size of the simplices gets smaller, the error of $\star^{discrete}$ goes to zero (as $\omega^k$ will be close to constant in small regions).
+
+This simple $\star^{discrete}$ operator will still prove to be quite good. From a numerical point of view it is great that it is represented by a diagonal matrix. And by associating dual forms to dual Voronoi cells, the geometry of the Hodge star is captured quite well. 
+
+\subsubsection{Drawbacks of Voronoi Duality}
+One drawback when choosing the dual mesh and discrete star as Voronoi cells is that Voronoi cells 'degenerate' in the presence of obtuse simplices. The circumcenter of a simplex can lie arbitrarely far away from the simplex such that $\star_{discrete}\textbf{w}^k$ is not a good estimation for a sampled dual form. \note{...} Adapting the weight matrices as with the Laplacian in Section \note{...} might be beneficial.
+ 
 \section{This is Discrete Exterior Calculus}
+With the discrete star, forms, dual forms and discrete exterior derivative for dual and primal forms we can build a 'discrete de Rham' complex. \note{mention of more general chain complexes} The discrete de Rham complex keeps many properties from the continuous one. \note{Maybe list them here... PoinCarré and Hodge ... TODO}
 
-\section{The 0 Form Laplacian from the beginning}
+
+
+
+\section{Implementation of Dual Forms}
+
+\subsection{The 0 Form Laplacian from the beginning}
 Now easy to write that guy down.

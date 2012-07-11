@@ -8,11 +8,11 @@
 \caption{A zebra mesh that is coloured according to its local mean curvature}
 \end{figure}
 
-In this chapter we focus completely on two dimensional surfaces. The theory here is not vital to understand DEC and if you are in a hurry you may skip this chapter. Nevertheless as surfaces and triangle meshes play a vital role in many applications it is worth to get acquainted with ways to describe and compute local mesh properties, as developed here.
+In this chapter we focus completely on two dimensional surfaces. The theory here is not vital to understand exterior calculus or discrete exterior calculus and, if you are in a hurry, you may skip this chapter. Nevertheless as surfaces and triangle meshes play an important role in many applications it is worth to get acquainted with ways to describe and compute local mesh properties, as developed here. And you can see some of the concepts introduced for manifolds are applied to 2-dimensional surfaces.
 
 In this chapter we start with a short differential geometry primer where we introduce basics like curvatures and a 'metric', a scalar product consistently defined on all tangential spaces. In the second section we will then thrive to get a notion of curvatures on meshes and thereby have a first encounter with a Laplace operator defined on a surface. The third section again is the practical section where we give some implementation details for curvatures and present surface smoothing as an application.
 
-\begin{figure}[b]
+\begin{figure}[ht]
 \begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
 \hline
 Smooth Theory& Discrete Theory& Implementation (Notes)\\
@@ -41,13 +41,13 @@ The manifold definition for curves translates to:
 
 %\note{Note on length? Nah trivial enough}
 
-We have already seen that the first derivative of a parametrization describes tangents. To interpret higher derivatives we have to look at a special parametrization of curves the parametrization by arc length.
+We have already seen that the first derivative of a parametrization describes tangents. To interpret higher derivatives we have to look at a special parametrization of curves: the parametrization by arc length.
 
 \subsubsection{Parametrization by Arc Length}
 
-A curve is parametrized by arclength if $|\alpha'(t)|=1$ for all $t$. This means that the curve is run through with constant speed (img). The name ``parametrized by arclength'' comes from the simple fact that the length of a curve segment 
+A curve is parametrized by arclength if $|\alpha'(t)|=1$ for all $t$. This means that the curve is run through with constant speed (Figure \ref{fig::3_1_paramByArclength}). The name ``parametrized by arclength'' comes from the simple fact that the length of a curve segment 
 \[l_a^b = \int_a^b |\alpha'| dt = b-a\]
-is directly given by the parameter. It is not completely obvious, that such a parametrization by arclength always exists, but it does. Actually there exist always two parametrizations by arclength with different orientations. Note also, that even if you only have an arbitrary parametrization one can still easily calculate what the derivatives by arclength are at some given point; see the Appendix for this and for a sketch of the proof of existence of the parametrization. A curve parametrized by arc length is shown in Figure \ref{fig::3_1_paramByArclength}.
+is directly given by the parameter. It is not completely obvious, that such a parametrization by arclength always exists, but it does. Actually there exist always two parametrizations by arclength with different orientations. Note also, that even if you only have an arbitrary parametrization you can still easily calculate what the derivatives by arclength are at some given point; see the Appendix for this and for a sketch of the proof of existence of the parametrization. A curve parametrized by arc length is shown in Figure \ref{fig::3_1_paramByArclength}.
 
 \begin{figure}[h]
 \begin{center}
@@ -91,49 +91,48 @@ For oriented 2D surfaces embedded in $\mathbb R^3$ we can do something we can no
 \[N(p) = \frac{\frac{\partial \phi(p)} {\partial u} \times \frac{\partial \phi(p)} {\partial v}}{\abs{\frac{\partial \phi(p)} {\partial u} \times \frac{\partial \phi(p)} {\partial v}}}\]
 The normal solely depends on the orientation. And, as mentioned in the section about oriented manifolds, finding a consistent normal field on a surface is equivalent to the finding an orientation of the surface.
 
-\subsubsection{Derivatives on surfaces}
-\note{Is this the right way to introduce this stuff? Should this section be more general for any manifolds and in an other chapter? Answer these questions in a later iteration.}
-Given a normal field $N$ on a surface we would like to find the derivative of $N$ to describe curvature. As $N$ is a function defined ON the surface we need to have a look at derivatives of functions on manifolds.
+%\subsubsection{Derivatives on surfaces}
+%\note{Is this the right way to introduce this stuff? Should this section be more general for any manifolds and in an other chapter? Answer these questions in a later iteration.}
+%Given a normal field $N$ on a surface we would like to find the derivative of $N$ to describe curvature. As $N$ is a function defined ON the surface we need to have a look at derivatives of functions on manifolds.
 
-Given a surface $S$ and a function $f: S \rightarrow \mathbb R^n$ what does it even mean for $f$ to be differentiable? We want the derivative to be something very similar to the derivative $Dh$ of a function $h: \mathbb R^2 \rightarrow \mathbb R^n$. In this case $Dh$ is the linear mapping that locally approximates $h$ and can be used to give the directional derivative for a direction $v$.
-\[h( p + tv) \approx h(p) + Dh \cdot tv\]
-We want the same for functions $f$ on surfaces: $Df$ should be a linear mapping, that maps a direction i.e. an element from the tangential plane to a vector that describes the change of $f$ when going in that direction. This is important: the differential $Dh$ is a mapping from the \emph{tangential spaces} to vectors. 
-
-We can express this readily by using a curve $\alpha (t)$ with a tangent $\frac{\partial \alpha(0)}{\partial t} = v$ in a wished direction.
-\[Df \cdot v := \frac{\partial}{\partial t} f(\alpha(t))\]
-As $f(\alpha(t))$ is simply a function $\mathbb R \rightarrow \mathbb R^n$ we know how to calculate the right hand side $\frac{\partial}{\partial t} f(\alpha(t))$. This is not very handy for any calculations; but we can express the derivative in the local coordinates given by a parametrization $\phi(u,v)$.
-
-\begin{figure}
-\begin{center}
-\includegraphics[width= 12.5cm]{imgs/3_1_manifoldDerivative.eps}
-\end{center}
-\caption{Construction of a derivative of a real valued function $f$ defined on a manifold locally parametrized by $\phi$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $\mathbb R$}
-\label{fig::3_1_manifoldDerivative}
-\end{figure}
-
-As we have seen, a parametrization provides a base of the tangential space, namely 
-\[\frac{\partial\phi}{\partial u}, \frac{\partial\phi}{\partial v}\] 
-Curves can be expressed in this map and tangential vectors can be described in this base: $\alpha(t) = \phi(u(t),v(t))$ and $\alpha'(t) = \frac{\partial\phi}{\partial u} u' + \frac{\partial\phi}{\partial v} v'$. The function $f$ also has to be given in that map , i.e. $f(u,v) = f(\phi(u,v)) = (f_1(\phi(u,v)),...,f_n(\phi(u,v)))$. Then 
-\[Df \cdot \alpha'(t) = (\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v}) \cdot \begin{pmatrix}
-	u' \\ v'\end{pmatrix}\]
-and $Df$ is described \emph{in the local coordinates given by $\phi$} by the $ n \times 2$ matrix $(\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v})$. This situation is depicted in Figure \ref{fig::3_1_manifoldDerivative}.
-
-A slight generalisation is considering functions $f$ going from one manifold $M$ to an other manifold $M'$, as shown in Figure \ref{fig::3_1_manifoldDerivative2}. The derivative $Df$ at some point $p$ then is a linear mapping from the tangential space $T_pM$  to the tangential space $T_{f(p)} M'$, i.e. $D_p f = T_p M \rightarrow T_f(p) M'$. If $M$ is a $k$-manifold and $M'$ a $l$-manifold $Df$ can be expressed as a $k\times l$ matrix, described relatively to two sets of local coordinates $\phi \rightarrow M$ and $\psi \rightarrow M'$.
-
-\begin{figure}
-\begin{center}
-\includegraphics[width= 13cm]{imgs/3_1_manifoldDerivative2.eps}
-\end{center}
-\caption{Two 2-manifolds $M$ and $M'$ with local parametrizations $\phi$ and $\psi$. $f$ is a function $f: M \rightarrow M'$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $T_{f(p)} M'$, choosing $D\phi$ and $D \psi$ to parametrize the tangential spaces $Df$ can be represented as a $2\times 2$ matrix (relative to these bases)}
-\label{fig::3_1_manifoldDerivative2}
-\end{figure}
-
+%Given a surface $S$ and a function $f: S \rightarrow \mathbb R^n$ what does it even mean for $f$ to be differentiable? We want the derivative to be something very similar to the derivative $Dh$ of a function $h: \mathbb R^2 \rightarrow \mathbb R^n$. In this case $Dh$ is the linear mapping that locally approximates $h$ and can be used to give the directional derivative for a direction $v$.
+%\[h( p + tv) \approx h(p) + Dh \cdot tv\]
+%We want the same for functions $f$ on surfaces: $Df$ should be a linear mapping, that maps a direction i.e. an element from the tangential plane to a vector that describes the change of $f$ when going in that direction. This is important: the differential $Dh$ is a mapping from the \emph{tangential spaces} to vectors. 
+%
+%We can express this readily by using a curve $\alpha (t)$ with a tangent $\frac{\partial \alpha(0)}{\partial t} = v$ in a wished direction.
+%\[Df \cdot v := \frac{\partial}{\partial t} f(\alpha(t))\]
+%As $f(\alpha(t))$ is simply a function $\mathbb R \rightarrow \mathbb R^n$ we know how to calculate the right hand side $\frac{\partial}{\partial t} f(\alpha(t))$. This is not very handy for any calculations; but we can express the derivative in the local coordinates given by a parametrization $\phi(u,v)$.
+%
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width= 12.5cm]{imgs/3_1_manifoldDerivative.eps}
+%\end{center}
+%\caption{Construction of a derivative of a real valued function $f$ defined on a manifold locally parametrized by $\phi$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $\mathbb R$}
+%\label{fig::3_1_manifoldDerivative}
+%\end{figure}
+%
+%As we have seen, a parametrization provides a base of the tangential space, namely 
+%\[\frac{\partial\phi}{\partial u}, \frac{\partial\phi}{\partial v}\] 
+%Curves can be expressed in this map and tangential vectors can be described in this base: $\alpha(t) = \phi(u(t),v(t))$ and $\alpha'(t) = \frac{\partial\phi}{\partial u} u' + \frac{\partial\phi}{\partial v} v'$. The function $f$ also has to be given in that map , i.e. $f(u,v) = f(\phi(u,v)) = (f_1(\phi(u,v)),...,f_n(\phi(u,v)))$. Then 
+%\[Df \cdot \alpha'(t) = (\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v}) \cdot \begin{pmatrix}
+%	u' \\ v'\end{pmatrix}\]
+%and $Df$ is described \emph{in the local coordinates given by $\phi$} by the $ n \times 2$ matrix $(\frac{\partial f}{\partial u}, \frac{\partial f}{\partial v})$. This situation is depicted in Figure \ref{fig::3_1_manifoldDerivative}.
+%
+%A slight generalisation is considering functions $f$ going from one manifold $M$ to an other manifold $M'$, as shown in Figure \ref{fig::3_1_manifoldDerivative2}. The derivative $Df$ at some point $p$ then is a linear mapping from the tangential space $T_pM$  to the tangential space $T_{f(p)} M'$, i.e. $D_p f = T_p M \rightarrow T_f(p) M'$. If $M$ is a $k$-manifold and $M'$ a $l$-manifold $Df$ can be expressed as a $k\times l$ matrix, described relatively to two sets of local coordinates $\phi \rightarrow M$ and $\psi \rightarrow M'$.
+%
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width= 13cm]{imgs/3_1_manifoldDerivative2.eps}
+%\end{center}
+%\caption{Two 2-manifolds $M$ and $M'$ with local parametrizations $\phi$ and $\psi$. $f$ is a function $f: M \rightarrow M'$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $T_{f(p)} M'$, choosing $D\phi$ and $D \psi$ to parametrize the tangential spaces $Df$ can be represented as a $2\times 2$ matrix (relative to these bases)}
+%\label{fig::3_1_manifoldDerivative2}
+%\end{figure}
+%
 
 \subsubsection{The derivative of the Normal-Field}
-Now we have the tools to analyse the normal function. We got curvature of curves by looking at the change of unit tangents, i.e. how the tangential space changes. By looking at the derivative of the normal function we do the very same for the two dimensional tangential spaces of surfaces.
+We got curvature of curves by looking at the change of unit tangents, i.e. how the tangential space changes. By looking at the derivative of the normal function we do the very same for the two dimensional tangential spaces of surfaces. As $N$ is a function defined ON the surface, we can apply what we developed in the section about derivatives of functions on manifolds (Section \ref{sec::2_derivativesOnMF}).
 
-
-As mentioned above, $N$ is a function that maps a point on a surface $S$ to its unit normal, so $N$ is a mapping from the surface to the unit sphere.
+As mentioned above, $N$ maps a point on a surface $S$ to its unit normal, so $N$ is a mapping from the surface to the unit sphere i.e. between two manifolds (see Figure \ref{fig::3_1_normalDerivative}).
 
 We are interested to express $N$ in local coordinates for a given map $\phi$. This is easy, as we know that the normal at a given point $\phi(u,v)$ is perpendicular to the tangential plane spanned by $\phi_u, \phi_v$.
 \[N_{loc}(u,v) = \frac{\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}}{|\frac{\partial \phi}{\partial u} \times \frac{\partial \phi}{\partial v}|} (u,v) \]
@@ -149,7 +148,7 @@ We are interested to express $N$ in local coordinates for a given map $\phi$. Th
 The derivative of the function $N$ maps vectors from the tangential space $T_pS$ to vectors in the tangential space $T_{N(p)}S^2$. Note that both $T_{N(p)}S^2$ and $T_pS$ are orthogonal to $N(p)$. This means both $T_pS$ and $T_{N(P)}S^2$ describe the same subspace of $\mathbb R^3$ and $dN$ can be thought of as a map $dN: T_pS \rightarrow T_pS$ from $T_pS$ onto itself. Therefore we can use the local map $\phi$ to induce a basis in the source AND the image space and $dN$ can be completely expressed in the local coordinates given by $\phi$. This is also described in Figure \ref{fig::3_1_normalDerivative}.
 
 
-It turns out that $dN$ in local coordinates can be expressed solely using the coordinate function $\phi$ and its derivatives. For a deduction in detail see e.g. \note{p114 of do carno or appendix, to decide yet}. The formula is the following:
+It turns out that $dN$ in local coordinates can be expressed solely using the coordinate function $\phi$ and its derivatives. For a deduction in detail see e.g. \note{p114 of do carno}. The formula is the following:
 
 \[dN_{local} = \begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{pmatrix} = - \begin{pmatrix} e & f \\ f & g \end{pmatrix} \begin{pmatrix} E & F \\ F & G \end{pmatrix}^{-1}\]
 
@@ -210,16 +209,17 @@ and is equivalent to saying that it can be represented by a symmetric matrix if 
 \section{Discrete Curvature and a Discrete Laplacian}
 In this part we will translate the notion of curvature to 2D meshes. We will follow the approach given in \note{...} There are quite a few different approaches to define curvature on meshes, the problem is not trivial. \note{Could reference a few papers and approaches here.}
 
-\note{Assuming knowledge about differential structure and the laplacian defined on surfaces i will now motivate mean curvature flow. Rewrite/reformulate appropriately later}.
 
-The main idea in the approach described in \note{chagah} is to use a relation between mean curvature with the Laplacian operator on surfaces that exposes a geometric property of the mean curvature that can be  used directly to get a meaningful mean curvature definition on the mesh, alongside a motivation for a Laplacian operator.
+The main idea in the approach described in \note{chagah} is to use a relation between mean curvature with the Laplacian operator on surfaces. This relation exposes a geometric property of the mean curvature that can be  used directly to get a meaningful mean curvature definition on the mesh, alongside with a motivation for a Laplacian operator.
 
 \subsection{Minimal Surfaces and the Mean Curvature Flow}
-The geometric key property of mean curvature and the Laplacian that is exploited is the so called area minimizing flow. Minimal surfaces are a quite complex field; a quite readable introduction is given in [Osserman survey of minimal surfaces 1986], a rather advanced introduction is given in [T. H. Colding and W. Mincozzi] and an excellent introduction is given in [Konrad Polthier Computational Aspects of Discrete Minimal Surfaces]. To explain what the mean curvature flow is and how it relates to the Laplacian we sketch two 'facts' and their implications.
+The geometric key property of mean curvature and the Laplacian that is exploited is the so called area minimizing flow. Minimal surfaces are a quite complex field; a quite readable introduction is given in [Osserman survey of minimal surfaces 1986], a rather advanced introduction is given in [T. H. Colding and W. Mincozzi]. Further computational aspects of the mean curvature flow in a similar setting as this thesis are described in [Konrad Polthier Computational Aspects of Discrete Minimal Surfaces]. To explain what the mean curvature flow is and how it relates to the Laplacian we sketch two 'facts' and their implications.
 
-The first fact considers the relation between the manifold-Laplacian, the spacial coordinates of the manifold and the mean curvature normal. As we have seen, some manifolds can get a differential structure and we can define a divergence, a gradient and a Laplace operator on the manifold. These differential operators can be applied to any (smooth) function on the surface. One special smooth function are the coordinate functions: every point on the manifold $M^k \subset \mathbb R^n$ has a spacial position $(x_1,...,x_n)$ and the function that assigns every point $p\in M^k$ its $j$-th coordinate is a smooth function; the $j$th coordinate function. \note{img}
+The first fact considers the relation between the manifold-Laplacian, the spacial coordinates of the manifold and the mean curvature normal. As we have seen, manifolds can get a differential structure. This can be used to define a divergence, a gradient and a Laplace operator ON manifolds. We will come back to such operators on manifolds in Section \note{...} when talking about exterior calculus; for now you will have to accept that they do exist, and that these differential operators can be applied to (smooth) function on the surface. 
 
-The manifold Laplacian applied by element to the coordinates $x$ of the manifold then turns out to be a multiple of the curvature normal:
+ One special kind of smooth functions are the coordinate functions: every point on a manifold $M^k \subset \mathbb R^n$ has a spacial position $(x_1,...,x_n)$ and the function that assigns every point $p\in M^k$ its $j$-th coordinate is a smooth function; the $j$th coordinate function. \note{img}
+
+The manifold Laplacian applied by element to the coordinates $x$ of 2-dimensional surface then turns out to be a multiple of the curvature normal:
 \begin{equation} \Delta_{M^2}x= -2H\cdot N \label{eqn::laplaceMeancurve}\end{equation}
 The second fact considers surface area as a function of the manifold's coordinates.
 \[area(M^2)\]
@@ -231,7 +231,7 @@ This is a function in $t$ so we can calculate a derivative
 \[\frac{\partial}{\partial t}area(M^2_t).\]
 Setting $t=0$ then turns out to produce
 \[\frac{\partial}{\partial t}area(M^2_t)|_{t=0} = 2\int_{M^2}H\langle V, N \rangle\]
-where $N$ is the surface normal field of $M^2$ and $H$ is the mean curvature. This has various implications: if the mean curvature vanishes everywhere on a surface the surface is a so called minimal surface: perturbing it locally always increases the surface area. (Well, this is not completely true: you would have to look at the second variational derivative to make this sure, but this is of no importance for us)
+where $N$ is the surface normal field of $M^2$ and $H$ is the mean curvature. This has various implications: if the mean curvature vanishes everywhere on a surface, the surface is a so called minimal surface: perturbing it locally always increases the surface area. (Well, this is not completely true: you would have to look at the second variational derivative to make this sure, but this is of no importance for us)
 
 The second implication is that selecting $V = -H\cdot N$ leads to
 
@@ -281,12 +281,12 @@ As long as triangles are non-obtuse this works well. For obtuse triangles this f
 \note{etc, TODO}
 
 The relation between the surface Laplacian and the mean curvature in Equation \ref{eqn::laplaceMeancurve} then motivates to define a discrete Laplacian acting on a discrete function $f$ defined per vertex as
-\[\Delta_{discrete} f = -\frac{1}{\mathcal A_v}\sum_{j\in N_1(v)} (\cot \alpha_{ij} + \cot \beta_{ij})(x_v-x_j)\] 
+\[\Delta_{discrete} f = -\frac{1}{\mathcal A_v}\sum_{j\in N_1(v)} (\cot \alpha_{ij} + \cot \beta_{ij})(f_v-f_j)\] 
 \note{A cleaner but less geometric approach to the discrete Lalacian in a Finite Element setting is also given in section.... and the much more general approach to differential operators using discrete differential forms in Chapter ... will also lead to this formula.}
 
 \subsection{Discrete Gauss Curvature, Principle Curvatures}
+\note{Is this Section needed?Claude's Opinion? Nothing new would be gained an they are described very understandably in the desbrun paper}
 For the sake of completeness we present the discrete Gaussian and principle curvatures, as introduced in [desbrun et Al.], such that all the curvature operators introduced in the differential geometry section get some discrete analogues. While the discrete mean curvature performs very well and because of its strong relation to the Laplacian fits perfectly in the discrete differential forms setting introduced in the next chapters, the Gaussian as well as the principal curvatures use an independent approach. In the experiments done by [desbrun et Al.] they did also perform less well than or at best comparatively well as other approaches. 
-\note{Is this Section needed?Claude's Opinion? Do it later if so....}
 
 
 \subsection{Note: Discrete Laplacian in a Finite Element Setup}
@@ -359,4 +359,4 @@ for every time step. \note{image}
 \note{Images of results, explicit vs implicit}
 
 \subsection{(?) Implementation: remeshing (?)}
-\note{You could use the laplacian also for remeshing to get very nicely meshed meshes where circumcenters lie inside the triangles (the mesh gets slightly smoothed in the remeshing step). The implementation is simple. These meshes would probably be nice enough for fluid simulations as described... This section is a 'nice to have' section i maybe do if everything else is done.}
+\note{You could use the laplacian also for remeshing to get very nicely meshed meshes where circumcenters lie inside the triangles (the mesh gets slightly smoothed in the remeshing step... a fluid sim on a bunny would be funny; maybe a bit like hair in the wind...). The implementation is simple. These meshes would probably be nice enough for fluid simulations as described... This section is a 'nice to have' section i maybe do if everything else is done.}

@@ -1,0 +1,42 @@
+\begin{appendix}
+
+\chapter{Primal and Dual Discrete Border Operator}
+
+\note{What follows now comes in the Appendix - this is already a much clearer formulation than anything i found anywhere, but still a bit technical. Could put a short note on orientation definition using forms in Appendix too} 
+[Inspired by Discrete Exterior Calculus by Desbrun et al.]
+The setting is the following: we are on an $n$-dimensional (discrete) manifold and the $n$-simplex $\sigma^n$ is oriented according to the orientation of the manifold. $\sigma^k$ is some face on $\sigma^n$ with an arbitrary orientation and $\sigma^{k-1}$ is a face of $\sigma^k$. On the dual-mesh side we have the cells $\star \sigma^k$ that lies on the border of $\star \sigma^{k-1}$; both these dual have an orientation induced by the primary cells. Our goal is to relate the primary border matrix $\delta_k$ which stores the relative orientation of $\sigma^k$ and $\sigma^{k-1}$ 
+and the dual border matrix $\delta_{n-k+1}^{dual}$ that stores the relative orientation of the (n-k+1)-cell $\star \sigma^{k-1}$ and $\star \sigma^{k}$.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height= 5cm]{imgs/6_4_dualPrimalBorder.eps}
+\end{center}
+\caption{$v_1,v_2$ defines the orientation of $\sigma^k$ (here $k=2$) and $v_1,v_2,v_3$ defines the orientation of the 3-manifold we are on; $v_2$ ($v_k$) is an inside pointing border normal for $\sigma^{k-1}$ and outside normal for $\star \sigma^k$. $\sigma^{k+1}$ is one border simplex, oriented according to $\omega^k$. The duals $\star \omega^k$ and $\star \omega^{k-1}$ have orientations induced by the primal cells (red). As you can see, while the primals are oriented consistently, the induced orientations on the dual are opposite to each other.}
+\end{figure}
+
+First of all notice that orientation can be treated very neatly by using forms, as volume forms measure signed volume.
+We saw in Section \note{...}, that a $k$ simplex $\sigma^k$ encodes orientation by the ordering of its vertices, and that induces an oriented basis $v_1,...,v_k$ that spans its volume. In terms of forms the ordering defines a volume form
+\[dv_1\wedge...\wedge dv_k\]
+to the $k$-simplex. The $k$-simplex lies in an $n$-simplex $\sigma^n$, oriented according to the orientation of the discrete manifold; it induces a volume form
+\[dv_1\wedge ... \wedge dv_n\]
+on its volume. We can select the vector $v_k$ (for some fixed $j<=k$) to be a normal on the face $\sigma^{k-1}$ pointing inside $\sigma^k$, and adapt $v_1,...,v_{k-1}$ such that $dv_1\wedge...\wedge dv_k$ remains the same. Then the orientation / volume form  of $\sigma^{k-1}$ induced by $\sigma^k$ (via its border relation) is
+\[dv_1\wedge... \wedge dv_{k-1} (-1)^{k}\]
+consistent with the way we defined border orientation ( preappending the 'outside normal' $-dv_k$ leads to the form $dv_1\wedge ... \wedge dv_k$, i.e. the orientation of $\sigma^k$). Furthermore we ask $v_{k+1},...,v_{n}$ to be orthogonal on $v_{1},...,v_{k}$; i.e. they should be aligned with the dual of the cell $\sigma^k$. Then the induced orientation of the dual simplex $\star \sigma^k$ is given by
+\[\star (dv_1\wedge...\wedge dv_k) = dv_{k+1}\wedge...\wedge dv_{n}\]
+The orientation of the $j$th border component $\sigma_j^{k-1}$ of $\sigma^k$ induced by $\sigma^k$ is
+\[\delta (dv_1\wedge...\wedge dv_k) \Rightarrow\]
+\[(-1)^{k}dv_1\wedge...\wedge dv_{k-1}\]
+its dual $\star \sigma^{k-1}$ has the orientation
+\[\star ((-1)^{k} v_1\wedge...\wedge dv_{k-1}) = (-1)^{k} dv_k \wedge dv_{k+1}\wedge ... \wedge dv_n\]
+Both, $\star \sigma^k$ and $\star \sigma^{k-1}$, have orientations induced from the primary simplices as seen. But by its border relation $\star \sigma^{k-1}$ also induces an orientation to $\star \sigma^k$. Note that $v_k$ acts as outside pointing normal for $\star \sigma^k$ as border of the dual $\star \sigma_j^{k-1}$ and therefore
+\[\delta (-1)^{k} dv_k \wedge dv_{k+1}\wedge ... \wedge dv_n = (-1)^{k} dv_{k+1}\wedge ... \wedge dv_n\]
+This means that the relative orientation of the pair $(\sigma^k, \sigma^{k-1})$ and the relative orientation of the pair $(\star \sigma^{k-1}, \star \sigma^k)$ is related by
+\[orient(\sigma^k, \sigma^{k-1}) = (-1)^{k} orient(\star \sigma^{k-1}, \star \sigma^k)\]
+Therefore, if the border matrix
+\[\delta_k\]
+stores the relative orientations of $k$ and $k-1$ simplices $\sigma^k$ and $\sigma^{k-1}$, then the relative orientation of $n-k-1$ and $n-k$-dimensional dual cells $\star \sigma^{k-1}$  and $\star \sigma^k$, with orientations induced by the primary simplices, is given by the dual border matrix
+\[\delta_{n-k+1}^{dual} = (-1)^{k} (\delta_k)^T\]
+
+\note{End of Appendix part}
+
+\end{appendix}

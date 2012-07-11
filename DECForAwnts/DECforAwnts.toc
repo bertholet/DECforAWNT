@@ -1,117 +1,144 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Introduction}{7}
-\contentsline {section}{\numberline {1.1}General Setting}{7}
+\contentsline {section}{\numberline {1.1}Goal of this Thesis}{7}
 \contentsline {section}{\numberline {1.2}A Glimpse of DEC}{7}
-\contentsline {section}{\numberline {1.3}A Tour to this Thesis}{7}
-\contentsline {section}{\numberline {1.4}What this thesis is and what it is not}{7}
-\contentsline {chapter}{\numberline {2}The Basic Objects: Meshes, Manifolds and Sparse Matrices}{9}
-\contentsline {section}{\numberline {2.1}Manifolds}{10}
+\contentsline {section}{\numberline {1.3}A Tour to this Thesis}{8}
+\contentsline {section}{\numberline {1.4}What this thesis is and what it is not}{8}
+\contentsline {chapter}{\numberline {2}Manifolds and Meshes}{9}
+\contentsline {section}{\numberline {2.1}Manifolds}{9}
 \contentsline {subsection}{\numberline {2.1.1}Describing Manifolds}{10}
+\contentsline {subsubsection}{Local Coordinates}{12}
 \contentsline {subsection}{\numberline {2.1.2}Tangential Spaces}{12}
-\contentsline {subsection}{\numberline {2.1.3}Orientations}{13}
-\contentsline {subsection}{\numberline {2.1.4}Manifolds with Border}{14}
+\contentsline {subsection}{\numberline {2.1.3}Orientations}{14}
+\contentsline {subsection}{\numberline {2.1.4}The Border Operator}{14}
 \contentsline {subsection}{\numberline {2.1.5}Functions and Derivatives on Manifolds}{16}
-\contentsline {section}{\numberline {2.2}Meshes and Simplicial Complexes}{17}
-\contentsline {subsection}{\numberline {2.2.1}Simplices and Simplicial Complexes}{17}
-\contentsline {subsection}{\numberline {2.2.2}Orientations of Simplicial Complexes}{18}
-\contentsline {subsection}{\numberline {2.2.3}Border Operations}{19}
-\contentsline {subsection}{\numberline {2.2.4}Oriented Discrete Manifold}{21}
-\contentsline {section}{\numberline {2.3}Implementation: Mesh and basic operations}{22}
-\contentsline {subsection}{\numberline {2.3.1}A word on Sparse Matrices}{22}
-\contentsline {subsection}{\numberline {2.3.2}Implementing a Mesh for DEC}{23}
-\contentsline {subsection}{\numberline {2.3.3}Implementing k-Simplicial Complexes for DEC}{24}
-\contentsline {subsection}{\numberline {2.3.4}Implementing Basic Mesh Operations}{25}
-\contentsline {subsubsection}{Setup a DEC mesh from a Wireframe Mesh Representation}{25}
-\contentsline {subsubsection}{Set Up Border Matrices}{25}
-\contentsline {subsubsection}{Check if a DEC Mesh is a Discrete Manifold}{26}
-\contentsline {subsubsection}{Find Borders}{27}
-\contentsline {subsubsection}{Get Connected Components of a set of K-Simplices}{27}
-\contentsline {chapter}{\numberline {3}Two Dimensional Surfaces}{29}
-\contentsline {section}{\numberline {3.1}Differential Geometry}{30}
-\contentsline {subsection}{\numberline {3.1.1}Curves in $\mathbb R^3$}{30}
-\contentsline {subsubsection}{Parametrization by Arc Length}{30}
-\contentsline {subsubsection}{Curvature}{30}
-\contentsline {subsubsection}{Torsion}{31}
-\contentsline {subsection}{\numberline {3.1.2}Curvatures on Surfaces}{31}
-\contentsline {subsubsection}{Normals and Orientation}{32}
-\contentsline {subsubsection}{Derivatives on surfaces}{32}
-\contentsline {subsubsection}{The derivative of the Normal-Field}{33}
-\contentsline {subsubsection}{Curvature on Surfaces}{35}
-\contentsline {subsubsection}{A metric on a surface}{37}
-\contentsline {section}{\numberline {3.2}Discrete Curvature and a Discrete Laplacian}{37}
-\contentsline {subsection}{\numberline {3.2.1}Minimal Surfaces and the Mean Curvature Flow}{37}
-\contentsline {subsection}{\numberline {3.2.2}Discrete Mean Curvature}{39}
-\contentsline {subsection}{\numberline {3.2.3}Discrete Gauss Curvature, Principle Curvatures}{40}
-\contentsline {subsection}{\numberline {3.2.4}Note: Discrete Laplacian in a Finite Element Setup}{41}
-\contentsline {section}{\numberline {3.3}Implementation}{41}
-\contentsline {subsection}{\numberline {3.3.1}Discrete $\Delta $ and Mean Curvature}{41}
-\contentsline {subsection}{\numberline {3.3.2}Implementation: Surface Smoothing}{43}
-\contentsline {subsection}{\numberline {3.3.3}(?) Implementation: remeshing (?)}{43}
-\contentsline {chapter}{\numberline {4}(?) Differential Structure and Differential Calculus on Manifolds}{45}
-\contentsline {section}{\numberline {4.1}Differentiability Revisited}{45}
-\contentsline {subsubsection}{An example Vector Field}{46}
-\contentsline {section}{\numberline {4.2}Derivatives, Vectorfields and Differential Operators}{47}
-\contentsline {section}{\numberline {4.3}Riemannian Metric}{47}
-\contentsline {section}{\numberline {4.4}Some Differential Operators}{48}
-\contentsline {subsection}{\numberline {4.4.1}Divergence}{49}
-\contentsline {subsection}{\numberline {4.4.2}Gradient}{50}
-\contentsline {subsection}{\numberline {4.4.3}Rotation}{50}
-\contentsline {subsection}{\numberline {4.4.4}Laplacian}{50}
-\contentsline {chapter}{\numberline {5}Differential Forms}{53}
-\contentsline {section}{\numberline {5.1}Motivation: The perfect thing to integrate}{54}
-\contentsline {section}{\numberline {5.2}Forms and Differential Forms}{55}
-\contentsline {subsection}{\numberline {5.2.1}Basis and Dimension of $\Lambda ^k(\mathbb R^l)$}{56}
-\contentsline {subsection}{\numberline {5.2.2}The Wedge Product}{57}
-\contentsline {subsection}{\numberline {5.2.3}Differential Forms}{58}
-\contentsline {subsection}{\numberline {5.2.4}What Differential Forms are in $\mathbb {R}^3$}{59}
-\contentsline {subsubsection}{Differential 0 Forms}{59}
-\contentsline {subsubsection}{Differential $n$-Forms on $\mathbb R^n$}{61}
-\contentsline {section}{\numberline {5.3}Integrating Forms}{62}
-\contentsline {subsection}{\numberline {5.3.1}Pull-Back}{63}
-\contentsline {section}{\numberline {5.4}Discrete Forms}{63}
-\contentsline {subsection}{\numberline {5.4.1}Sampling Forms}{64}
-\contentsline {subsubsection}{Sampling 0 Forms}{64}
-\contentsline {subsubsection}{Sampling 1 Forms}{65}
-\contentsline {subsubsection}{Sampling 2 Forms}{65}
-\contentsline {subsubsection}{Some Observations}{66}
-\contentsline {subsection}{\numberline {5.4.2}Integrating Discrete Forms}{66}
-\contentsline {subsection}{\numberline {5.4.3}(?) Interpolating discrete differential Forms and the $^\#$ }{67}
-\contentsline {chapter}{\numberline {6}Exterior Calculus \& Discrete Exterior Calculus}{69}
-\contentsline {section}{\numberline {6.1}(?) Gradient, Curl, Divergence}{70}
-\contentsline {section}{\numberline {6.2}The Exterior Derivative $d$}{70}
-\contentsline {subsection}{\numberline {6.2.1}Defining $d$}{70}
-\contentsline {subsection}{\numberline {6.2.2}What $d$ is in $\mathbb R^3$}{71}
-\contentsline {subsubsection}{$0$-Forms}{71}
-\contentsline {subsubsection}{$1$ Forms}{71}
-\contentsline {subsubsection}{$2$-Forms on $\mathbb R^3$}{72}
-\contentsline {subsubsection}{Summary}{72}
-\contentsline {subsection}{\numberline {6.2.3}Properties of the exterior derivative}{73}
-\contentsline {subsection}{\numberline {6.2.4}$d$ in another base}{73}
-\contentsline {section}{\numberline {6.3}Stokes Theorem}{73}
-\contentsline {subsection}{\numberline {6.3.1}A Proof Sketch for Stokes Theorem}{74}
-\contentsline {subsubsection}{Proof (sketch)}{75}
-\contentsline {subsection}{\numberline {6.3.2}Special Cases of Stokes Theorem}{76}
-\contentsline {subsection}{\numberline {6.3.3}Geometry of $d$}{76}
-\contentsline {section}{\numberline {6.4}Discrete Differential Operator}{77}
-\contentsline {subsection}{\numberline {6.4.1}Examples}{77}
-\contentsline {section}{\numberline {6.5}Duality: We want more}{77}
-\contentsline {section}{\numberline {6.6}Dual Mesh and Star Operator}{77}
-\contentsline {section}{\numberline {6.7}This is Discrete Exterior Calculus}{77}
-\contentsline {section}{\numberline {6.8}The 0 Form Laplacian from the beginning}{77}
-\contentsline {chapter}{\numberline {7}Application: Mesh Parametrization}{79}
-\contentsline {subsection}{\numberline {7.0.1}Embeddings}{79}
-\contentsline {subsection}{\numberline {7.0.2}Conformal Maps}{79}
-\contentsline {subsection}{\numberline {7.0.3}Implementaion: Conformal Embedding}{79}
-\contentsline {subsection}{\numberline {7.0.4}Dimension of Harmonic Space?}{79}
-\contentsline {section}{\numberline {7.1}Application: Vectorfield Design and the general Laplacian}{80}
-\contentsline {subsection}{\numberline {7.1.1}Point Carre Lemma}{80}
-\contentsline {subsection}{\numberline {7.1.2}General Laplacian}{80}
-\contentsline {subsection}{\numberline {7.1.3}Hodge Decomposition}{80}
-\contentsline {subsection}{\numberline {7.1.4}Application: Vector Field Design}{80}
-\contentsline {subsection}{\numberline {7.1.5}Border Constraints}{80}
-\contentsline {section}{\numberline {7.2}A Fluid Simulation with DEC}{81}
-\contentsline {subsection}{\numberline {7.2.1}The Euler Equations}{81}
-\contentsline {subsection}{\numberline {7.2.2}The Algorithm}{81}
-\contentsline {subsection}{\numberline {7.2.3}Interpolation and Pathtracing}{81}
-\contentsline {subsection}{\numberline {7.2.4}Border Constraints}{81}
-\contentsline {subsection}{\numberline {7.2.5}Influence of Mesh choice and parameter choice}{81}
+\contentsline {subsubsection}{Derivatives}{16}
+\contentsline {section}{\numberline {2.2}Meshes and Simplicial Complexes}{19}
+\contentsline {subsection}{\numberline {2.2.1}Simplices and Simplicial Complexes}{19}
+\contentsline {subsection}{\numberline {2.2.2}Orientations of Simplicial Complexes}{21}
+\contentsline {subsection}{\numberline {2.2.3}Border Operations}{22}
+\contentsline {subsection}{\numberline {2.2.4}Oriented Discrete Manifold}{24}
+\contentsline {section}{\numberline {2.3}Implementation: Mesh and basic operations}{25}
+\contentsline {subsection}{\numberline {2.3.1}A word on Sparse Matrices}{25}
+\contentsline {subsection}{\numberline {2.3.2}Implementing a Mesh for DEC}{26}
+\contentsline {subsection}{\numberline {2.3.3}Implementing k-Simplicial Complexes for DEC}{27}
+\contentsline {subsection}{\numberline {2.3.4}Implementing Basic Mesh Operations}{28}
+\contentsline {subsubsection}{Setup a DEC mesh from a Wireframe Mesh Representation}{28}
+\contentsline {subsubsection}{Set Up Border Matrices}{28}
+\contentsline {subsubsection}{Check if a DEC Mesh is a Discrete Manifold}{29}
+\contentsline {subsubsection}{Find Borders}{30}
+\contentsline {subsubsection}{Get Connected Components of a set of K-Simplices}{30}
+\contentsline {chapter}{\numberline {3}Two Dimensional Surfaces}{33}
+\contentsline {section}{\numberline {3.1}Differential Geometry}{34}
+\contentsline {subsection}{\numberline {3.1.1}Curves in $\mathbb R^3$}{34}
+\contentsline {subsubsection}{Parametrization by Arc Length}{34}
+\contentsline {subsubsection}{Curvature}{34}
+\contentsline {subsubsection}{Torsion}{35}
+\contentsline {subsection}{\numberline {3.1.2}Curvatures on Surfaces}{35}
+\contentsline {subsubsection}{Normals and Orientation}{36}
+\contentsline {subsubsection}{The derivative of the Normal-Field}{36}
+\contentsline {subsubsection}{Curvature on Surfaces}{37}
+\contentsline {subsubsection}{A metric on a surface}{39}
+\contentsline {section}{\numberline {3.2}Discrete Curvature and a Discrete Laplacian}{39}
+\contentsline {subsection}{\numberline {3.2.1}Minimal Surfaces and the Mean Curvature Flow}{40}
+\contentsline {subsection}{\numberline {3.2.2}Discrete Mean Curvature}{41}
+\contentsline {subsection}{\numberline {3.2.3}Discrete Gauss Curvature, Principle Curvatures}{43}
+\contentsline {subsection}{\numberline {3.2.4}Note: Discrete Laplacian in a Finite Element Setup}{43}
+\contentsline {section}{\numberline {3.3}Implementation}{43}
+\contentsline {subsection}{\numberline {3.3.1}Discrete $\Delta $ and Mean Curvature}{44}
+\contentsline {subsection}{\numberline {3.3.2}Implementation: Surface Smoothing}{45}
+\contentsline {subsection}{\numberline {3.3.3}(?) Implementation: remeshing (?)}{46}
+\contentsline {chapter}{\numberline {4}(?) Differential Structure and Differential Calculus on Manifolds}{47}
+\contentsline {section}{\numberline {4.1}Differentiability Revisited}{47}
+\contentsline {subsubsection}{An example Vector Field}{48}
+\contentsline {section}{\numberline {4.2}Derivatives, Vectorfields and Differential Operators}{49}
+\contentsline {section}{\numberline {4.3}Riemannian Metric}{49}
+\contentsline {section}{\numberline {4.4}Some Differential Operators}{50}
+\contentsline {subsection}{\numberline {4.4.1}Divergence}{51}
+\contentsline {subsection}{\numberline {4.4.2}Gradient}{52}
+\contentsline {subsection}{\numberline {4.4.3}Rotation}{52}
+\contentsline {subsection}{\numberline {4.4.4}Laplacian}{52}
+\contentsline {chapter}{\numberline {5}Differential Forms}{55}
+\contentsline {section}{\numberline {5.1}Motivation: The perfect thing to integrate}{56}
+\contentsline {section}{\numberline {5.2}Forms and Differential Forms}{57}
+\contentsline {subsection}{\numberline {5.2.1}Basis and Dimension of $\Lambda ^k(\mathbb R^l)$}{58}
+\contentsline {subsection}{\numberline {5.2.2}The Wedge Product}{59}
+\contentsline {subsection}{\numberline {5.2.3}Differential Forms}{60}
+\contentsline {subsection}{\numberline {5.2.4}What Differential Forms are in $\mathbb {R}^3$}{61}
+\contentsline {subsubsection}{Differential 0 Forms}{61}
+\contentsline {subsubsection}{Differential $n$-Forms on $\mathbb R^n$}{63}
+\contentsline {section}{\numberline {5.3}Integrating Forms}{64}
+\contentsline {section}{\numberline {5.4}Pull-Backs}{65}
+\contentsline {section}{\numberline {5.5}Discrete Forms}{65}
+\contentsline {subsection}{\numberline {5.5.1}Sampling Forms}{66}
+\contentsline {subsubsection}{Sampling 0 Forms}{66}
+\contentsline {subsubsection}{Sampling 1 Forms}{67}
+\contentsline {subsubsection}{Sampling 2 Forms}{67}
+\contentsline {subsubsection}{Some Observations}{68}
+\contentsline {subsection}{\numberline {5.5.2}Integrating Discrete Forms}{68}
+\contentsline {subsection}{\numberline {5.5.3}(?) Interpolating discrete differential Forms and the $^\#$ }{69}
+\contentsline {chapter}{\numberline {6}Exterior Calculus \& Discrete Exterior Calculus}{71}
+\contentsline {section}{\numberline {6.1}(?) Gradient, Curl, Divergence}{72}
+\contentsline {section}{\numberline {6.2}The Exterior Derivative $d$}{72}
+\contentsline {subsection}{\numberline {6.2.1}Defining $d$}{72}
+\contentsline {subsection}{\numberline {6.2.2}What $d$ is in $\mathbb R^3$}{73}
+\contentsline {subsubsection}{$0$-Forms}{73}
+\contentsline {subsubsection}{$1$ Forms}{73}
+\contentsline {subsubsection}{$2$-Forms on $\mathbb R^3$}{74}
+\contentsline {subsubsection}{Summary}{74}
+\contentsline {subsection}{\numberline {6.2.3}Properties of the exterior derivative}{75}
+\contentsline {subsection}{\numberline {6.2.4}$d$ in another base}{75}
+\contentsline {section}{\numberline {6.3}Stokes Theorem}{75}
+\contentsline {subsection}{\numberline {6.3.1}A Proof Sketch for Stokes Theorem}{76}
+\contentsline {subsubsection}{Proof (sketch)}{77}
+\contentsline {subsection}{\numberline {6.3.2}Special Cases of Stokes Theorem}{78}
+\contentsline {subsection}{\numberline {6.3.3}Geometry of $d$}{78}
+\contentsline {section}{\numberline {6.4}Discrete Differential Operator}{79}
+\contentsline {subsection}{\numberline {6.4.1}Examples}{79}
+\contentsline {subsection}{\numberline {6.4.2}Correctness}{79}
+\contentsline {section}{\numberline {6.5}Duality: The Hodge Star}{80}
+\contentsline {subsection}{\numberline {6.5.1}Intuition}{81}
+\contentsline {subsection}{\numberline {6.5.2}Dual Forms}{81}
+\contentsline {subsubsection}{Definition of $\star $}{82}
+\contentsline {subsubsection}{Understanding $\star $}{82}
+\contentsline {subsubsection}{Interpretation of $\star $}{83}
+\contentsline {section}{\numberline {6.6}Exterior Calculus}{84}
+\contentsline {section}{\numberline {6.7}Dual Mesh and a Discrete Star}{85}
+\contentsline {subsection}{\numberline {6.7.1}Dual Mesh}{86}
+\contentsline {subsubsection}{Border Operator and Orientation of the dual mesh}{86}
+\contentsline {subsection}{\numberline {6.7.2}Discrete Dual Forms and Star Operator}{87}
+\contentsline {subsubsection}{Drawbacks of Voronoi Duality}{88}
+\contentsline {section}{\numberline {6.8}This is Discrete Exterior Calculus}{88}
+\contentsline {section}{\numberline {6.9}Implementation of Dual Forms}{88}
+\contentsline {subsection}{\numberline {6.9.1}The 0 Form Laplacian from the beginning}{88}
+\contentsline {chapter}{\numberline {7}Application: Mesh Parametrization}{89}
+\contentsline {section}{\numberline {7.1}Problem Statement: Conformal Maps}{89}
+\contentsline {section}{\numberline {7.2}Conformal Embedding with DEC}{91}
+\contentsline {subsection}{\numberline {7.2.1}Border Constraints}{91}
+\contentsline {subsection}{\numberline {7.2.2}Graph Theory}{92}
+\contentsline {subsection}{\numberline {7.2.3}Multiple Borders}{95}
+\contentsline {subsubsection}{Exterior Border}{95}
+\contentsline {subsubsection}{Interior Borders}{95}
+\contentsline {subsubsection}{Overall linear equation}{96}
+\contentsline {subsection}{\numberline {7.2.4}?? Alternative $\star _0$ matrices ??}{96}
+\contentsline {subsubsection}{Mean value weights}{97}
+\contentsline {subsubsection}{Uniform weights}{97}
+\contentsline {subsubsection}{Alternative $\star _k$ matrices}{97}
+\contentsline {subsection}{\numberline {7.2.5}Results}{97}
+\contentsline {subsection}{\numberline {7.2.6}Topology?}{97}
+\contentsline {subsubsection}{Hopf Index Theorem}{97}
+\contentsline {subsubsection}{Dimension of Harmonic spaces }{97}
+\contentsline {subsection}{\numberline {7.2.7}Generalization and further notes}{98}
+\contentsline {chapter}{\numberline {8}Application: Vectorfield Design and the general Laplacian}{99}
+\contentsline {subsection}{\numberline {8.0.8}Point Carre Lemma}{99}
+\contentsline {subsection}{\numberline {8.0.9}General Laplacian}{99}
+\contentsline {subsection}{\numberline {8.0.10}Hodge Decomposition}{99}
+\contentsline {subsection}{\numberline {8.0.11}Application: Vector Field Design}{99}
+\contentsline {subsection}{\numberline {8.0.12}Border Constraints}{99}
+\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{101}
+\contentsline {subsection}{\numberline {9.0.13}The Euler Equations}{101}
+\contentsline {subsection}{\numberline {9.0.14}The Algorithm}{101}
+\contentsline {subsection}{\numberline {9.0.15}Interpolation and Pathtracing}{101}
+\contentsline {subsection}{\numberline {9.0.16}Border Constraints}{101}
+\contentsline {subsection}{\numberline {9.0.17}Influence of Mesh choice and parameter choice}{101}
+\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{103}

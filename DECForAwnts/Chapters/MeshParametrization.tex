@@ -1,0 +1,255 @@
+\chapter{Application: Mesh Parametrization}
+	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+		\hline
+		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+		\hline
+			Conformal Maps
+			\begin{packed_enum}
+				\item[-] Conformal Maps with Exterior Calculus
+			\end{packed_enum}
+			&
+			Existance of Embeddings, The thingy theorem
+			\begin{packed_enum}
+				\item[-] Dimension of result spaces depending on topology?
+			\end{packed_enum}
+			 & 
+			 Implementing it with DEC
+			 \begin{packed_enum}
+				\item[-] The equation
+				\item[-] Border Constraints
+				\item[-] Results
+			\end{packed_enum}
+			 \\		
+		\hline
+	\end{longtable}
+	
+With the machinery of discrete and non discrete exterior calculus at hand we can solve various problems with great ease. The way to use this machinery is always similar. The first step is to formulate a problem using exterior calculus, then to translate it to the discrete exterior calculus setting and use this sparse matrix formulation to solve the given problem computationally.
+
+The problem under consideration in this chapter is 2D-surface parametrization as it happens for example with texture mapping. The goal is to find a parametrization of a mesh, i.e. texture coordinates for all its vertices, such that the parametrization has some nice properties. \note{[...] approaches} \note{reference to paper}. 
+
+
+	%\subsection{Embeddings}
+	%Taking coordinates as functions associated to the Surface and not the other way round. The thingy theorem for graphs
+	\section{Problem Statement: Conformal Maps}
+	Given a smooth 2D surface $M$, we try to find a map $\phi$ that parametrizes the whole surface, $\phi: U \subset [0,1]\times [0,1] \rightarrow M$. Such a global map only exists if the surface $M$ has basically the shape of a deformed disk with holes. \emph{[...]}. But lets assume, that $M$ has such a shape, that it has the topology of a disk.
+	
+	In our setting it is easier if we shift our point of view a bit. Instead of looking at the map $\phi$  as something describing the manifold $M$, we take $M$ to be an object existing independently of any maps and interpret $\phi$ as a possibility to assign $x$ and $y$ coordinates to every point on $M$. \note{image}. This means that finding such a $\phi$ is equivalent to finding to real valued functions $x: M \to \mathbb R$ and $y: M \to \mathbb R$. Or in terms of exterior calculus: we want to find two $0$-Forms $x$ and $y$ on $M$.
+	
+In the setting of texture mapping we would like $\phi$ to distort the texture $[0,1]\times [0,1]$ as least as possible, when mapping it to the surface. But there is no perfect way to do this, even if $M$ has the topology of a disk. As soon as $M$ has points where both principle curvatures are non zero there is no way to circumvent distortion, there is no $\phi$ that preserves distances\footnote{,,,}. We can ask various other things of a map $\phi$ or coordinates $x,y$ to minimize distortion. One possibility is to ask the map $\phi$ to be conformal: angles should be preserved under the map \note{img}. Conformality is a local property of a map; angle preservation can be enforced separately at every point. Minimizing the distortion of distances on the other hand affects a map globally, as it can not be enforced by only looking at a map locally. Because of its locality, angle preservation is relatively easy to impose.
+
+In terms of exterior calculus conformality is ensured by
+\begin{equation}
+ \star dx = dy.
+ \label{eqn::conformality}
+\end{equation}
+This expresses that $dx$ is orthogonal to $dy$; as $x$ and $y$ are $0$-Forms or real valued functions, the exterior derivative $d$ represents the gradient operator and $dx$ and $dy$ are the gradients of the coordinate functions. The star operator represents a rotation of $90^\circ$ and Equation \ref{eqn::conformality} therefore imposes that the two gradients are orthogonal and of the same length. The map $\phi$ is then angle preserving\footnote{Basically because $D\phi^T D\phi$ will be a a multiple of the identity matrix at an point and therefore angles are preserved}.
+
+From equation \ref{eqn::conformality} also directly follows that $x$ and $y$ are harmonic maps, i.e. 
+\[\star d \star d x =0\]
+\[ \star d \star d y = 0,\] 
+as you directly get by replacing $\star d x $ by $dy$ and using $dd = 0$: 
+\[\star d \star d x = \star ddy=  \star 0 = 0\]
+
+Furthermore it is well known that the following problem has a unique solution, if all participating elements are sufficiently smooth \note{reference...}:
+\[\left.\begin{matrix}
+ \Delta f(x) = 0 & \text{ for $x \in M$ } \\
+  f(x) = g & \text{ for $x \in \delta M$ } \\
+\end{matrix}\right\rbrace\]
+Here $M$ is a smooth bordered manifold with a differential structure and $g$ are some constraints on the border and $\Delta = \star d\star d$ is the Laplacian. If the values of $f$ are fixed on the border then the harmonicity defines $f$ uniquely. Therefore, in order to find a conformal parametrisation, it is enough to find two harmonic 0-Forms $x$ and $y$ and choose the border constraint such that the conformality holds. I.e. 
+\[\left.\begin{matrix}
+ \Delta x = 0 & \text{ inside $ M$ } \\
+ \Delta y = 0 & \text{ inside $ M$ } \\
+ \text{ Border Constraint for $x,y$ on $ \delta M$} \\
+\end{matrix}\right\rbrace\]
+where the border constraint uniquely determines the values of $x$ and $y$ on the border and ensures $\star dx = dy$ on the border. Conformality then holds automatically inside $M$ as well. \note{it does doesn't it?} The choice of good border constraints is the tricky part.
+
+
+\section{Conformal Embedding with DEC}
+Now it is easy to express the problem statement with discrete exterior calculus. To begin with we assume that the mesh we want to parametrize is a discrete $2$ manifold and that it is a surface patch: that it has the topology of a disk and only has a single border component. We then solve for two discrete $0$-Forms $x$ and $y$, i.e. two vectors of per vertex texture coordinates. Using the discrete star and $d$ operator the harmonicity constraint is given by the two linear equations
+\[\star_0^{-1} d_1^{dual} \star_1 d_0^{primal} x = 0\]
+\begin{equation}\star_0^{-1} d_1^{dual} \star_1 d_0^{primal} y = 0 \label{eq:conformal}\end{equation}
+The border constraints are handled separately: we compute $x$ and $y$ coordinates for border vertices separately, leading to some coordinate vectors $b_x, b_y$ and  replace the equation above for border vertices by
+\[ x = b_x\]
+\[y = b_y.\]
+\note{How its done. Pretty straight forward if you have the machinery. Different Border Constraints. Mention MeanValue Weights?}
+
+\subsection{Border Constraints}
+For border constraints there are different options which lead to results of varying quality. Note that for now we assume that the mesh only has one border component.
+
+\subsubsection*{Convex Polygon}
+A very simple but not very good approach is to force the $x$ and $y$ coordinates of the border component to form some convex polygon, for example a circle. If the border component has $n$ vertices, then for the $k$th border vertex $b_x$ and $b_y$ are simply set to
+\[(b_x,b_y) = (sin((2k/n)\pi),cos((2k/n)\pi)).\] 
+You can get a slight improvement by spacing the values on the circle as they are spaced on the border of the mesh, i.e. by using the factor 
+\[(borderDist(v_k,v_0)/length(border)\] 
+instead of the factor $k/n$.
+
+\subsubsection*{Conformal Border Constraint}
+Conformality means preservation of angles. Say $v$ is a border vertex and $v^+$ and $v^-$ are its predecessor and successor on the border. Then the angle $\alpha_v$ between the edges $(v^-,v)$ and $(v,v^+)$ measured on the mesh,
+\[\alpha_v = \angle (v^-,v),(v,v^+)\]
+should be preserved. When mapped to the plane, the total angle of the image of the border has to be $(n-2)\pi$, so the best we can do is to choose
+\begin{equation}\alpha_v^{mapped} = \alpha_v \frac{(n-2) \pi}{\sum_{v \in border} \alpha_v}\label{eq:conformalAngles}\end{equation}
+as target angles. To get a simple linear system for the mapped border vertices $v_{mapped}^*$ we choose the constraint
+\begin{equation} v^+_{mapped} = v_{mapped} + \frac{\abs{v^+-v}}{\abs{v^- -v}}rot_{\alpha_v^{mapped}} \cdot (v_{mapped}^- - v_{mapped})\label{eq:conformalBorder}\end{equation}
+or
+\[ (v^+_{mapped}-v_{mapped} ) + \frac{\abs{v^+-v}}{\abs{v^- -v}}rot_{\alpha_v^{mapped}} \cdot (v_{mapped} - v_{mapped}^- )= 0,\]
+which takes into account the relative distances between neighboring border vertices in addition to the angle $\alpha_v$. All $v_{mapped}^*$ are vectors in $\mathbb R^2$ with an $x$ and a $y$ coordinate $v_m^*.x$ and $v_m^*.y$. Denoting $\frac{l^+}{l^-} = \frac{\abs{v^+-v}}{\abs{v^- -v}}$, this linear equation for the mapped vertex positions has the following matrix representation
+\[\begin{pmatrix}
+-\frac{l^+}{l^-}cos(\alpha_{m})& \frac{l^+}{l^-}cos(\alpha_{m}) -1 & 1 & \frac{l^+}{l^-}sin(\alpha_{m}) & -\frac{l^+}{l^-}sin(\alpha_{m}) & 0\\
+-\frac{l^+}{l^-}sin(\alpha_{m}) & \frac{l^+}{l^-}sin(\alpha_{m})  & 0  & - \frac{l^+}{l^-}cos(\alpha_{m}) & \frac{l^+}{l^-}cos(\alpha_{m}) -1 & 1\\
+ 
+\end{pmatrix} \begin{pmatrix}
+v_{m}^-.x \\
+v_{m}.x \\
+v_{m}^+.x \\
+v_{m}^-.y \\
+v_{m}.y \\
+v_{m}^+.y \\
+\end{pmatrix} = \begin{pmatrix}
+0 \\
+0
+\end{pmatrix}\]
+
+This set of equation has two degrees of freedom: the scale of the mapped vertices and the orientation. To get a solution we can for example require an arbitrarily selected 'first` border vertex to be mapped to (1,0) and its neighbor to (0,0). The resulting values for border positions are rescaled and translated to $[0,1]^2$ in an additional step.
+
+\note{IMAGE for linear eq}
+
+\subsection{Graph Theory}
+\note{Start with embedding stuff}
+We use DEC to formulate conformality, but it is not clear at all if solving the linear system (...) leads to a good solution. The solution should do more than locally approximate a conformal mapping. The mapping from the mesh to $[0,1]^2$ should be an embedding: there should be no overlapping edges or faces. 
+
+The goal is to embed a graph in $\mathbb R^2$, such that no fold overs occur. There is a renown result proven by Tutte, which describes a simple way to embed '3-connected planar graphs' with a single border component in $\mathbb R^2$. A planar graph is any graph for which such an embedding exists, for example any graph that describes a discrete 2 manifold with disk topology and 3-connected means that removing any three vertices will not lead to a disconnected graph. Tutte stated that if the border of any such graph is mapped to any convex polygon and every vertex is mapped to convex combination of its neighbors, then this mapping is an embedding. Tutte's Theorem, stated as in \note{...}
+
+\begin{thm}(Tutte) Let $G$ be a $3$-connected graph and $\delta G$ be its border component. If $\delta G$ is embedded in the plane as a convex polygon and every vertex is positioned as a strictly convex combination of its neighbors, then the drawing of $G$ with these vertex positions is an embedding.
+\end{thm}
+The proof of this theorem is omitted and can be found in \note{... image, a node in convex hull, one not in convex hull as plausibilizer}. 
+
+This result means that choosing any convex polygon $b_x, b_y$ as image for the border vertices of a mesh and solving a linear system
+\[Ax = 0\]
+\[Ay = 0\]
+\[x_{border} = b_x\]
+\[y_{border} = b_y\]
+leads to an embedding without self intersections, if $A$ describes convex equations for every vertex, i.e. every line $i$ of the matrix fulfils
+\begin{equation}
+a_{ij} \neq 0 \text{ iff $v_i$ and $v_j$ are neighbors} \label{eqn:tutte1}
+\end{equation}
+\begin{equation}
+\sum_{j\neq i} a_{ij} = - a_{ii} \text{i.e.} \sum_{j} a_{ij} = 0\label{eqn:tutte2}
+\end{equation}
+\begin{equation}
+a_{ii} <0, a_{ij} \geq 0 \text{ for $i\neq j$}\label{eqn:tutte3}
+\end{equation}
+
+as such a line expresses that the vertex $i$ is a convex combination $\sum_j w_j v_j$ of its neighbors $v_j$ with the weights
+\[w_j = \frac{a_{ij}}{a_{ii}}.\]
+Tutte's theorem does not completely apply to our setting. Choosing a convex polygon as border might not lead to a conformal mapping and the matrix
+\[\star_0^{-1} d_1^{dual} \star_1 d_0\]
+does not fulfil Equation \ref{eqn:tutte3} when there are obtuse angles in the mesh; the cotan weights from \note{...} are negative for such angles. The Equations \ref{eqn:tutte1} and \ref{eqn:tutte2} are always met. 
+To circumvent this problem we can either use the improved mixed area weights from Section \note{...} or so called mean value weights \note{...}. So at least when the outer border is mapped to a convex polygon and either the mesh is nice or the weigths are slightly adapted the approach described in this chapter will lead to an embedding without self intersections.
+
+In \note{...} Gortler et al. proved an extension of Tutte's theorem, which relaxes the conditions needed to get embeddings and can give quality guaranties when multiple borders are present and they are mapped to non-convex polygons:
+
+\begin{thm}(Gortler et al.) Under the following conditions a parametrization describes an embedding without self intersection:
+\begin{packed_enum}
+\item $G$ is an oriented 2-manifold with disc topology and multiple exterior faces (one exterior boundary and additional holes)
+\item The exterior boundary is mapped to a polygon with winding number $2\pi$ and no self intersections.
+\item The interior boundaries are mapped to non intersecting polygons with winding numbers $-2\pi$
+\item Every mapped non boundary vertex lies in the convex hull of its neighbors
+\item The reflex vertices on boundaries of the mapped graph lie in the convex hull of their neighbors
+\end{packed_enum}
+\end{thm}
+For proof of both theorems we refer to \note{...} and do not reproduce them as many concepts needed for the proof will not be needed anywhere else in this thesis.
+
+Consider the five conditions. The first condition ensures that the problem is solvable from a topological point of view and that there exist global parametrizations of the mesh and the fourth condition is the same as in the Tutte theorem. Conditions 2 and 3 are needed because the mapped oriented manifold is still an oriented manifold, now embedded in $[0,1]^2$. The interior borders then have to be oriented negatively relative to the exterior border.\note{IMAGE}. 
+
+The last property is the key property that can be used to check or guaranty the quality of the result when using a conformal border constraint or any non-convex borders. It means that border vertices that are mapped to reflex vertices have to be treated separately and with care. Note also that inner borders always have reflex vertices \note{image} or can consist only of reflex vertices.
+
+While Tutte's theorem can be used directly to construct an embedding by choosing any convex weights and any convex polygon as mapped border, the extension of Gortler et Al. is not as straight forward to use because the fifth property is not easy to guaranty. If a mapping or parametrization is given, the property is easy to check, but before you have the mapping, you do not know which border vertices are mapped to reflex border vertices and on which you therefore have to enforce (5). 
+
+Simply fixing all border vertices, the reflex and the convex as is proposed in the last section, does not enforce (5). But replacing the fixed constraint for a reflex vertex by a constraint that leads to a fulfillment of (5) at that vertex might lead to its neighbors newly becoming reflex vertices \note{IMG}.
+
+Still the theorem is very useful: having no overlaps in a parametrization looks like a global property, which might need to be enforce by looking at all triangle pairs. But the theorem states that ensuring the local property (4) and taking care of the borders following (5) is enough.
+
+\note{Wort: bedeutung für die reflex vertices, beispiel (gezeichnet) eines reflex vert der die constraint verletzt. Bemerkung das bei verletzter constraint das resultat beliebig schlecht ist. Bemerkung das es noch so kul ist, dass obwohl man eine globale eigenschaft (no intersections) überpruefen will es genügt nur den Rand zu betrachten, weshalb der satz doch recht gut ist. Bemerkung das man am anfang nicht weiss welche vertex reflex sein werden. Bemerkung das alles funktioniert wenn man das am anfang richtig rät. Bemerkung das es klappt wenn man einen spheren kreis braucht und die inneren ränder weit genug weg sind, soso lala.  problem bei vielen nicht reflexen nebeneinander oder so.}
+
+\subsection{Multiple Borders}
+With the Gortler's generalized Tutte theorem in our back we can reconsider the linear Equation \ref{eq:conformal} when using conformal border constraints. We will treat the exterior and the interior borders differently. 
+\subsubsection{Exterior Border}
+First we compute border positions $b_x$ and $b_y$ of the exterior border using the conformal border constraint as described by Equation \ref{eq:conformalBorder}. But we enforce $x = b_x$ and $y= b_y$ only for border vertices that are not reflex if positioned according to $b_x, b_y$. For those that are reflex we replace this constraint by some convexity constraint, we propose to simply treat them like all interior vertices and taking the constraint given by Equation \ref{eq:conformal}:
+\[\star d\star d = 0\]  
+If the conformal border constraint leads to a good border, meaning that it allows a close to conformal map at the border \note{see img...}, and the use of the convexity constraint leads to no new reflex vertices, Gortler's theorem ensures that the calculated solution is an embedding.
+
+\subsubsection{Interior Borders}
+For interior borders we procede similarly; we choose to enforce a conformal constraint on the inner borders. But we do not precompute any border positions.
+
+We start by computing target angle sizes at all vertex positions, as with the exterior border, using Equation \ref{eq:conformalBorder}. Note that this gives us outer angles \note{img...} and when a target angle is less than $\pi$ the vertex is a reflex vertex. Again we treat all vertices that would be reflex vertices after this guess like inner vertices, i.e. choosing the convex constraint given by Equation \ref{eq:conformal} for these vertices. For the vertices estimated to be non reflex we choose the linear equation derived for the conformal border constraint, i.e. Equation \ref{eq:conformalBorder}.
+
+\subsubsection{Overall linear equation}
+The linear equation to get a conformal parametrization for a mesh with disk topology and multiple holes then is the following.
+There is one equation for each vertex x and y coordinate. Let $b_x$ and $b_y$ be some precomputed exterior border positions and $\alpha_v^{mapped}$ be the target angle for a border vertex $v$.
+
+The linear equations then are
+\begin{eqnarray*}
+ &x = b_x & \\
+ &y = b_y &\\
+\end{eqnarray*}
+for convex vertices ($\alpha < \pi$) on the outer border,
+\[(v^+_{mapped}-v_{mapped} ) + \frac{\abs{v^+-v}}{\abs{v^- -v}}rot_{\alpha_v^{mapped}} \cdot (v_{mapped} - v_{mapped}^- )= 0 \]
+for convex vertices on inner borders and
+\[\star_0^{-1} d_1^{dual} \star_1 d_0^{primal} x = 0\]
+\[\star_0^{-1} d_1^{dual} \star_1 d_0^{primal} y = 0\]
+for all other vertices.
+
+
+\subsection{?? Alternative $\star_0$ matrices ??}
+\note{Where to put this section? And i don't know how to put mean value coordinates in the perspective}
+As mentioned when introducing it, the discrete $\star$ is less than perfect. That it is a simple diagonal matrix is a great strength, but as seen there are some issues. For one, other than the discrete $d$ operator, it is not wholly consistent with the theoretical sampling scheme. But more importantly the weights degenerate if the mesh degenerates because of choosing the Voronoi mesh as dual mesh: the Voronoi cells for obtuse simplices are not bounded and therefore the approximation of the $\star$ operator which relies on a guess of the dual form integrated over the dual cell, gets arbitrary bad.
+
+We have considered exactly this problem in Section \note{...} and came up with the mixed area weights \note{...}. In DEC the interpretation is ...
+
+But even thought the mixed area weights are pretty good we want to mention some further alternatives:
+
+\subsubsection{Mean value weights}
+
+\subsubsection{Uniform weights}
+
+\subsubsection{Alternative $\star_k$ matrices}
+
+\subsection{Results}
+
+\subsection{Topology?}
+In this Chapter we constantly made the restriction that the mesh should have the topology of a disk (with or without holes). Why? The answer is simple: in most other cases there would not exist a global parametrization. To understand the why we have to fall back to (differential) topology. Differential topology treats very general properties of manifolds with a differential structure. Topology treats properties of objects that stay true if the objects are deformed in a continuous way. An important topological invariant is the Euler characteristic or the genus, which basically depends only on the number of holes a geometric object has. For example a doughnut (one hole or genus 1) has an other genus then a pretzel (3 holes, genus 3) or a sphere (no holes, genus 0).
+
+In the following we mention some results that clarify the topological constraints on parametrization and similar problems.
+
+\subsubsection{Hopf Index Theorem}
+The Hopf index theorem \note{proof using difforms in ....} as it is stated here treats vector fields but we can directly apply it to our problem.
+
+\subsubsection{Dimension of Harmonic spaces }
+\note{Where to put it?}
+The following is somewhat abstract and part of so called Hodge theory and treats harmonic $k$-Forms on arbitrary dimensional compact Riemannian manifolds $M$.\footnote{ A compact Riemannian manifold is a smooth manifold without border that is contained in some finite subspace $[a,b]^n$- for example the surface of a sphere. A disk would not qualify because of its border, an infinite plane e.g. $\mathbb R^2$ would neither as it is not compact.} The result we are interested in states \note{some reference...}: 
+\[\]
+\emph{The dimension of the kernel of the Laplacian on the space of $k$-forms is equal to the dimension of the de Rham cohomology group of degree $k$; the dimension of this kernel is the $k$-th Betti number.} 
+\[\]
+This needs some explanation; we go through this statement term by term. The kernel of the Laplacian on the space of $k$-Forms is easy to understand: it is the vector space of $k$-Forms for which $\Delta \omega^k = 0$ i.e. the space of harmonic $k$-forms. The harmonic $k$-forms form a vector space over $\mathbb R$ as any multiple of a harmonic $k$-form is a harmonic $k$-form and the sum of two harmonic $k$-forms is again harmonic.
+
+The $k$-th de Rham cohomology group is quite abstract. It is the space $Ker(d_k)/Img(d_{k-1})$ where $/$ is the 'modulo' operator. \note{Just now it is of no immediate importance; but we will meet this again when treating the Hodge decomposition and here is the right context to mention it. .... do i need to mention it?}
+
+A Betti number is a natural number and a topological invariant. Topological invariants stay the same when the underlying space is deformed. For example if you deform a manifold to an other manifold without tearing new holes in it or glueing multiple points to each other, topological invariants stay the same. You can really think of the manifold being made out of plasticine and any deformation which does not tear new holes in it or where you merge outer faces is allowed. 
+
+Even without understanding Betti numbers any further you can see that the result is quite strong: the solution space of harmonic $k$-forms on compact Riemannian manifolds is of some fixed finite dimension that depends only on the topology of the manifold i.e. its very general form. 
+
+The zeroth, and the first Bettinumber capture the following properties on two dimensional compact Riemannian manifolds: the 0-Betti number is simply the number of connected components of the manifold. The first Betti number is two times the number of ''handles`` or ''loops`` the manifold has. Here ''handle`` is meant in its plainest sense. A coffee cup usually has exactly one loop like handle, therefore the first Betti number of its surface is 2. A donut consist of exactly one loop like handle so its first Betti number is 2, it is also merely a deformation of a classical coffee cup. A pretzel consist of three handles so its surface has Betti number 6. And a sphere has no handles at all, therefore it has Betti number 0. \note{image}
+
+
+Just to mention it: the $k$-th Betti number for smooth Riemannian manifolds is more or less directly defined as the dimension of a cohomology group $Ker(d_k)/Img(d_{k-1})$. But we don't care about this. The important point is that they are topological invariants and therefore the dimension of the space of harmonic $k$-forms also only depends on the topology of the manifold.
+
+
+\note{Note that here there is a lot that is left unsaid. Bettinumbers, chain complexes, cochain complexes - you can get abstracted and abstracter - and see the symmetry between border operator, simplicial complexes etc clearer and clearer.}
+
+
+We did use DEC and more graph theoretic results to treat the mesh parametrization problem. 
+		Looking at results and topology. Genus, Bettinumbers, DeRham Complex?	Would be nice..
+		Mention cutting algorithms like the quad mesh paper..
+		
+\subsection{Generalization and further notes}
+Cutting algorithms, better border constraints, iterative process. Multiple holes: hole filling and recutting.

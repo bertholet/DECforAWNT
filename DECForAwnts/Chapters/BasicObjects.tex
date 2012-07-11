@@ -1,9 +1,23 @@
-\chapter{The Basic Objects: Meshes, Manifolds and Sparse Matrices}
+\chapter{Manifolds and Meshes}
 
-So lets get started. In this chapter we will have a closer look at the basic objects we will deal with throughout this text.  We start with the description of so called ''manifolds'' which describe smooth surfaces and more generally smooth spaces embedded in higher dimensional spaces.
-In the second section we have a closer look at the meshes (and more generally Simplicial Complexes) that we use in practice in the place of manifolds. The third section explains how to implement meshes and simplicial complexes in a way that is convenient for DEC purposes. 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height = 4cm]{imgs/2_1_ECVsDEC.eps}
+\end{center}
+\vspace{-0.5cm}
+\caption{Exterior calculus is defined on manifolds, discrete exterior calculus on discrete manifolds. This chapter therefore covers manifolds and discrete manifolds.}
+\end{figure}
 
-The third section is the actual hands-on section, whereas the first two sections provide the background and the foundations of Exterior Calculus and Discrete Exterior Calculus.
+Throughout this thesis we will always have to deal with two worlds. On one side there is the continuous world, where classical calculus and exterior calculus can be used to describe problems or physical relations. On the other side is the discrete world, where computational calculations can be done and the the smooth world is approximated.
+
+This chapter focuses the geometric objects in these worlds. On the continuous side these are manifolds, which are the mathematical objects used to describe smooth curved spaces. Manifolds are treated in Section \ref{sec::2_Manifolds}. On the other side we have discrete manifolds, which are multiple dimensional meshes and are introduced in Section \ref{sec::2_discreteManifolds}. Having a correct  understanding of both discrete and continuous manifolds is vital to understand exterior and discrete exterior calculus.
+
+The last section of this chapter is of a more practical nature. It can be used as a guide when implementing discrete manifolds for DEC or as a hands-on section to get the most out of reading this thesis. As application some geometric operations on meshes and discrete manifolds are described.
+
+%So lets get started. In this chapter we will have a closer look at the basic objects we will deal with throughout this text.  We start with the description of so called ''manifolds'' which describe smooth surfaces and more generally smooth spaces embedded in higher dimensional spaces.
+%In the second section we have a closer look at the meshes (and more generally Simplicial Complexes) that we use in practice in the place of manifolds. The third section explains how to implement meshes and simplicial complexes in a way that is convenient for DEC purposes. 
+
+
 \begin{figure}[ht]
 \begin{center}
 	\begin{longtable}{|p{4cm}|p{4cm}|p{4cm}|}
@@ -53,31 +67,48 @@ The third section is the actual hands-on section, whereas the first two sections
 \end{figure}
 
 \section{Manifolds}
-		This section is an introduction to general surfaces. The whole thesis is about things you can do on or with smooth (hyper) surfaces, so it is important to understand their mathematical model. While no application in this thesis actually exceeds 3 dimensions, Discrete Exterior Calculus (DEC) and Exterior Calculus provide tools for arbitrary dimensions, without any complications. So there is no reason to stick with two and three dimensional spaces. 
+\label{sec::2_Manifolds}
+In this section we introduce smooth curved spaces, known as manifolds. Some simple two-dimensional manifolds (in short: 2-manifolds) are depicted in Figure \ref{fig::2_1_manifold}.
+
+The following topics on manifolds need to be covered:
+\begin{enumerate}
+\item Describing bordered manifolds using local maps
+\item Tangential spaces
+\item Orientation of manifolds
+\item The border operator and the orientation of borders
+\item Differential structure on manifolds (derivatives of functions on manifolds)
+\end{enumerate}
+
+While no application in this thesis actually exceeds 3 dimensions, discrete exterior calculus (DEC) and exterior calculus provide tools for arbitrary dimensions, without any complications. So there is no reason to cover only two or three dimensional spaces. 
 		
 \subsection{Describing Manifolds}	
-		You have already seen various manifolds in your life. Spheres are manifolds.any smooth curve without self intersections are 1 manifolds, or most things you would call 'surface' are manifolds (e.g.  Fig. \ref{fig::2_1_manifold} depicts a two dimensional manifold). Generally A $k$ dimensional manifold in $\mathbb R^n$ is simply a geometric object in $\mathbb R^n$  that locally looks like $\mathbb R^k$.  Formally this is done by assuring that at every point on the manifold we have a 'map' linking the manifold to $\mathbb R^k$.
+A two dimensional manifold is an object that locally looks like a plane and possibly has one or multiple (one dimensional) borders. Three two dimensional surfaces are given in Figure \ref{fig::2_1_manifold}.
+
+We describe manifolds using local maps. A local map at some point on the manifold describes the manifold locally; in the case of 2-manifolds as a function of two parameters. There are two types of maps: maps that describe the manifold close to borders an maps that describe the manifold at inner points, as depicted in the Figure \ref{fig::2_1_mapping}. This is taken account of by allowing the local map to either describe the manifold using a plane or a halfplane. A 2-manifold then is an object that can be described at every point locally with a 2 dimensional map (with or without border). This makes sure that the manifold looks at every point like a plane or halfplane.
+
+
+Generally a $k$-dimensional manifold $M$ lying in $\mathbb R^n$ is a geometric object that locally looks like $\mathbb R^k$ or like the halfspace $\mathbb H^k = \{x= (x_1,...,x_k) \in \mathbb R^k : x_k \geq 0\}$.  Formally this is done by guarantying that at every point on the manifold there is a 'map' linking the manifold to $\mathbb R^k$ or $\mathbb H^k$.
 		
-For the sake of simplicity we assume that all functions and mappings are infinitely differentiable.
+For the sake of simplicity we will assume through the whole text that all functions and mappings considered are infinitely differentiable.
 		
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=5cm]{imgs/2_1_manifold.eps}
-		\caption{A simple 2-manifold}
+		\includegraphics[height=4cm]{imgs/2_1_2dmanifolds.eps}
+		\caption{Three simple 2-manifold; the surfaces of the sphere and the torus do not have any borders, the third surface has. The inner of the sphere and the torus would be 3-manifolds with border (their borders being their surfaces)}
 		\label{fig::2_1_manifold}
 	\end{center}
 \end{figure}
 		
-\begin{definition}[Map] A $k$ dimensional map is a differentiable mapping 
+\begin{definition}[Map] A $k$-dimensional map is a differentiable mapping 
 \[\phi: U \subset \mathbb R^k \rightarrow \phi(U)\] 
 \[\begin{pmatrix}
 	u_1\\ \vdots \\ u_k
 \end{pmatrix} \rightarrow \begin{pmatrix}x_1(u_1,...,u_k)\\x_2(u_1,...,u_k)\\ \vdots \\ \vdots \\ x_n(u_1,...,u_k)\end{pmatrix}\]
-that is injective and whose Jakobimatrix has rank $k$ on all $U$, where $U$ is some open subset of $\mathbb R^2$ (image).
+that is injective and whose Jakobimatrix has rank $k$ on all $U$, where $U$ is some open subset of $\mathbb R^k$ or $\mathbb H^k$ (Figure \ref{fig::2_1_mapping}).
 		
 \end{definition} 
 
-A map is exactly like the maps you have in an atlas; they link the surface of the world locally to a flat 2d surface. Now a $k$ manifold is an object where at any point you can find a map of its neighborhood:
+A $k$-manifold then is an object where you can find local maps everywhere:
 
 \begin{definition}[Manifold] A subset $S\subset \mathbb R^n$ is a (regular) $k$ manifold, if for each point $p \in S$ there exist an open set $V\subset \mathbb R^k$ such that there is a map $\phi: U \rightarrow  V\cap S$.
 \end{definition} 
@@ -85,25 +116,31 @@ A map is exactly like the maps you have in an atlas; they link the surface of th
 	
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=12cm]{imgs/2_1_mapping.eps}
-		\caption{An example for a 2d map $\phi$}
+		\includegraphics[width=14cm]{imgs/2_1_borderedmanifold_maps.eps}
+		\caption{An example of a bordered 2-manifold. Left: a local map $\phi$ at some inner point. Right: a local map at a border point. The map at the border has the additional restriction that the border of the halfspace $H^2$ is mapped to the border of the manifold.}
 		\label{fig::2_1_mapping}
 	\end{center}
 \end{figure}
 
-This definition using maps ensures that the surface locally has a structure that is equivalent to a patch in $\mathbb R^k$. Note that this definition does not allow borders to occur. \note{(Does that need explanation?)}
+There are some important details in the definition of maps. The injectivity of the maps prevents self intersections, and the non zero Jacobi determinant makes sure that the image of a map $\phi$ does not degenerate. For example the image of a two dimensional map should not degenerate to a point or a line.
 
-You can also say that a map $\phi: U \subset \mathbb R^k \rightarrow S$ assigns local coordinates to a surface. The tuple $u=(u1_,...,u_k)\in U$ are the local coordinates of the point $\phi(u)$. You then can speak of expressing some functions $f:S \rightarrow ?$ in the local coordinates given by $\phi$. All this means is that you consider $f \circ \phi : U \subset \mathbb R^k \rightarrow ?$ instead of $f$. %(Image : local coordinates..) 
+\subsubsection{Local Coordinates}
 
-\subsubsection*{A Note on Coordinates}
-Note that there are two types of coordinates here. Lets look at a 2-Manifold. You can have the local coordinates given by and depending on the local parametrisations you chose (giving you (u,v) coordinates). Then you have the global coordinates of the surrounding space $\mathbb R^3$, assigning (x,y,z) coordinates to every point.
+A local map $\phi: U \subset \mathbb R^k \rightarrow M$ assigns local coordinates to a manifold $M$. The values of the tuple $u=(u1_,...,u_k)\in U$ are said to be the local coordinates of the point $\phi(u)$ on the manifold, in the map $\phi$. A classic example of this is the sphere parametrized by two angles using a map like
+\[\phi(a,b) = (sin(a)sin(b), sin(a)cos(b), cos(a))\]
+This assigns coordinates $(a,b)$ just as longitude and latitude are used as coordinate for the world. (But note that you can not parametrize the whole sphere at once if the source domain of your map is an open set and the map has to be injective)
 
-But in the end all coordinates are just descriptive tools; the geometric object we describe is assumed to exist independently of all these parameters. The 'tricky' part then is to get independence of parametrizations when we want to describe geometric properties of our manifolds. Even to get a definition of 'differentiability' on the manifold that is independent of the selected parametrization one must be careful with the definition.
+If you have a local map $\phi$ you can also express functions $f:M \rightarrow ?$ defined on the manifold in the local coordinates given by $\phi$. This means that you consider $f \circ \phi : U \subset \mathbb R^k \rightarrow ?$ instead of $f$, such that you can use the local coordinates $(u_1,...,u_k)$ as parameter of $f$ instead of the position on the manifold. %(Image : local coordinates..) 
 
-In fact in later applications  we will play around with coordinates, (with surface smoothing in chapter ... the global coordinates, with conformal maps in chapter ... the local coordinates). Rather than taking coordinates as describing the manifolds we take them as something associated to the geometric object to work with them or solve for them.
-
-External calculus (introduced in chapter...) will provide tools and results that do not use parametrizations.
-
+%\subsubsection*{A Note on Coordinates}
+%Note that there are two types of coordinates here. Lets look at a 2-Manifold. You can have the local coordinates given by and depending on the local parametrisations you chose (giving you (u,v) coordinates). Then you have the global coordinates of the surrounding space $\mathbb R^3$, assigning (x,y,z) coordinates to every point.
+%
+%But in the end all coordinates are just descriptive tools; the geometric object we describe is assumed to exist independently of all these parameters. The 'tricky' part then is to get independence of parametrizations when we want to describe geometric properties of our manifolds. Even to get a definition of 'differentiability' on the manifold that is independent of the selected parametrization one must be careful with the definition.
+%
+%In fact in later applications  we will play around with coordinates, (with surface smoothing in chapter ... the global coordinates, with conformal maps in chapter ... the local coordinates). Rather than taking coordinates as describing the manifolds we take them as something associated to the geometric object to work with them or solve for them.
+%
+%External calculus (introduced in chapter...) will provide tools and results that do not use parametrizations.
+%
 
 	
 \subsection{Tangential Spaces}		
@@ -112,14 +149,15 @@ For curves calculating tangents is easy. If you have a parametrization $\alpha(t
 
 \begin{figure}[tb]
 \begin{center}
-\includegraphics[width=10cm]{imgs/2_1_tangent.eps}
+\includegraphics[width=8cm]{imgs/2_1_tangent.eps}
 \end{center}
-\caption{A parametrized curve, the vector $\alpha'$ and the tangential space $T_{\alpha(t_0)}$ at $t_0$}
+\caption{A parametrized curve, the vector $\alpha'$ and the tangential space $T_{\alpha(t_0)}$ at $t_0$.}
+\label{fig::2_1_paramCurve}
 \end{figure}
 
-		While the length of $\alpha'(t)$ at the point $\alpha(t)$ depends on the parametrization $\alpha$ (for example $\alpha(2t)$ is a different parametrization of the curve $S$ described by $\alpha$ where the length doubles) the \textbf{tangential space} $ T_{\alpha(t)}S = span(\alpha'(t)) = \{x \in \mathbb R^3: x = c \alpha'(t), c \in \mathbb R\}$ does obviously only depend of the position $\alpha(t)$ on the curve. 
+		While the length of $\alpha'(t)$ at the point $\alpha(t)$ depends on the parametrization $\alpha$ (for example $\alpha(2t)$ is a different parametrization of the same curve where the length doubles) the \textbf{tangential space} $ T_{\alpha(t)}S = span(\alpha'(t)) = \{x \in \mathbb R^n: x = c \alpha'(t), c \in \mathbb R\}$ does only depend of the position $\alpha(t)$ on the curve, as depicted in Figure \ref{fig::2_1_paramCurve}. 
 		
-We can do the same for a $k$ dimensional manifold $M$. The tangential space $T_p M$ at a point $p$ is:
+We can do the same for a $k$-dimensional manifold $M$. The tangential space $T_p M$ at a point $p$ is:
 
 \begin{enumerate}
 	\item The space that approximates the surface in the best way, locally at $p$.
@@ -131,12 +169,12 @@ We can do the same for a $k$ dimensional manifold $M$. The tangential space $T_p
 	\vdots\\
 	\frac{\partial \phi_n} {\partial u_1}
 \end{pmatrix},...,\begin{pmatrix}
-	\frac{\partial \phi_1} {\partial u_1} \\
-	\frac{\partial \phi_2} {\partial u_1}\\
+	\frac{\partial \phi_1} {\partial u_k} \\
+	\frac{\partial \phi_2} {\partial u_k}\\
 	\vdots\\
-	\frac{\partial \phi_n} {\partial u_1}
-\end{pmatrix})\]
-	One could also interpret this as the $span$ of the tangents of a set of special curves, the curves $\phi(t, u_2,...,u_k)$, $\phi(u_1, t,...,u_k)$ ,..., $\phi(u_1, ...,u_{k-1},t)$, where $u_1,..,uk$ are fixed values.
+	\frac{\partial \phi_n} {\partial u_k}
+\end{pmatrix}),\]
+as depicted in Figure \ref{fig::2_1_mapping_coords} for a 2-manifold. Here the restriction that maps have a non-zero Jacobi determinant plays a role, as it means that the partial derivatives are linearly independent.
 \end{enumerate}
 
 \begin{figure}[tb]
@@ -147,71 +185,56 @@ We can do the same for a $k$ dimensional manifold $M$. The tangential space $T_p
 \label{fig::2_1_mapping_coords}
 \end{figure}
 
-The tangential spaces $T_p M$ are the vector spaces containing all tangential vectors at a point $p$. Every point on a manifold gets an associated vector space. While the vector space itself is depending solely on $p$ the choice of a basis of this vector space is open. Choosing the basis $\frac{\partial \phi}{\partial u_i}$ obviously is dependent on $\phi$. Note that, just as in Fig. \ref{fig::2_1_mapping_coords}, these vectors are in general not orthogonal and if we want to define and use a scalar product consistently in all tangential spaces we will have to take care.
-\note{Reformulate last sentence, what do i want to say?}.
+The tangential space $T_p M$ is the vector space containing all tangential vectors at a point $p$. Through the tangential space, every point on a manifold gets an associated vector space. While the vector space itself is depending solely on $p$, the choice of a basis for $T_pM$ is open. Usually  the basis vectors $\frac{\partial \phi}{\partial u_i}$  are chosen, according to some local map $\phi$. But, just as it is the case in Fig. \ref{fig::2_1_mapping_coords}, these vectors are in general not orthogonal or normalized. This is something to take care of.
 
-One special example of a manifold is $\mathbb R^k$ seen as a manifold parametrized by $\mathbb R^k$ with $\phi = id$. Then the tangential space $T_p \mathbb R^k$ at any point $p$ is again $\mathbb R^k$. But still: the vectors in one tangential space $T_p \mathbb R^k$ and the vectors of another tangential space $T_q \mathbb R^k$ can not be mixed; every point gets its own proper tangential space, not shared with any other point.
+One special example of a manifold is  the space $\mathbb R^k$ seen as a manifold parametrized by $\mathbb R^k$ with $\phi = id$. Then the tangential space $T_p \mathbb R^k$ at any point $p$ is again $\mathbb R^k$. But still: the vectors in one tangential space $T_p \mathbb R^k$ and the vectors of another tangential space $T_q \mathbb R^k$ can not be mixed; every point gets its own proper tangential space, not shared with any other point.
 		
 \subsection{Orientations}
-We do not want to talk about just any Manifolds but only about a subgroup: orientable manifolds. Orientation is easy to define; it is to assign a sign to the volume you are treating. Either your volume is positive or negative. Which orientation is positive and which negative is arbitrary. 
+We only want to consider a special kind of manifolds: orientable manifolds. Orienting a volume is to assign a sign to the volume you are treating. Either your volume is positive or negative. 
 
-For a vector space you can encode orientation in the ordering of basis vectors. Two ordered bases $v_1,...v_k$ and $w_1,...,w_k$ describe the same orientation if the matrix that describes the change of bases has a positive determinant (see Fig. \ref{fig::2_1_orientation2d}). The determinant actually measures signed volume spanned by a set of vectors.
+For a vector space you can encode orientation in the ordering of basis vectors. Two ordered bases $v_1,...v_k$ and $w_1,...,w_k$ describe the same orientation if the matrix that describes the change of bases has a positive determinant. The determinant measures the signed volume spanned by a set of vectors.
 
-\begin{figure}[hb]
-\begin{center}
-\includegraphics[width = 10cm]{imgs/2_1_orientation2d.eps}
-\caption{Three bases orienting $\mathbb R^2$, the first two describe the same orientation, the third a different one }
-\label{fig::2_1_orientation2d}
-\end{center}
-\end{figure}
-
-In the last section we introduced tangential spaces and emphasized the point that every point gets its own proper tangential vector space. Tangential spaces of points that are very close together are very similar and it makes sense to ask if they have the same orientation.
+In the previous section we introduced tangential spaces and emphasized that every point gets its own proper tangential vector space. Tangential spaces of points that are very close together are very similar and it makes sense to ask them to have the same orientation.
 
 %In the last section we introduced tangential spaces and 
 
-We saw that parametrizations can provide bases on tangential spaces. One single parametrization actually induces consistent orientations for the tangential spaces of all points it hits. Now we say that a Manifold can be oriented if all tangential spaces can be oriented consistently.
+We saw that parametrizations can provide bases for tangential spaces. One single parametrization induces consistent orientations to the tangential spaces of all points it hits. Therefore we say that a Manifold can be oriented if all tangential spaces can be oriented consistently.
 
-\begin{definition}[Oriented Manifold] A manifold can be oriented if the exists a set of maps $A = \{\phi: U_\phi \to \phi(U_\phi) \subset M\}$ such that the maps describe the whole manifold and any two maps $\phi$, $\psi$ which describe a common patch $\psi(U_\psi) \cap \phi(U_\phi)$ result in the same orientations i.e. for the base change matrix $C$ from the base $D\phi$ to $D\psi$ has positive determinant
+\begin{definition}[Oriented Manifold] A manifold is orientable if there exists a set of maps $\mathcal A = \{\phi: U_\phi \to \phi(U_\phi) \subset M\}$ such that the maps describe the whole manifold and any two maps $\phi$, $\psi$ which describe a common patch $\psi(U_\psi) \cap \phi(U_\phi)$ result in the same orientations i.e. the base change matrix $C$ from the base $D\phi$ to $D\psi$ has a positive determinant
 \[det(C) >0\]
 A manifold is oriented if for all tangential spaces a consistent orientation has been chosen.
 
 \end{definition}
 
-For 2d manifolds in 3d space this is the same as saying that you should be able to consistently chose a surface normal, as depicted in Fig. \ref{fig::2_1_mobius}.
+For 2d manifolds in 3d space this is the same as asking that you can consistently chose a surface normal, as tried in Fig. \ref{fig::2_1_mobius}.
 
 \begin{figure}[t]
 \begin{center}
 \includegraphics[width = 6cm]{imgs/2_1mobius.eps}
-\caption{The Moebius strip, the pathological example of a not orientable manifold}
+\caption{The Moebius strip, the pathological example of a non orientable manifold}
 \label{fig::2_1_mobius}
 \end{center}
 \end{figure}
 
-\subsection{Manifolds with Border}
-Up to now we have only looked at manifolds without borders, like the surface of a sphere or a torus. But treating borders is a central part of DEC so we extend our notions now. While up to now we required that a manifold looks locally like $\mathbb R^k$, we now allow it to alternatively look like $\mathbb H^k$, where $\mathbb H^k$ denotes the $k$ dimensional half space $\mathbb H^k = \{x = (x_1,...,k_k)\in \mathbb R^k: x_k \geq 0\}$.
+\subsection{The Border Operator}
+The border operator describes a special geometric operation for manifolds. 
+We denote the border of a manifold $M$ by $\delta M$ and call $\delta$ the border operator. From the definition of maps at border points follows that the border of a manifold is again a manifold, where the dimension decreases by one. And from the definitions also follows, that the border of a manifold always is a manifold without border, as it is the case with spheres or tori (again see Figure \ref{fig::2_1_manifold}); this means that for bordered manifolds
+\[\delta\delta M = \emptyset.\]
 
-\begin{definition}[Bordered Manifold] $M \subset \mathbb R^n$ is a $k$ dimensional manifold with border, if for any point $p \in M$ either conditions hold:
-\begin{enumerate}
-\item There are two open sets $p \in V\subset \mathbb R^n$ and $0\in U \subset \mathbb R^k$ and a differentiable injective map $U\to V$ whose Jacobi matrix has rank $k$ such that 
-\[h(U\cap \mathbb H^k) =  V\cap M\]
-\item  There are two open sets $p \in V\subset \mathbb R^n$ and $U \subset \mathbb R^k$ and a differentiable injective map $U\to V$ whose Jacobi matrix has rank $k$ such that 
-\[h(U) =  V\cap M\]
-\end{enumerate}
-\end{definition}
+A central point (considering DEC) is that an oriented manifold induces an orientation to its border. This is sketched in Figure \ref{fig::2_1_borderManifold}.  What follows is a short technical description of how the orientation on the border is defined formally. The border operator and the border orientations play a central role in external calculus and throughout this thesis. Therefore it deserves to be introduced properly.
 
-\note{This definition might not be rigorously correct.} This just makes sure that every point on bordered $k$ manifold either is inside the manifold or on a $k-1$ dimensional border. Actually the border of a $k$ manifold is a $k-1$ dimensional manifold without border. \note{(Image! Hk and bordermap)}.  We denote the border of a manifold $M$ by $\delta M$ and call $\delta$ the border operator.
-
-While nothing changes for tangential spaces of non-border points, at border points $p$ two tangential spaces are present. One is the tangential space of the manifold $T_pM$ and $k$ dimensional, the other one is the $k-1$ dimensional tangential space of the border manifold $T_p \delta M$ (Fig. \ref{fig::2_1_borderManifold}, left) . The important thing is that an oriented manifold induces an orientation to its border. Remember that orientation is defined by the orientation of the tangential spaces, so inducing an orientation to the border means inducing an orientation in $T_p\delta M$ using the orientation of $T_p M$. This happens defining normals on the border.
+ As the orientation of a manifold is defined by the orientation of its tangential spaces we need to take a closer look at the tangential spaces of bordered manifolds.
+While nothing is special for tangential spaces at non-border points, at border points two tangential spaces are present. One is the tangential space of the manifold $T_pM$ and $k$ dimensional, the other one is the $k-1$ dimensional tangential space of the border manifold $T_p \delta M$ (see Fig. \ref{fig::2_1_borderManifold}, left) . Inducing an orientation to the border means inducing an orientation in $T_p\delta M$ using the orientation of $T_p M$. This happens by defining normals on the border.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = 13cm]{imgs/2_1_borderedManifold_combined.eps}
 \end{center}
 \label{fig::2_1_borderManifold}
-\caption{A bordered manifold with tangential spaces $T_pM$, $T_p\delta M$ and the border normal $N$ (left image). The right image depicts how an orientation of the manifold given by bases oriented like ($b_1$,$b_2$) induces an orientation to the border: $N$ and a vector following the border orientation build a basis oriented like $b_1,b_2$.}
+\caption{On bordered manifold two tangential spaces $T_pM$ and $T_p\delta M$  are present at border points; $N$ is the outward pointing border normal (left image). The right image depicts how the manifold oriented according to the base ($b_1$,$b_2$) of some tangential space induces an orientation to the border: $N$ and a vector following the border orientation have to build a basis oriented like $b_1,b_2$.}
 \end{figure}
 
-For any border point you can define a surface normal $N$. The surface normal $N$ is the vector in $T_p N$ with:
+For any border point you can define a border normal $N$. The border normal $N$ is the vector in $T_p N$ with:
 \begin{itemize}
 \item $N$ is orthogonal to $T_p \delta N$
 \item $N$ has length 1
@@ -224,7 +247,62 @@ a basis $\widetilde{b_1},...,\widetilde{ b_{k-1}}$ of the tangential space of th
 
 
 \subsection{Functions and Derivatives on Manifolds}
-\note{	Tangential Spaces and Differential structure. Maybe put it in next chapter; here its all about geometry, not about functions.}
+\label{sec::2_derivativesOnMF}
+
+Exterior calculus is about differentiation  and integration of functions and more general things on manifolds. In this section we explain how differentiation of mappings $f:M\to M'$ between two manifolds $M$ and $M'$ is done ON manifolds.  In our setting manifolds are more than just geometric objects; they become spaces where differentiation is possible, just as it is in $\mathbb R^n$. The manifolds get a \textbf{differential structure}.
+
+\subsubsection{Derivatives}
+Given a manifold $M$ and a function $f: M \rightarrow \mathbb R^n$, what is the derivative of $f$? We want the derivative to be something very similar to the derivative $Dh$ of a function $h: \mathbb R^k \rightarrow \mathbb R^n$. In this case $Dh$ is the linear mapping that locally approximates $h$ and can be used to give the directional derivative for a direction $v$.
+\[h( p + tv) \approx h(p) + Dh \cdot tv\]
+We want the same for functions $f$ on manifolds: $Df$ should be a linear mapping that maps a direction to a vector that describes the change of $f$ when going in that direction. A direction on a manifold at some position is a tangential vectors. This is important: the differential $Df$ is a mapping from the \emph{tangential spaces} to vectors, as depicted in Figure \ref{fig::3_1_manifoldDerivative}. 
+
+We can express the idea that $Df\cdot v$ describes the change of $f$ in the direction $v$ readily by using a curve $\alpha (t)$ with a tangent $\frac{\partial \alpha(0)}{\partial t} = v$ in the wished direction $v$:
+\begin{equation} Df \cdot v := \frac{\partial}{\partial t} f(\alpha(t)) \label{eq:2_1_derivativeDef}\end{equation}
+As $f(\alpha(t))$ is simply a function $\mathbb R \rightarrow \mathbb R^n$ we know how to calculate the right hand side $\frac{\partial}{\partial t} f(\alpha(t))$. This is not very handy for any calculations; but we can express the derivative in the local coordinates given by a parametrization $\phi(u_1,...,u_k)$.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width= 12.5cm]{imgs/3_1_manifoldDerivative.eps}
+\end{center}
+\caption{Construction of a derivative of a real valued function $f$ defined on a manifold locally parametrized by $\phi$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $\mathbb R$}
+\label{fig::3_1_manifoldDerivative}
+\end{figure}
+
+As we have seen, a parametrization provides a base of the tangential space, namely 
+\[\frac{\partial\phi}{\partial u_1},..., \frac{\partial\phi}{\partial u_k}\] 
+Curves can be expressed in this map and tangential vectors can be described in this base: $\alpha(t) = \phi(u_1(t),...,u_k(t))$ and $\alpha'(t) = \frac{\partial\phi}{\partial u_1} u_1' + ... + \frac{\partial\phi}{\partial u_k} u_k'$. The function $f$ also has to be given in that map , i.e. 
+\begin{eqnarray*} f(u_1,...,u_k) &=& f(\phi(u_1,...,u_k)) \\
+ &=& f_1(\phi(u_1,...,u_k)),...,f_n(\phi(u_1,...,u_k)). \end{eqnarray*} 
+Then 
+\[Df \cdot \alpha'(t) = (\frac{\partial f}{\partial u_1},..., \frac{\partial f}{\partial u_k}) \cdot \begin{pmatrix}
+	u_1' \\ \vdots \\ u_k'\end{pmatrix}\]
+and $Df$ is described \emph{in the local coordinates given by $\phi$} by the $ n \times k$ matrix $(\frac{\partial f}{\partial u_1},..., \frac{\partial f}{\partial u_k})$. $(u_1',...,u_k')$ is the description of the tangential vector $v = \alpha'$ in the base $D\phi$ . 
+
+The curve $\alpha$ was only used to construct the derivative; written without $\alpha$ the derivative $Df$ in local coordinates $\phi$ is:
+\[Df \cdot v = (\frac{\partial f}{\partial u_1},..., \frac{\partial f}{\partial u_k}) \cdot \begin{pmatrix}
+	v_1 \\ \vdots \\ v_k\end{pmatrix}\]
+where the tangential vector $v$ is expressed in the base of the tangential space induced by $\phi$
+\[v = v_1 \frac{\partial \phi}{u_1} +...+ v_k \frac{\partial \phi}{u_k}\] 
+ %This situation is depicted in Figure \ref{fig::3_1_manifoldDerivative}.
+\subsubsection*{Derivatives of Mappings between Manifolds}
+A slight generalisation is considering mappings 
+\[f:M\to M'\]
+going from one manifold $M$ to an other manifold $M'$, as shown in Figure \ref{fig::3_1_manifoldDerivative2}. If we look again at Equation \ref{eq:2_1_derivativeDef}, we see that, as $f(\alpha(t))$ is a curve on $M'$ and $\frac{\partial}{\partial t}f(\alpha(t))$ is a tangential vector to this curve, $Df\cdot v$ has to be a vector in the tangential space of $M'$. This means that the derivative $D_pf$ at some point $p$ is a linear mapping from the tangential space $T_pM$  to the tangential space $T_{f(p)} M'$, i.e. 
+\[D_p f = T_p M \rightarrow T_{f(p)} M'.\] 
+
+If $M$ is a $k$-manifold and $M'$ a $l$-manifold $Df$ can be expressed as a $k\times l$ matrix, described relatively to two sets of local coordinates $\phi \rightarrow M$ and $\psi \rightarrow M'$.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width= 13cm]{imgs/3_1_manifoldDerivative2.eps}
+\end{center}
+\caption{Two 2-manifolds $M$ and $M'$ with local parametrizations $\phi$ and $\psi$. $f$ is a function $f: M \rightarrow M'$. $Df$ at a point $p$ is a linear mapping from the tangential space $T_p M$ to $T_{f(p)} M'$, choosing $D\phi$ and $D \psi$ to parametrize the tangential spaces $Df$ can be represented as a $2\times 2$ matrix (relative to these bases)}
+\label{fig::3_1_manifoldDerivative2}
+\end{figure}
+
+
+
+%\note{	Tangential Spaces and Differential structure. Maybe put it in next chapter; here its all about geometry, not about functions.}
 
 \input{"Chapters/Simplical Complexes.tex"}
 
@@ -334,7 +412,6 @@ Then enumerate all occuring $k-1$ simplices (sort their indices, you do not need
 
 		
 \subsection{Implementing Basic Mesh Operations}
-\note{IMAGE of the bad teapot that has dangling triangles, an unexpected border and multiple components}
 To get later applications working you will need most of the following tools. For the applications presented in this thesis they do not need to perform extremely fast, as these operations will occur only once when setting up an application.
 
 \subsubsection{Setup a DEC mesh from a Wireframe Mesh Representation}

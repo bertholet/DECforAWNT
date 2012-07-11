@@ -1,5 +1,6 @@
-\documentclass[draft]{scrbook}
+\documentclass[]{scrbook}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{color}
@@ -11,7 +12,7 @@
 \usepackage{longtable}
 \usetikzlibrary{shapes,arrows}
 
-\title{Discrete Differential Calculus for Academics with No Time}
+\title{Discrete Exterior Calculus in a Week}
 \author{Peter Bertholet}
 
 \newenvironment{definition}[1][]{\begin{trivlist}
@@ -30,9 +31,11 @@
   \setlength{\parsep}{0pt}
 }{\end{itemize}}
 
+\newtheorem{thm}{Theorem}
 
 \newcommand{\note}[1]{\textcolor{red}{\textit{(#1)}}}
 \newcommand{\abs}[1]{\left| #1 \right|}
+%\newcommand{\eq}[2]{\begin{equation} #1 \label{#2} \end{equation}}
 
 \begin{document}
 
@@ -58,82 +61,12 @@
 \input{Chapters/DifferentialCalculus.tex}
 
 \newpage		
-\chapter{Application: Mesh Parametrization}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			Conformal Maps
-			\begin{packed_enum}
-				\item[-] Conformal Maps with Exterior Calculus
-			\end{packed_enum}
-			&
-			Existance of Embeddings, The thingy theorem
-			\begin{packed_enum}
-				\item[-] Dimension of result spaces depending on topology?
-			\end{packed_enum}
-			 & 
-			 Implementing it with DEC
-			 \begin{packed_enum}
-				\item[-] The equation
-				\item[-] Border Constraints
-				\item[-] Results
-			\end{packed_enum}
-			 \\		
-		\hline
-	\end{longtable}
-	In this chapter we are all about 0 Forms.
-	\subsection{Embeddings}
-	Taking coordinates as functions associated to the Surface and not the other way round. The thingy theorem for graphs
-	\subsection{Conformal Maps}
-	Conformal maps properties, EC formulation
-	\subsection{Implementaion: Conformal Embedding}
-		How its done. Pretty straight forward if you have the machinery. Different Border Constraints. Mention MeanValue Weights?
-	\subsection{Dimension of Harmonic Space?}
-		Looking at results and topology. Genus, Bettinumbers, DeRham Complex?	Would be nice..
-		Mention cutting algorithms like the quad mesh paper..
+\input{Chapters/MeshParametrization.tex}
+
 \newpage	
-\section{Application: Vectorfield Design and the general Laplacian}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			Important External Calculus Results:
-			\begin{packed_enum}
-				\item[-] Point Carre Lemma
-				\item[-] Laplace Beltrami Operator: $d$ and $\delta$ free.
-				\item[-] Hodge Decomposition
-				\item[-] Here on the dim of harmonic spaces?
-			\end{packed_enum}
-			&
-			The same as the smooth ones.
-			\begin{packed_enum}
-				\item[-] Properties still hold exactly.
-				\item[-] Laplacian in Least square sence
-				\item[-] Border Constraints
-				\item[-] One Form interpolation
-			\end{packed_enum}
-			 & 
-			 Implementing it with DEC
-			 \begin{packed_enum}
-				\item[-] Vector Field Design
-				\item[-] =Least square harmonic 1 Form solving
-			\end{packed_enum}
-			 \\		
-		\hline
-	\end{longtable}
-	\subsection{Point Carre Lemma}
-	When is a form d or delta of another form?
-	\subsection{General Laplacian}
-	The Laplacian is as well d as delta of another form...
-	\subsection{Hodge Decomposition}
-	Splitting Forms
-	\subsection{Application: Vector Field Design}
-	Using all this for Vector Field Design
-	\subsection{Border Constraints}
-	How borders can be treated but it affects everything.
+\input{Chapters/VectorfieldDesign.tex}
 \newpage
-\section{A Fluid Simulation with DEC}
+\chapter{A Fluid Simulation with DEC}
 	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
 		\hline
 		Smooth Theory& Discrete Theory& Implementation (Notes)\\
@@ -168,4 +101,7 @@
 	Need for exact Harmonic solution $=>$ Equation.
 	\subsection{Influence of Mesh choice and parameter choice}
 	Results and problems.
+	
+	
+	\input{Chapters/Appendix.tex}
 \end{document}
