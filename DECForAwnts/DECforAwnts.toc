@@ -114,31 +114,36 @@
 \contentsline {chapter}{\numberline {7}Application: Mesh Parametrization}{89}
 \contentsline {section}{\numberline {7.1}Problem Statement: Conformal Maps}{89}
 \contentsline {section}{\numberline {7.2}Conformal Embedding with DEC}{91}
-\contentsline {subsection}{\numberline {7.2.1}Border Constraints}{91}
-\contentsline {subsection}{\numberline {7.2.2}Graph Theory}{92}
-\contentsline {subsection}{\numberline {7.2.3}Multiple Borders}{95}
-\contentsline {subsubsection}{Exterior Border}{95}
-\contentsline {subsubsection}{Interior Borders}{95}
+\contentsline {subsection}{\numberline {7.2.1}Fixed Border Constraints}{91}
+\contentsline {subsubsection}{Neumann Border Constraints}{92}
+\contentsline {subsection}{\numberline {7.2.2}Graph Theory}{93}
+\contentsline {subsection}{\numberline {7.2.3}Multiple Borders}{96}
+\contentsline {subsubsection}{Exterior Border}{96}
+\contentsline {subsubsection}{Interior Borders}{96}
 \contentsline {subsubsection}{Overall linear equation}{96}
-\contentsline {subsection}{\numberline {7.2.4}?? Alternative $\star _0$ matrices ??}{96}
-\contentsline {subsubsection}{Mean value weights}{97}
-\contentsline {subsubsection}{Uniform weights}{97}
-\contentsline {subsubsection}{Alternative $\star _k$ matrices}{97}
-\contentsline {subsection}{\numberline {7.2.5}Results}{97}
-\contentsline {subsection}{\numberline {7.2.6}Topology?}{97}
-\contentsline {subsubsection}{Hopf Index Theorem}{97}
-\contentsline {subsubsection}{Dimension of Harmonic spaces }{97}
-\contentsline {subsection}{\numberline {7.2.7}Generalization and further notes}{98}
-\contentsline {chapter}{\numberline {8}Application: Vectorfield Design and the general Laplacian}{99}
-\contentsline {subsection}{\numberline {8.0.8}Point Carre Lemma}{99}
-\contentsline {subsection}{\numberline {8.0.9}General Laplacian}{99}
-\contentsline {subsection}{\numberline {8.0.10}Hodge Decomposition}{99}
-\contentsline {subsection}{\numberline {8.0.11}Application: Vector Field Design}{99}
-\contentsline {subsection}{\numberline {8.0.12}Border Constraints}{99}
-\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{101}
-\contentsline {subsection}{\numberline {9.0.13}The Euler Equations}{101}
-\contentsline {subsection}{\numberline {9.0.14}The Algorithm}{101}
-\contentsline {subsection}{\numberline {9.0.15}Interpolation and Pathtracing}{101}
-\contentsline {subsection}{\numberline {9.0.16}Border Constraints}{101}
-\contentsline {subsection}{\numberline {9.0.17}Influence of Mesh choice and parameter choice}{101}
-\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{103}
+\contentsline {subsection}{\numberline {7.2.4}Results}{97}
+\contentsline {subsection}{\numberline {7.2.5}Topology?}{97}
+\contentsline {subsubsection}{Hopf Index Theorem}{98}
+\contentsline {subsubsection}{Dimension of Harmonic spaces }{99}
+\contentsline {subsection}{\numberline {7.2.6}Generalization and further notes}{100}
+\contentsline {subsection}{\numberline {7.2.7}?? Alternative $\star _0$ matrices ??}{101}
+\contentsline {subsubsection}{Mean value weights}{101}
+\contentsline {subsubsection}{Uniform weights}{101}
+\contentsline {subsubsection}{Alternative $\star _k$ matrices}{101}
+\contentsline {chapter}{\numberline {8}Application: Vectorfield Design and the general Laplacian}{103}
+\contentsline {subsection}{\numberline {8.0.8}Problem Statement}{103}
+\contentsline {section}{\numberline {8.1}General Laplacian}{103}
+\contentsline {subsection}{\numberline {8.1.1}Curl- and Divergence-Freeness}{104}
+\contentsline {subsection}{\numberline {8.1.2}Poincar\'e-Lemma}{104}
+\contentsline {subsection}{\numberline {8.1.3}Hodge Decomposition}{105}
+\contentsline {subsection}{\numberline {8.1.4}Dimension of Harmonic spaces}{106}
+\contentsline {subsection}{\numberline {8.1.5}Overall Picture}{106}
+\contentsline {section}{\numberline {8.2}Application: Vector Field Design}{106}
+\contentsline {subsection}{\numberline {8.2.1}Border Constraints}{106}
+\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{107}
+\contentsline {subsection}{\numberline {9.0.2}The Euler Equations}{107}
+\contentsline {subsection}{\numberline {9.0.3}The Algorithm}{107}
+\contentsline {subsection}{\numberline {9.0.4}Interpolation and Pathtracing}{107}
+\contentsline {subsection}{\numberline {9.0.5}Border Constraints}{107}
+\contentsline {subsection}{\numberline {9.0.6}Influence of Mesh choice and parameter choice}{107}
+\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{109}

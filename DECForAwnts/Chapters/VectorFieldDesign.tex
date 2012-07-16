@@ -27,13 +27,76 @@
 			 \\		
 		\hline
 	\end{longtable}
-	\subsection{Point Carre Lemma}
-	When is a form d or delta of another form?
-	\subsection{General Laplacian}
-	The Laplacian is as well d as delta of another form...
-	\subsection{Hodge Decomposition}
-	Splitting Forms
-	\subsection{Application: Vector Field Design}
-	Using all this for Vector Field Design
-	\subsection{Border Constraints}
-	How borders can be treated but it affects everything.
+		
+	Some further important EC results: the point carre lemma and the hodge decomposition theorem. Understanding of harmonic forms.
+	\subsection{Problem Statement}
+		
+	
+%\subsection{Point Carre Lemma}
+When is a form d or delta of another form?
+\section{General Laplacian}
+For $k$-Forms the Laplacian is defined as 
+\[\Delta_k = \star_{k} d_{n-k+1}^{dual} \star_{k+1}d_k + d_{k-1}\star_{k-1}d_{n-k}^{dual} \star_{k}\]
+or ignoring the implicitely clear sub-indices and using the so called covariant derivative, or short co-derivative  $\partial = (-1)^k\star d \star$ \note{image}
+\[\Delta = \partial d + d \partial .\]
+We are interested in harmonic $k$-Forms, i.e.
+\[\Delta_k \omega^k = 0\]
+and want to understand what it means for a form to be harmonic. 
+
+\subsection{Curl- and Divergence-Freeness}
+First of all note that the co-derivative has an important property: it is adjoint to the derivative respective to the scalar product for $k$-forms defined in Section \note{...}\footnote{We defined the scalar product for forms, not differential forms. It is extended to differential forms by $\langle\omega^k,\nu^k \rangle = \int_M \langle \omega^k,\nu^k\rangle dVol$}. Being the adjoint means that for borderless Manifolds or when the involved forms vanish on the borders of the Manifold\footnote{The adjointness follows directly from Stokes Theorem and the behavior of $d$ and $\wedge$: $0=\int_{\delta M} \omega^k\wedge \star \nu^{k+1} = \int_M (d\omega\wedge\star \nu + (-1)^k\omega\wedge d\star \nu)$ and then setting $\omega\wedge d\star\nu = (-1)^{n-k}\omega\wedge \star \star d\star\nu$ we end $0= \int_M \langle d\omega,\nu\rangle dVol  - \int_M \langle \omega,\star d \star\nu \rangle dVol$}
+\[\langle d\omega^k, \nu^{k+1} \rangle = \langle \omega^k,\partial\nu^{k+1}\rangle.\]
+Therefore, for harmonic $k$-Forms
+\begin{eqnarray*}0=\langle\Delta\omega^k,\omega^k\rangle &= &\langle \partial d\omega^k + d \partial \omega^k, \omega^k\rangle \\
+ &=& \langle \partial d\omega^k, \omega^k\rangle + \langle d \partial \omega^k, \omega^k\rangle \\
+ &=& \langle d\omega^k,d\omega^k\rangle + \langle \partial\omega^k,\partial\omega^k\rangle
+\end{eqnarray*}
+But because the scalar product is non-degenerated, meaning that $\langle \nu,\nu\rangle \geq 0$  with $=0$ iff $\nu=0$, it follows that
+\[d\omega^k = 0\]
+\[\partial\omega^k = 0\]
+and we get on borderless manifolds or if $\omega^k = 0$ on the border
+\[\Delta \omega^k = 0 \Leftrightarrow \: \left\{\begin{matrix}
+d\omega^k = 0\\
+\partial \omega^k = 0
+\end{matrix}\right.\]
+
+For 1-Forms, $d$ is the curl operator and $\partial$ is the divergence operator. Therefore, this is the generalisation of the well known fact, that harmonic fields are curl and divergence free. \note{think about images}
+
+\subsection{Poincar\'e-Lemma}
+The Poincar\'e-Lemma describes when a differential form $\omega$ is the derivative of some other form $\nu$, i.e. when there exists a $\nu$ such that
+\begin{equation} d\nu = \omega .\label{eq:exact}\end{equation}
+It turns out that if a manifold $M$ can be parametrized by one open contractible subset of $\mathbb R^n$ this is exactly the case if
+\begin{equation} d\omega = 0 \label{eq:closed}\end{equation}
+A differential form $\omega$ for which there exists a $\nu$ such that Equation \ref{eq:exact} holds is called \emph{exact}, while an $\omega$ fulfilling Equation \ref{eq:closed} is called \emph{closed}. The Poincar\'e Lemma is also true for the codifferential operator $\partial$, i.e. under the same conditions as above
+\[\exists \nu : \partial \nu = \omega \Leftrightarrow \partial \omega = 0.\]
+This means that, for general manifolds at least locally, a form is the $d$ of another, exactly if it is $d$-free, and the same is true for $\partial$. The proof of the Lemma is usually done by construction; you show that you can always construct a solution $\nu$ to the problem $d\nu = \omega$ is $d\omega = 0$. \note{note to deRham cohomology?}
+
+For example on any disc shaped manifold a $1$-Form $\omega^1$ is the $d$ of a $0$-Form exactly if $d\omega^1 = 0$. In standard terms this means a vectorfield is the gradient of a function exactly if it is curl free. Or in 3 dimensions a vector field is the curl of another vector field exactly if it is divergence free.
+%For general manifolds this is true locally
+
+One could also ask the question how unique a $\nu^{k}$ is when you require $d\nu^{k} = \omega{k+1}$. The answer also follows directly from the Poincar\'e Lemma: if $d\nu_1 = d\nu_2 = \omega$ then $d(\nu_1-\nu_2) = 0$ and by the lemma this difference is again the exterior derivative of a $(k-1)$-Form $\xi^{k-1}$: $\nu_1 -\nu_2 = d \xi^{k-1}$ and therefore
+\[\nu_2 = \nu_1 +  d\xi^{k-1}\]
+meaning that given one special solution $\nu$ you get all solutions by adding the exterior derivative of arbitrary $k-1$ forms.
+
+\note{sketch what we know in a diagram}
+
+In the last section we saw that harmonic forms are closed and co-closed, i.e. closed under the co-derivative. \note{Der folgende Satz ist unnuetz, ist es nicht so, das wenn closed und exakt das gleiche ist es nur konstante harmonische funktionen gibt? Recherchieren. Aber Lokal sicher richtig} So \emph{locally} a harmonic $k$-Form $\omega^k$ is as well the exterior derivative $d$ of a $(k-1)$-Form and the co-derivative of a $(k+1)$-Form. \note{Sketch: $d\Omega^{k-1}$ $\cap$ $\partial \Omega^{k-1}$ and kernel $d$ $\cap$ kernel $\delta$.}
+
+\subsection{Hodge Decomposition}
+\note{needs references, recheck}
+We have now seen three kinds of $k$-Forms: closed $k$-Forms, co-closed $k$-Forms and harmonic forms. The space of the first are the kernel of $d$, the space of the second are the kernel of the coderivative $\partial$ and the space of the third being the intersection of the first two.
+
+The Hodge decomposition theorem then states that any $k$-form can be split in three complements: a harmonic part $\gamma: \Delta \gamma = 0$, an exact part $d\alpha^{k-1}$ and a co-exact part $\partial \beta^{k+1}$:
+\[\omega^k = d\alpha^{k-1} + \partial \beta^{k+1} + \gamma\]
+We will show that this result holds for Discrete Exterior Calculus, because then the proof only uses linear algebra. The idea or realisation behind this result is that the spaces of exact and co-exact differential forms are orthogonal to each other and their orthogonal complement is the space of harmonic forms \note{Sketch!}. And as we will see this is the same for Discrete Exterior Calculus, which is extremely nice.
+
+\subsection{Dimension of Harmonic spaces}
+\note{Section as written above, yet to be re placed, reorganized.}
+
+\subsection{Overall Picture}
+We have the cohomology groups, they determine the relation between exactness and closedness and the existece and dimension of harmonic forms. True?
+
+\section{Application: Vector Field Design}
+Using all this for Vector Field Design
+\subsection{Border Constraints}
+How borders can be treated but it affects everything.
