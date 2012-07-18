@@ -108,6 +108,7 @@
 \contentsline {subsubsection}{Border Operator and Orientation of the dual mesh}{86}
 \contentsline {subsection}{\numberline {6.7.2}Discrete Dual Forms and Star Operator}{87}
 \contentsline {subsubsection}{Drawbacks of Voronoi Duality}{88}
+\contentsline {subsubsection}{Scalar product for discrete $k$-Forms}{88}
 \contentsline {section}{\numberline {6.8}This is Discrete Exterior Calculus}{88}
 \contentsline {section}{\numberline {6.9}Implementation of Dual Forms}{88}
 \contentsline {subsection}{\numberline {6.9.1}The 0 Form Laplacian from the beginning}{88}
@@ -131,19 +132,24 @@
 \contentsline {subsubsection}{Uniform weights}{101}
 \contentsline {subsubsection}{Alternative $\star _k$ matrices}{101}
 \contentsline {chapter}{\numberline {8}Application: Vectorfield Design and the general Laplacian}{103}
-\contentsline {subsection}{\numberline {8.0.8}Problem Statement}{103}
-\contentsline {section}{\numberline {8.1}General Laplacian}{103}
-\contentsline {subsection}{\numberline {8.1.1}Curl- and Divergence-Freeness}{104}
-\contentsline {subsection}{\numberline {8.1.2}Poincar\'e-Lemma}{104}
-\contentsline {subsection}{\numberline {8.1.3}Hodge Decomposition}{105}
-\contentsline {subsection}{\numberline {8.1.4}Dimension of Harmonic spaces}{106}
-\contentsline {subsection}{\numberline {8.1.5}Overall Picture}{106}
-\contentsline {section}{\numberline {8.2}Application: Vector Field Design}{106}
-\contentsline {subsection}{\numberline {8.2.1}Border Constraints}{106}
-\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{107}
-\contentsline {subsection}{\numberline {9.0.2}The Euler Equations}{107}
-\contentsline {subsection}{\numberline {9.0.3}The Algorithm}{107}
-\contentsline {subsection}{\numberline {9.0.4}Interpolation and Pathtracing}{107}
-\contentsline {subsection}{\numberline {9.0.5}Border Constraints}{107}
-\contentsline {subsection}{\numberline {9.0.6}Influence of Mesh choice and parameter choice}{107}
-\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{109}
+\contentsline {section}{\numberline {8.1}Problem Statement}{104}
+\contentsline {section}{\numberline {8.2}Theoretical Background}{104}
+\contentsline {subsection}{\numberline {8.2.1}General Laplacian}{104}
+\contentsline {subsection}{\numberline {8.2.2}Curl- and Divergence-Freeness}{105}
+\contentsline {subsection}{\numberline {8.2.3}Poincar\'e-Lemma}{106}
+\contentsline {subsection}{\numberline {8.2.4}Hodge Decomposition}{106}
+\contentsline {subsection}{\numberline {8.2.5}Discrete Hodge decomposition}{107}
+\contentsline {subsection}{\numberline {8.2.6}Dimension of Harmonic spaces}{108}
+\contentsline {subsection}{\numberline {8.2.7}Overall Picture}{108}
+\contentsline {section}{\numberline {8.3}Application: Vector Field Design}{108}
+\contentsline {subsection}{\numberline {8.3.1}Directional Constraints}{110}
+\contentsline {subsection}{\numberline {8.3.2}1-Form to Vector Field}{110}
+\contentsline {subsection}{\numberline {8.3.3}Border Constraints}{110}
+\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{111}
+\contentsline {subsection}{\numberline {9.0.4}The Euler Equations}{111}
+\contentsline {subsection}{\numberline {9.0.5}The Algorithm}{111}
+\contentsline {subsection}{\numberline {9.0.6}Interpolation and Pathtracing}{111}
+\contentsline {subsection}{\numberline {9.0.7}Border Constraints}{111}
+\contentsline {subsection}{\numberline {9.0.8}Influence of Mesh choice and parameter choice}{111}
+\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{113}
+\contentsline {chapter}{\hbox to\@tempdima {.\hfil }Bibliography}{114}

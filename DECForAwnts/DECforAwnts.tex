@@ -35,6 +35,7 @@
 
 \newcommand{\note}[1]{\textcolor{red}{\textit{(#1)}}}
 \newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\discrete}[1]{\textbf{#1}}
 %\newcommand{\eq}[2]{\begin{equation} #1 \label{#2} \end{equation}}
 
 \begin{document}
@@ -98,10 +99,16 @@
 	\subsection{Interpolation and Pathtracing}
 	As it says. Issues on curved meshes.
 	\subsection{Border Constraints}
-	Need for exact Harmonic solution $=>$ Equation.
+	Need for exact Harmonic solution $=>$ Equation.g
 	\subsection{Influence of Mesh choice and parameter choice}
 	Results and problems.
 	
 	
 	\input{Chapters/Appendix.tex}
+	
+	\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+	\nocite{*}
+	\bibliographystyle{alphadin}
+	\bibliography{chapters/thesis}
+	
 \end{document}

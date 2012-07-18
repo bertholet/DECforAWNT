@@ -27,14 +27,45 @@
 			 \\		
 		\hline
 	\end{longtable}
-		
-	Some further important EC results: the point carre lemma and the hodge decomposition theorem. Understanding of harmonic forms.
-	\subsection{Problem Statement}
-		
 	
+Vector field design is an other area where DEC can be applied directly. The goal is to generate a nice or natural looking tangential vector field on a two dimensional mesh using very few constraints like setting sources, sinks, position of vortices or a general flow direction. Tangential vector fields are naturally described by 1-Forms and therefore it is very natural to use DEC to describe 'niceness' constraints for vector fields. Another strength of using DEC in this setting is that it leads to a linear equation that is easily solved with any linear solver. In the end we will be looking for 'nearly` harmonic $1$-Forms knocking everything one
+
+This section is structured the following way: we start by formulating the problem statement in standard calculus. In this formulation the Laplacian for vector fields arises naturally. The second section gives some theoretical background to understand various difficulties and constraints connected to vector field design. In this context we present more advanced exterior calculus and differential topology results to enhance the understanding of harmonicity :
+\begin{enumerate}
+\item The Poincar\'e Lemma, which answers the question when a differential form $\omega$ can be 'integrated', i.e. when there exist differential forms $\nu$ with $d\nu = \omega$
+\item The Hodge Decomposition, which allows to split any differential form in three 'orthogonal' parts that can be treated somewhat independently, one of them harmonic
+\item The Hopf Index Theorem, which describes what vector fields are possible on a surface, based on its topology
+\item A result from Hodge theory, which describes the dimension of the spaces of harmonic forms, solely depending on the topology of the surface.
+\end{enumerate}
+In the third section we use the continuous theory to  exactly formulate the properties of designed vectorfields and translate this directly to DEC. In the fourth section we consider vector field design on meshes with borders or holes. 
+
+Vector field design, as presented here, was introduced by Matthew Fisher et al. \note{[Desing of Tangent Vector Fields]}.
+
+\section{Problem Statement}
+What is a nice looking vector field? Vector fields have various visually properties we want to control. The first are singularities, points where the vector field vanishes. These can be sources, sinks, vortices or of a more exotic nature \note{img}; the Hopf index theorem described in the next section sates that depending on the topology of the mesh such singularities are unavoidable. Therefore we want to control those.
+
+We can do so by controlling the curl and the divergence of a vector field. We want to allow divergence and curl only in some small, chosen environments. In terms of exterior calculus, this means solving for a 1-Form for which $d\omega = 0$ and $\partial \omega = 0$, but for selected points, or rather for very small areas, if we want to stay in a smooth setting. \note{imgs} Additionally we want to constrain the vector field to follow some painted strokes \note{img} but still look natural. This is done by constraining the vector field to fixed vectors on the stroke, and then, instead of requiring $d\omega = 0$ and $\partial \omega = 0$ we solve for a $1$-Form with minimal exterior (co)-derivative:
+\begin{flalign*}
+%\begin{matrix}
+\begin{aligned} &\omega^1 = v_{fixed} \\
+& d\omega^1 = +-c_{div} \\
+& \partial \omega^1 = +-c_{curl} \\
+&\langle d\omega^1, d\omega^1\rangle + \langle\partial \omega^1, \partial \omega^1 \rangle \; minimal \\
+\end{aligned} & \hspace{0.5cm}
+\begin{aligned}
+& \text{on strokes} & \\ 
+& \text{for source / sink vertices} &\\
+ & \text{for vortices} &\\
+& \text{else} &\\
+\end{aligned}
+\end{flalign*}	
+Note that the manifold we are treating is two dimensional; $d\omega^1$ and $\partial \omega^1$ are therefore scalar functions. So $c_{div}$ and $c_{curl}$ are some real valued 
+constants, $v_fixed$ is a 1-Form ore in standard calculus terms, just some vectors.
 %\subsection{Point Carre Lemma}
-When is a form d or delta of another form?
-\section{General Laplacian}
+%When is a form d or delta of another form?
+
+\section{Theoretical Background}
+\subsection{General Laplacian}
 For $k$-Forms the Laplacian is defined as 
 \[\Delta_k = \star_{k} d_{n-k+1}^{dual} \star_{k+1}d_k + d_{k-1}\star_{k-1}d_{n-k}^{dual} \star_{k}\]
 or ignoring the implicitely clear sub-indices and using the so called covariant derivative, or short co-derivative  $\partial = (-1)^k\star d \star$ \note{image}
@@ -84,19 +115,119 @@ In the last section we saw that harmonic forms are closed and co-closed, i.e. cl
 
 \subsection{Hodge Decomposition}
 \note{needs references, recheck}
+The Hodge decomposition theorem explains that it is possible to treat constraints $d\omega = c_{curl}$ and $\partial \omega = c_{div}$ completely independently from each other.
+
 We have now seen three kinds of $k$-Forms: closed $k$-Forms, co-closed $k$-Forms and harmonic forms. The space of the first are the kernel of $d$, the space of the second are the kernel of the coderivative $\partial$ and the space of the third being the intersection of the first two.
 
 The Hodge decomposition theorem then states that any $k$-form can be split in three complements: a harmonic part $\gamma: \Delta \gamma = 0$, an exact part $d\alpha^{k-1}$ and a co-exact part $\partial \beta^{k+1}$:
 \[\omega^k = d\alpha^{k-1} + \partial \beta^{k+1} + \gamma\]
 We will show that this result holds for Discrete Exterior Calculus, because then the proof only uses linear algebra. The idea or realisation behind this result is that the spaces of exact and co-exact differential forms are orthogonal to each other and their orthogonal complement is the space of harmonic forms \note{Sketch!}. And as we will see this is the same for Discrete Exterior Calculus, which is extremely nice.
 
+Realising that these three spaces are orthogonal to each other simplifies the vectorfield design problem: vorticity constraints can be met independently of divergence constraints. The part $d\alpha^{k-1}$ being $d$ free, fulfilling $dd\alpha = 0$, $\gamma$ being harmonic is also $d$ free, so constraints on the curl of the vector field $\omega$, i.e. $d\omega = c_{curl}$ are met by the component $\partial \beta$. Constraints for the divergence on the other hand have to be fulfilled by the component $d\alpha$.
+
+And if there exist harmonic $1$-Forms on the manifold, then specifying only divergence and curl constraints does not uniquely determine a vectorfield, as there is no constraint on the harmonic component $\gamma$.
+
+\subsection{Discrete Hodge decomposition}
+In Discrete Exterior Calculus the discrete version of the Hodge Decomposition holds. This is really great because it means that constraints on $d\omega$ and $\partial \omega$ can be enforced separately, in practice also. As we have already seen with conformal maps, when we enforce border constraints some of the DEC matrices have to be adapted; because being able to use the Hodge decomposition also on meshes with borders or using different $\star$ discretizations we formulate the discrete Hodge theorem very generally. We state some fundamental properties for the matrices $d$, $\star$ and $\partial$ that need to hold such that the Hodge decomposition holds. \note{img}
+
+\note{calling it a theorem is a bit much}
+\begin{thm}(Discrete Hodge Decomposition) If the matrices $d_k$,$\partial_k$, $\star_k$ and the scalar product $\langle , \rangle_k$ on the space of discrete $k$-Forms fulfil
+\begin{align}
+d_{k-1} d_{k} &= 0 \\
+\langle  d_k\discrete{v}^k,\discrete{w}^{k+1} \rangle_{k+1} &= \langle  \discrete{v}^k,\delta_{k+1}\discrete{w}^{k+1} \rangle_k \label{eq:adjoint}
+\end{align}
+then the following three subspaces are orthogonal to each other, with respect to the scalar product $\langle.,.\rangle_k$, and span the space of all discrete $k$-Forms:
+\[Img(d_{k-1}) \perp Img (\partial_{k+1}) \perp \left(Ker(d_k) \cap Ker(\delta_k)\right)\]
+This also means that any discrete $k$-Form can be written uniquely as a sum
+\[\discrete{w}^k = d_{k-1} \discrete{a}^{k-1} + \partial_{k+1} \discrete{b}^{k+1} + \discrete{c}^k\]
+where $\discrete{c}^k$ is a discrete harmonic $k$-form.
+\end{thm}
+
+To see this we just need to use the adjointness \ref{eq:adjoint}: $Img(d_{k-1}) \perp Img (\partial_{k+1})$ is true as
+\[\langle d \discrete{w} , \partial \discrete{v}\rangle = \langle \underbrace{dd}_{0} \discrete{w} , \discrete{v} \rangle = 0 \;\;\; \forall\; \discrete{v,w}\]
+Furthermore $(Img(d_{k-1}) \perp Img (\partial_{k+1}))^\perp = \left(Ker(d_k) \cap Ker(\delta_k)\right)$ because
+\begin{align*}
+(Img(d_{k-1}) \perp Img (\partial_{k+1}))^\perp &= \discrete{w}^k: \begin{cases} \langle \partial_{k+1}\discrete{v}^{k+1},\discrete{w}^k \rangle = 0 & \forall \discrete{v}^{k+1}\\
+\langle d_{k-1}\discrete{v}^{k-1},\discrete{w}^k \rangle = 0 & \forall \discrete{v}^{k-1}\end{cases} \\
+&= \discrete{w}^k: \begin{cases} \langle \discrete{v}^{k+1},d_{k}\discrete{w}^k \rangle = 0 & \forall \discrete{v}^{k+1}\\
+\langle \discrete{v}^{k-1},\partial_{k}\discrete{w}^k \rangle = 0 & \forall \discrete{v}^{k-1}\end{cases} \\
+&= \discrete{w}^k: \begin{cases} d_{k}\discrete{w}^k = 0 \\
+\partial_{k}\discrete{w}^k  = 0 \end{cases}\\
+&= Ker(d_k) \cap Ker(\delta_k)
+\end{align*}
+
+
 \subsection{Dimension of Harmonic spaces}
 \note{Section as written above, yet to be re placed, reorganized.}
+\note{Note: adjointness  is dirichelet enrgey to laplacian relation for 1d as $\int \abs{\nabla}^2 = \langle d,d \rangle ...$}
 
 \subsection{Overall Picture}
 We have the cohomology groups, they determine the relation between exactness and closedness and the existece and dimension of harmonic forms. True?
 
 \section{Application: Vector Field Design}
-Using all this for Vector Field Design
+\note{Do i need the Theory introducced above? Index Theorem to Appendix, I say, this is nearly stand alone and so short and nice...}
+
+\note{As given by the paper} By the Hodge decomposition theorem constraints on the divergence of a vector field are independent of constraints on the curl of a vector field. We solve for a $1$-Form $\discrete{w}^1$ with prescribed divergence curl and additional directional constraints.
+First of all we note that in DEC the divergence of a discrete vector field $\partial \discrete{w}^1$ is a discrete $0$-Form, therefore divergence constraints are given per vertex on a mesh. Rotational constraints are given by triangle, as the curl $d\discrete{w}^1$ is a discrete $2$-Form. Finally directional constraints constrain specific values of the discrete $1$-Form $\discrete{w}^1$ and therefore are given on selected edges.
+
+All the constraints can be compiled easily in one linear system:
+\begin{equation}\begin{pmatrix} d \\
+\partial \\
+Z
+\end{pmatrix} \discrete{w}^1
+= \begin{pmatrix}
+r_t \\
+s_v \\
+c_z
+\end{pmatrix} \label{eq:vfdesign1}
+\end{equation}
+where $Z$ is the identity matrix, constrained to the edges  affected by directional constraints (see subsection...), $r_t$ is the vector of target rotation values of defined by triangle, $s_v$ is the  target divergence values, defined by vertex and $c_z$ is the vector of constraints per edge, given by the directional constraints.
+
+The constraints $r_t$, $s_v$ and $c_z$ are provided by a user and are very likely to be contradictory. For example constraints on singularities as vortices given by the Hopf Index theorem are easily violated, if an impossible combination of singularities is prescribed. Or directional constraints might induce divergence or curl. Therefore the linear system is solved in a least square sense.
+
+But the correct norm to minimize is not the Euclidean norm. Suppose $r_t$ is zero, we then want to minimize $d\discrete{w}^1$ as a discrete $0$-Form and as seen in \note{...} the correct norm for $0$-Forms is given by $\star_0$, meaning that
+\[\langle d\discrete{w}^1, d\discrete{w}^1\rangle \rangle_0 = (d\discrete{w}^1)^T \star_0 (d\discrete{w}^1)
+\]
+should be minimal and analogously
+\[\langle \partial \discrete{w}^1, \partial\discrete{w}^1\rangle \rangle_2 = (\partial\discrete{w}^1)^T \star_2 (partial\discrete{w}^1)\]
+therefore the linear equation \ref{eq:vfdesign1}
+should be minimized relative to the scalar product or norm given by the diagonal matrix
+\[L = \begin{pmatrix}
+\star_2 & & \\
+ & \star_0 & \\
+ & & W
+\end{pmatrix}\]
+\[\langle \cdot , \cdot\rangle_{vfdesign} = (\cdot)^T L (\cdot)\]
+\[\abs{\abs{ \cdot}}_{vfdesign} = \langle \cdot,\cdot \rangle_{vfdesign}\]
+where $W$ is a diagonal weight matrix introduced to additionally control the influence of directional constraints. The least square solution $\discrete{w}^1$ 
+\[\arg\min_{\discrete{w}^1}\abs{\abs{\begin{pmatrix} d \\
+\partial \\
+Z
+\end{pmatrix} 
+\discrete{w}^1 - \begin{pmatrix}
+r_t \\
+s_v \\
+c_z
+\end{pmatrix}}}_{vfdesign}\]
+is then the solution of the normal equation 
+\[\begin{pmatrix} d^T & \partial^T & Z^T \end{pmatrix} L \begin{pmatrix} d \\
+\partial \\
+Z
+\end{pmatrix} \discrete{w}^1= \begin{pmatrix} d^T & \partial^T & Z^T \end{pmatrix} L \begin{pmatrix}
+r_t \\
+s_v \\
+c_z
+\end{pmatrix}.\]
+
+This linear system can be implemented directly and solved with any sparse solver.
+
+Again note the elegance of DEC: the vector field design problem can be formulated directly in DEC and leads to a simple sparse linear system. But there are two points not yet answered: how to treat meshes with borders and how to gain a vectorfield on the mesh surface from a discrete $1$-Form, i.e. a set of values stored on edges.
+
+
+\subsection{Directional Constraints}
+
+
+\subsection{1-Form to Vector Field}
+
 \subsection{Border Constraints}
 How borders can be treated but it affects everything.
