@@ -142,14 +142,20 @@
 \contentsline {subsection}{\numberline {8.2.6}Dimension of Harmonic spaces}{108}
 \contentsline {subsection}{\numberline {8.2.7}Overall Picture}{108}
 \contentsline {section}{\numberline {8.3}Application: Vector Field Design}{108}
-\contentsline {subsection}{\numberline {8.3.1}Directional Constraints}{110}
-\contentsline {subsection}{\numberline {8.3.2}1-Form to Vector Field}{110}
-\contentsline {subsection}{\numberline {8.3.3}Border Constraints}{110}
-\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{111}
-\contentsline {subsection}{\numberline {9.0.4}The Euler Equations}{111}
-\contentsline {subsection}{\numberline {9.0.5}The Algorithm}{111}
-\contentsline {subsection}{\numberline {9.0.6}Interpolation and Pathtracing}{111}
-\contentsline {subsection}{\numberline {9.0.7}Border Constraints}{111}
-\contentsline {subsection}{\numberline {9.0.8}Influence of Mesh choice and parameter choice}{111}
-\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{113}
-\contentsline {chapter}{\hbox to\@tempdima {.\hfil }Bibliography}{114}
+\contentsline {subsection}{\numberline {8.3.1}1-Form to Vector Field}{110}
+\contentsline {subsection}{\numberline {8.3.2}Directional Constraints}{111}
+\contentsline {subsection}{\numberline {8.3.3}Results}{111}
+\contentsline {subsection}{\numberline {8.3.4}Border Constraints}{112}
+\contentsline {subsubsection}{ Pros and Cons of this approach}{113}
+\contentsline {chapter}{\numberline {9}A Fluid Simulation with DEC}{115}
+\contentsline {section}{\numberline {9.1}The Euler Equations}{115}
+\contentsline {subsection}{\numberline {9.1.1}Properties of Fluids}{115}
+\contentsline {subsection}{\numberline {9.1.2}Laplacian II}{115}
+\contentsline {subsection}{\numberline {9.1.3}Navier Stokes}{115}
+\contentsline {section}{\numberline {9.2}The Algorithm}{117}
+\contentsline {section}{\numberline {9.3}Interpolation and Pathtracing}{117}
+\contentsline {section}{\numberline {9.4}Border Constraints}{117}
+\contentsline {section}{\numberline {9.5}Influence of Mesh choice and parameter choice}{117}
+\contentsline {chapter}{\numberline {10}Further Literature}{119}
+\contentsline {chapter}{\numberline {A}Primal and Dual Discrete Border Operator}{121}
+\contentsline {chapter}{\hbox to\@tempdima {.\hfil }Bibliography}{122}

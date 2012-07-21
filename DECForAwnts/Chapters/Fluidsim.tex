@@ -1,0 +1,87 @@
+\chapter{A Fluid Simulation with DEC}
+\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+	\hline
+	Smooth Theory& Discrete Theory& Implementation (Notes)\\
+	\hline
+		\begin{packed_enum}
+			\item[-] Introduction to the fluid equations and reformulation in DEC.
+		\end{packed_enum}
+		&
+		\begin{packed_enum}
+			\item[-] Second approach to Borderconstraints.
+			\item[-] Reformulation / solving for rot part etc.
+		\end{packed_enum}
+		 & 
+		 Implementing Fluid Sim with DEC
+		 \begin{packed_enum}
+			\item[-] Solving for Exact harmonic 1 Form
+			\item[-] continuous Vfield interpolation
+			\item[-] pathtracing
+			\item[-] Results
+		\end{packed_enum}
+		 \\		
+	\hline
+\end{longtable}
+All theory but fluid dynamics is already introduced, so this chapter really is a demonstration of DEC in use. \note{reference}
+
+Problem of standard fluid simulations.
+
+\section{The Euler Equations}
+\subsection{Properties of Fluids}
+Viscosity, incompressibility.
+
+\subsection{Laplacian II}
+\note{put this somewhere}
+$E(\omega) = \int_M \langle d\omega, d\omega \rangle + \langle \partial\omega, \partial\omega \rangle$. Then $E(\omega + \epsilon\phi) = \epsilon^2\int_M \langle d\phi, d\phi \rangle + 2\epsilon\int_M \langle d\phi, d\omega \rangle + \int_M \langle d\omega, d\omega \rangle$. Taking $\frac{\partial}{\partial \epsilon} |_{\epsilon = 0}$ we have $=2\int_M \langle d\phi, d\omega \rangle$. But if $\phi = 0$ on borders or $M$ has no borders $\langle d\phi, d\omega \rangle + \langle \partial\phi, \partial\omega \rangle= \langle \phi, \partial d + d \partial\omega \rangle$. This means that any equation 
+\[\frac{\partial \omega}{ \partial t} = - \Delta \omega \]
+describes a flow that minimizes the energy $E$, i.e. smoothing $\omega$ and describes a diffusion. Example $1D$...
+	
+\subsection{Navier Stokes}
+The first step is to formulate the behaviour of fluids appropriately with exterior calculus. In this case the formulation should be designed to describe the behaviour of vortices as we want to concentrate on them.
+
+Physics provide the following description of incompressible viscous fluids, that is fluids with interior friction; the Navier-Stokes equation:
+\[\frac{\partial u}{\partial t} + u \cdot \nabla u = -\nabla p + \nu \Delta u\]
+\begin{equation}div(u) = 0\label{eq:NS}\end{equation} 
+The single terms have the following meanings:
+\begin{itemize}
+	\item $u(x,t)$ is a time and position dependent vector field of velocities. The velocities describe the speed and the direction of 'particles` at fixed positions
+	\item The condition $div(u) = 0$ describes that the fluid is incompressible; at every point all incoming flow has to go out.
+	\item $\frac{\partial u}{\partial t} + u \cdot \nabla u$ is the material derivative or derivative along the motion. The material derivative is based on the idea that you track particles or parcells moving along a path $\alpha$ determined by the velocities $u$
+	\[\frac{\partial \alpha(t)}{\partial t} = u(\alpha(t), t)\]
+	You can then answer how the velocity of such a tracked particle that currently is at some position $x = \alpha(t_0)$ changes, simply by using the chain rule \note{img: steady flow (no temporal change of u vs direction change of the particle}
+	\begin{align*}\frac{\partial}{\partial t} u(\alpha(t),t) &= Du \cdot \frac{\partial}{\partial t}\begin{pmatrix}
+	\alpha(t) \\
+	t
+	\end{pmatrix}\\
+	&= (\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y},\frac{\partial u}{\partial z}, \frac{\partial u}{\partial t}) \cdot \begin{pmatrix}
+	u(\alpha(t),t) \\
+	1
+	\end{pmatrix} \\
+	&= \frac{\partial u}{\partial t} + u \cdot \nabla u
+	\end{align*}
+	\item $p(x,t)$ is a scalar field that describes the pressure at the position $x$ at time $t$. The vectors $-\nabla p$ therefore point in the direction of the largest pressure decrease.
+	\item The factor $\nu \Delta u$ is the diffusion factor (see Section \note{diffusion and energy min...}) and $\nu$ is the viscosity, a real valued material dependent constant. The viscosity $\nu$ describes how 'thick` the fluid is, how much internal friction it has. For example honey is thicker than water, water having a viscosity of $0.001$. The term $\nu \Delta u$ then describes that the higher the friction is, the more the velocities get diffused.
+\end{itemize}
+
+The Navier-Stokes equation therefore states that the movement of small parcels is influenced by pressure differences and a diffusion term. Every particle is pulled both in the direction of the largest pressure decrease and in a direction such that curl and divergence are decreased \note{see}, where the influence of the second depends on the fluid, i.e. its viscosity.
+
+\note{Todo: The Karman Vortex street. Viscous fluids have an interesting behaviour close to boundaries of non moving objects. As they have internal friction the velocity on the boundaries of such objects is zero. This leads to some vorticity which then are carried away- Kelvins circulation theorem}
+\subsubsection*{}
+To emphasis the behavior oThe authors of \note{[Fluid sim]} reformulate the Navier Stokes equation in terms of vorticities. In terms of EC rather then describing the 1-Form $\omega^1$ corresponding to the velocity field $u$, they describe its curl $d\omega^1$ or $ \nabla \times u$. You can get to such a description by applying $\nabla \times$ to both sides of Equation \ref{eq:NS}
+\[\nabla \times \frac{\partial u} \partial{t} + \nabla \times (u \cdot \nabla u) = - \underbrace{\nabla\times \nabla}_{=0} p + \nu \nabla \times \Delta u,\]
+\[\Delta = grad(div) + curl(curl) = \nabla(\nabla \cdot) - \nabla \times (\nabla \times) \]
+leading to
+\[\frac{\partial (\nabla \times u)}{\partial t} + \nabla \times (u \cdot \nabla u) =  \nu \nabla \times \Delta u,\]
+\[\frac{\partial (\nabla \times u)}{\partial t} + \nabla \times (u \cdot \nabla u) =  \nu \nabla \times \nabla \times (\nabla \times u),\]
+
+
+\section{The Algorithm}
+Approach and general Algorithm
+\section{Interpolation and Pathtracing}
+As it says. Issues on curved meshes.
+\section{Border Constraints}
+Need for exact Harmonic solution $=>$ Equation.g
+\section{Influence of Mesh choice and parameter choice}
+Results and problems.
+
+\chapter{Further Literature}

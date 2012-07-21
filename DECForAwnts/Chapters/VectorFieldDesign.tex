@@ -210,24 +210,100 @@ s_v \\
 c_z
 \end{pmatrix}}}_{vfdesign}\]
 is then the solution of the normal equation 
-\[\begin{pmatrix} d^T & \partial^T & Z^T \end{pmatrix} L \begin{pmatrix} d \\
+\begin{equation}\begin{pmatrix} d^T & \partial^T & Z^T \end{pmatrix} L \begin{pmatrix} d \\
 \partial \\
 Z
 \end{pmatrix} \discrete{w}^1= \begin{pmatrix} d^T & \partial^T & Z^T \end{pmatrix} L \begin{pmatrix}
 r_t \\
 s_v \\
 c_z
-\end{pmatrix}.\]
+\end{pmatrix}. \label{eq:vfdesignLQ}\end{equation}
 
 This linear system can be implemented directly and solved with any sparse solver.
 
 Again note the elegance of DEC: the vector field design problem can be formulated directly in DEC and leads to a simple sparse linear system. But there are two points not yet answered: how to treat meshes with borders and how to gain a vectorfield on the mesh surface from a discrete $1$-Form, i.e. a set of values stored on edges.
 
+\subsection{1-Form to Vector Field}
+Up to now we designed a discrete $1$-Form $\discrete{w}^1$, without clarifying how the discrete one form can be used to generate a tangential vector field on the mesh. So given a discrete one Form, i.e. a set of values defined per edge that represent values sampled as described in Section  \note{...} how to generate a tangential vector field? In other words we want a discrete analogue to the continuous $\sharp$ operator from Section \note{...}.
+
+The definition of sharp operators for discrete Exterior calculus is not trivial and closely related to interpolation schemes. One approach is to interpolate the values on the edges to define a continuous differential $1$-Form on every triangle. The interpolated $1$-Forms should have the property that the integral along an edge $e$ should lead to the value $\discrete{w}^1(e)$. You can then apply the (non-discrete) sharp operator to the interpolated 1-Form to get a vector at any position on the mesh.
+But if you are interested only in vectors on vertex or dual vertex locations you can take a more direct approach, skipping the theoretical interpolation step.
+
+In \note{[Hirani]} it is argued that there are at least four different $\sharp$ operators that can be gained from any single interpolation scheme. Also discrete dual forms need to be interpolated differently than discrete primary forms, as they are defined on different simplices or cells. 
+
+The authors of the vector field design paper \note{VFDesing} propose to use so called Whitney forms or Whitney elements for the interpolation step, which leads to a differentiable $1$-Forms on every triangle, but with discontinuities on vertices and edges. We will skip all details here and simply give the resulting $\sharp$ operator. For any triangle $t_{ijk}$ with vertices $i,j,k$ and edges $e_{ij}, e_{jk},e_{ki}$ the proposed vector at the point with barycentric coordinates $\alpha_i, \alpha_j, \alpha_k$
+\begin{align} u(\alpha_i, \alpha_j, \alpha_k) = \frac{1}{2area(t_{ijk})} ( &(\discrete{w}_{ki} \alpha_k - \discrete{w}_{ij} \alpha_j)e_{jk}^\perp ) + {}\nonumber\\
+&(\discrete{w}_{ij} \alpha_i - \discrete{w}_{jk} \alpha_k)e_{ki}^\perp + {}\nonumber\\ 
+&(\discrete{w}_{jk} \alpha_j - \discrete{w}_{ki} \alpha_i)e_{ij}^\perp)
+\label{eq:vfSharp}
+\end{align}
+where $e^\perp$ is the edge $e$ rotated by $90^\circ$ in the plane of the triangle $t_{ijk}$, according to the orientation of $t_{ijk}$. We then have
+$$\discrete{w}^{1\sharp}_{ijk}(\alpha_i, \alpha_j, \alpha_k) = u(\alpha_i, \alpha_j, \alpha_k).$$
+
+Note that in Section \note{...} we will need to get a continuous vector field from a discrete $1$-Form, such that this $\sharp$ will not be suited. But the $1$-Form will be strictly divergence free and we will give a $\sharp$ operator for this special case.
+
 
 \subsection{Directional Constraints}
+The additional constraints $Z \discrete{w}^1 = c_z$ are provided by the user using strokes \note{img: example of s a stroke providing directions}. The simplest way to translate a stroke into $1$-Form constraints is to capture the path of the mouse stroke and translate it to vectors that describe the direction of the mouse motion per triangle.
+A single vector $v$ on a triangle $t$ can then be interpreted as describing a constant vector field on the triangle. According to the sampling scheme described in Section \note{...}, the target value for an edge $e$ of the triangle $t$ simply is the projection of $v$ on $e_t$:
+$$c_z = \langle v, (e.end - e.start) \rangle$$
+If an edge $e$ is part of two triangles with different vector valued constraints $v_1,v_2$, simply taking the value
+\[c_z= \frac{1}{2}\left(\langle v_1, (e.end - e.start) \rangle + \langle v_2, (e.end - e.start) \rangle\right)\]
+works well.
 
+For the magnitude of the directional constraints $v$ we propose two schemes. The first is to norm all directional constraints to the same user-specified length $\lambda$, i.e.
+\begin{equation} \abs{v} = \lambda \label{eq:vfconstraint1}\end{equation}
+The second one is to solve Equation \ref{eq:vfdesignLQ} once without any directional constraints to generate a first vector field $\nu_{pre}$ and then to scale the directional constraints to have the same length as the precomputed vector field:
+\begin{equation} \abs{v} = \abs{\nu_{pre}} \label{eq:vfconstraint2}\end{equation}
 
-\subsection{1-Form to Vector Field}
+Both constraint types have different properties. Specifying a constraint of the type in Equation \ref{eq:vfconstraint1} might introduce a lot of new divergence or influence the vector field in an unintuitive way \note{img}. Especially if the constraint is drawn in an environment where the vector field nearly vanishes, the enforcement of the no divergence constraint might lead to a global change of the vectorfield flow \note{img}. On the other hand you can use the introduction of divergence to your advantage: you can directly draw sources or sinks or more complex singularities which then are enforced.
+
+Constraints of the type \ref{eq:vfconstraint2} is less aggressive; the impact on divergence is less pronounced. The constraint constrains the designed vector field to follow the given stroke without affecting the global look of the vector field.
+
+\subsection{Results}
+...
 
 \subsection{Border Constraints}
-How borders can be treated but it affects everything.
+Meshes with boundaries are not treated correctly or intuitively without further adaptations \note{image}. The problem is that the discrete zero divergence condition
+\[\partial \discrete{w}^1 = 0\]
+is not enforced correctly on boundaries. The problem is that border vertices do not have a full $1$-neighborhood of faces. Let's look at the discrete co-derivative $\partial_1 = \star^{-1}_0 d^{dual} \star_1$. The $\star_1$ applied to the discrete $1$-Form $\discrete{w}^1$ leads to a dual $1$-Form; the values associated to the dual edges represent the flow of the vector field going through the dual edge, as described in Section \note{...}. The dual discrete derivative $d^{dual}$ then sums up the values on the dual edges along the border of dual faces, leading to a value defined by dual face. At interior vertices this value $d^{dual} \star_1 \discrete{w}^1$ describes the overall flow in or out of the associated dual faces, i.e. a correct approximation of divergence, but the dual faces at border vertices are not closed and no flow through the boundary is considered \note{Img of the two cases}. Implicitly, this enforces that there is no flow through the border of meshes, i.e. the designed vector field is parallel to borders \note{img}.
+
+This is a problem. In order to calculate the total divergence on a dual face of a border vertex we need to know the flow through border edges, which are primary edges. But the value stored on primary edges is the flow along the edge. Put differently we would need to know the dual form on primary vertices. \note{It might be an interesting approach to store the dual and primal values on all simplices. this would fascilitate border constraint treatment and might allow non voronoi duality: from primary and dual value it might be possible to make good guesses of primary and dual value on non orthogonal simplices.}
+
+The authors of \note{Vfdesign} propose to use the zero curl condition $d\discrete{w}^1 = 0$ together with the Whitney based interpolation scheme to compute the flow through a primary border edge. The curl freeness on a triangle $t_{ijk}$ means $\discrete{w}^1_{ij} = - \discrete{w}^1_{jk} - \discrete{w}^1_{ki}$ and using the interpolation scheme from Equation \ref{eq:vfSharp} they compute the flow $f_{ij}$ through the edge $e_{ij}$
+\begin{equation}f_{ij} = \int_{e_{ij}}\langle u(t, 1-t, 0), \frac{1}{\abs{e_{ij}}}e_{ij}^{T}\rangle = \discrete{w}^1_{jk} \cot(\theta^i) - \discrete{w}^1_{ki} \cot(\theta^j)\label{eq:vfFluxBorder}\end{equation}
+
+\begin{figure}
+\begin{center}
+\includegraphics[height = 4cm]{imgs/8_5_borderAdapt.eps}
+\end{center}
+\caption{The flow along the edges $e_{ki}= (v_k,v_i)$ and $e_{jk} = (v_j, v_k)$ is known. The flow through the edge $e_{ij}$ can then be estimated as the flow through $x$ plus the flow through $y$. Some basic trigonometry shows that the length of $x$ is $\abs{e_{ki}}\cot(\theta_j)$ and the length of $y$ is $\abs{e_{jk}}\cot(\theta_i)$. As $x$ and $y$ are orthogonal to $e_{ki}$ and $e_{jk}$ respectively, the flow through $x$ and $y$ can be estimated as $-\discrete{w}^1_{ki} \cot(\theta^j)$ and $\discrete{w}^1_{jk} \cot(\theta^i)$ respectively, leading to Equation \ref{eq:vfFluxBorder}}
+\label{fig:8_3_borderWeights}
+\end{figure}
+
+An alternative derivation of these weights without the use of any interpolation is given in Figure \ref{fig:8_3_borderWeights}.
+
+The estimated flow through the border edges can be used to control the behaviour of the vector field on the boundaries. When computing $\delta_1$, we can adapt the matrix $d_1^{dual} \star_1$ to use the estimated flux through the boundary edges as well. \note{img} The matrix $d_1^{dual} \star_1$ needs to be adapted on all rows corresponding to boundary vertices; supposing the edges $e_{ij}$, $e_{jk}$ are two boundary edges at the vertex $v_j$, then
+\[(d_1^{dual} \star_1)_{adapted} (v_j) := d_1^{dual} \star_1(v_j) + 0.5 f_{ij} + 0.5 f_{jk}\]
+The factor $+ 0.5 f_{ij} + 0.5 f_{jk}$ for boundary vertices can be easily described as a matrix
+\begin{align*}M_{borderdiff}& = \bordermatrix{ 
+& & \downarrow v \in e_1 \in border & &\downarrow v\in e_{2} \in border& & \cr
+v \notin border \rightarrow & 0 & 0& ...& 0& 0 \cr
+v\in border \rightarrow & 0 & 0.5 \cdot sgn(e_{1}, brdr) & ... & 0.5 \cdot sgn(e_{2}, brdr)&0\cr
+& 0 & & ...& & 0 \cr
+& 0 & & ...& & 0
+} \cdot \nonumber \\
+& \bordermatrix{ 
+& & & & &\cr
+e \notin \; border & 0 & 0 & ...&0 & 0 \cr
+e_{ij} \in\;border& & \cot(\theta^i)sgn(e_{jk}, t_{ijk}) & ... & \cot(\theta^j)sgn(e_{ki}, t_{ijk}) & \cr
+& 0 & & ...& & 0
+}\end{align*}
+The second matrix is a square matrix of size $(\# edges \times \# edges)$ that computes the flux for border edges following Equation \ref{eq:vfFluxBorder} and is zero for all non border edges. The first matrix computes the border flux relevant for border vertices and is of size $(\#vertices \times \#edges)$. The $sgn$ denote the relative orientations of the edges to the border or the face they lie in.
+
+\note{could simply use the equality $e_{1}^\perp = cot(\theta_2)e_2 + cot \theta_3 e_3$}
+
+\subsubsection{ Pros and Cons of this approach}In the vector field design setting this approach works very well \note{imgs}. But to generally use the adapted $d^{dual}_1$ on meshes with borders might not be a good idea. First of all the constraint works only because it is assumed that there is no curl on boundary triangles. Secondly  with the adapted $d^{dual}_1$ the property $d^{dual}_1d^{dual}_0 = 0$ does not hold any more and the adjointness of $d_0$ and $\delta_1$ do also fail and with it the discrete Hodge theorem. Not by much, but still. \note{For the fluid sim some quality measures of the solution of harmonic functions with border constraints using the adapted matrix have been computed and a better approach (for the Fluid Sim setting only) is introduced}
+And from a theoretical standpoint where we want the DEC operators to have the nice theoretical properties similar to the properties of the continuous operators the loss of adjointness and $d^{dual}_1d^{dual}_0 = 0$ is not great.
+
+Nevertheless, in this vector design setting, or in any setting where the emphasis is on visually pleasant results and not on optimal precision, the adapted $d^{dual}$ operator is very suitable.

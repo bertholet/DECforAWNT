@@ -103,11 +103,18 @@
 \newblock Prentice-Hall, 1974 (Mathematics Series). --
 \newblock ISBN 9780132126052
 
-\bibitem[MDSB02]{Meyer02discretedifferential-geometry}
-\textsc{Meyer}, Mark ; \textsc{Desbrun}, Mathieu ; \textsc{Schr\"{o}der}, Peter  ;
-  \textsc{Barr}, Alan~H.:
+\bibitem[Hir03]{hirani03}
+\textsc{Hirani}, Anil~N.:
+\newblock Discrete exterior calculus.
+\newblock   (2003).
+\newblock \url{http://resolver.caltech.edu/CaltechETD:etd-05202003-095403}
+
+\bibitem[MDSB02]{laplacebeltrami}
+\textsc{Meyer}, Mark ; \textsc{Desbrun}, Mathieu ; \textsc{Schr{\"o}der}, Peter
+   ; \textsc{Barr}, Alan~H.:
 \newblock Discrete Differential-Geometry Operators for Triangulated
-  2-Manifolds, Springer-Verlag, 2002, S. 35--57
+  2-Manifolds.
+\newblock {In: }\emph{Proc. VisMath}, 2002, S. 35--57
 
 \bibitem[MTAD08]{CGF:CGF1289}
 \textsc{Mullen}, Patrick ; \textsc{Tong}, Yiying ; \textsc{Alliez}, Pierre  ;

@@ -67,41 +67,7 @@
 \newpage	
 \input{Chapters/VectorfieldDesign.tex}
 \newpage
-\chapter{A Fluid Simulation with DEC}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			\begin{packed_enum}
-				\item[-] Introduction to the fluid equations and reformulation in DEC.
-			\end{packed_enum}
-			&
-			\begin{packed_enum}
-				\item[-] Second approach to Borderconstraints.
-				\item[-] Reformulation / solving for rot part etc.
-			\end{packed_enum}
-			 & 
-			 Implementing Fluid Sim with DEC
-			 \begin{packed_enum}
-				\item[-] Solving for Exact harmonic 1 Form
-				\item[-] continuous Vfield interpolation
-				\item[-] pathtracing
-				\item[-] Results
-			\end{packed_enum}
-			 \\		
-		\hline
-	\end{longtable}
-	All theory but the Fluid Simulation dependent theory is introduced, so this is a demonstration of DEC in use.
-	\subsection{The Euler Equations}
-	Short introduction to the meaning of the equation
-	\subsection{The Algorithm}
-	Approach and general Algorithm
-	\subsection{Interpolation and Pathtracing}
-	As it says. Issues on curved meshes.
-	\subsection{Border Constraints}
-	Need for exact Harmonic solution $=>$ Equation.g
-	\subsection{Influence of Mesh choice and parameter choice}
-	Results and problems.
+\input{Chapters/FluidSim.tex}
 	
 	
 	\input{Chapters/Appendix.tex}
