@@ -1,5 +1,22 @@
 \begin{appendix}
 
+\chapter{The integral of differential forms}
+\label{app:integrals}
+
+That the integral definition of Section \ref{sec:integralOfForms} really is independent of the chosen map $\phi$ follows directly from the common transformation formula. Say we use a different map $\psi: V \rightarrow \Omega \subset M$, then $\psi = \phi \circ h$ for some mapping $h:U \subset \mathbb R^k \rightarrow V \subset \mathbb R^k$ \note {image}. 
+\[\int_{\psi(V)} \omega^k = \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \psi}{\partial x_1},...,\frac{\partial \psi}{\partial x_k}) d x_1...d x_k\]
+\[= \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \phi \circ h}{\partial x_1},...,\frac{\partial \phi \circ h}{\partial x_k}) d x_1...d x_k\]
+\[= \int_V \omega_{\phi\circ h(x_1,...,x_k)}(D\phi \cdot Dh) d x_1...d x_k\]
+\[= \int_{V} det(Dh) \omega_{\phi\circ h(x_1,...,x_k)}(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) d x_1...d x_k\]
+and using the transformation formula
+\[= \int_U \omega_{\phi(x_1,...,x_n)} (\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) d x_1...d x_k \]
+
+\subsubsection{Example}
+The integral of a $k$-form $\omega^k = f(x) \cdot dVol $ over a $k$-dimensional set $\phi(U)$ parametrized by the orientation preserving map $\phi$ is the following:
+\[\int_{\phi(U)} f dVol = \int_{U} f(\phi(x)) dVol(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k})dx_1...dx_k\]
+And as $dVol(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) = \sqrt{det((D\phi)^TD\phi)}$ this is
+\[\int_{\phi(U)} f dVol = \int_{U} f(\phi(x)) \sqrt{det((D\phi)^TD\phi)} dx_1...dx_k\]
+
 \chapter{Primal and Dual Discrete Border Operator}
 
 \note{What follows now comes in the Appendix - this is already a much clearer formulation than anything i found anywhere, but still a bit technical. Could put a short note on orientation definition using forms in Appendix too} 

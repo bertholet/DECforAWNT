@@ -8,7 +8,7 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[AF01]{agricola2001globale}
+\bibitem[AF01]{globalAnalysis}
 \textsc{Agricola}, I. ; \textsc{Friedrich}, T.:
 \newblock \emph{Globale Analysis}.
 \newblock Vieweg, 2001 \url{http://books.google.ch/books?id=jNjyaS\_2qq0C}. --

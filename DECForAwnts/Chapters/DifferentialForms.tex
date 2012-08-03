@@ -1,28 +1,30 @@
 \chapter{Differential Forms}
-	In this Chapter we introduce forms and differential forms. Differential forms are mathematical objects that allow to treat many things in a unified way such as real valued functions, vector fields. Differential forms can be integrated (they are predestined for integration) and differentiated. The point why we are interested in differential forms is that the differential operator $d$ unifies many differential operators, like divergence, gradient and curl. It will unmask common relations of the operators and also their geometry, which is given by Stokes Theorem
-	\[\int_{\delta \Omega} \omega = \int_{\Omega} d\omega\]
-and directly connects the differential operator $d$ to the border operator $\delta$. In the end it will be this relation that is exploited to define various differential operators on simplicial complexes and meshes and by doing so preserve many important properties of these differential operators.
+In the next two chapters we introduce forms, differential forms and exterior calculus. Differential forms are mathematical objects that allow us to treat many things in a unified way, such as real valued functions and vector fields. Differential forms can be integrated and differentiated, actually they are designed to behave well under an integral. The point why we are interested in differential forms is that they allow the definition of a differential operator $d$ that unifies many differential operators, like divergence, gradient and curl. Exterior calculus will unmask common properties of these differential operators and also their geometry, via Stokes theorem
+\[\int_{\delta \Omega} \omega = \int_{\Omega} d\omega,\]
+which directly connects the differential operator $d$ to the border operator $\delta$. It will be this relation that is exploited to define the differential operator $d$ for simplicial complexes, and by doing so preserve many important properties of these differential operators.
 
-We will start this chapter with a motivation for differential forms, then we will capture them a bit more formally, introducing a few operations for them. In the third section we will relate them to standard calculus objects like vector fields and end this chapter by having a quick look at integration and discrete differential forms for simplicial complexes.
+The theory for differential forms is split in two chapters. This chapter motivates differential forms, captures them more formally, covers integration of differential forms and relates them to standard calculus objects like vector fields. It ends with the introduction of discrete differential forms.
+
+In Chapter \ref{chap:EC} we will then introduce the most important elements of exterior calculus and discrete exterior calculus, like the operators $d$ , $\partial$ and $\star$ and Stokes theorem. 
 \begin{table}[h]
 	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
 		\hline
 		Smooth Theory& Discrete Theory& Implementation (Notes)\\
 		\hline
-			Differential Forms: \begin{itemize}
+			Differential forms: \begin{itemize}
 			  \setlength{\itemsep}{1pt}
 			  \setlength{\parskip}{0pt}
 				\setlength{\parsep}{0pt}
-				\item[-]Diff Form motivation
-				\item[-]Forms (multilinear mappings) and the dimension of k Form space 
-				\item[-]Differential Forms 
-				\item[-]Riemann Integral of Diff Forms 
-				\item[-]Interpretation of Diff Forms in $\mathbb R^3$ 
+				\item[-]Diff form motivation
+				\item[-]Forms (multilinear mappings) and the dimension of $k$-form space 
+				\item[-]Differential forms 
+				\item[-]Riemann Integral of Diff forms 
+				\item[-]Interpretation of Diff forms in $\mathbb R^3$ 
 			\end{itemize}
 			&
 			\begin{packed_enum}
-				\item[-] Discrete Form
-				\item[-] Sampling Forms
+				\item[-] Discrete forms
+				\item[-] Sampling forms
 			\end{packed_enum}
 			 & - none
 			 \\		
@@ -31,80 +33,83 @@ We will start this chapter with a motivation for differential forms, then we wil
 	\end{table}
 	
 \section{Motivation: The perfect thing to integrate}
-
-\note{Have a look at what you need when taking an integral: an either symmetric or antisymmetric form taking
-vectors from the tangential space}
-
-The goal of this section is to get an intuition of what a differential form is. Differential forms arise very naturally when considering integrals. 
-
-Suppose we have a 2D surface $M$ and a function $f$ defined on the surface and want to integrate $f$ over $M$ i.e. calculate the Riemann integral
-\[\int_{M} f dA\]
-To calculate the integral we can do the usual: we choose a grid, sum up the areas of the rectangles weighted by the  function value $f(s)$ somewhere in the parallelogram $s$ and take the limit under grid refinement
-\[\lim_{diam(s\in grid)\rightarrow 0} \sum_{s \in grid} f(s)\cdot area(s) \]
-
+\label{sec:dfmotivation}
 \begin{figure}
-\begin{center}
-\includegraphics[width = 14cm]{imgs/5_1_riemann.eps}
-\end{center}
-\vspace{-1cm}
-\caption{To calculate the Riemann integral over a surface we select a grid and refine it \note{Too Blabla?}}
+	\begin{center}
+	\includegraphics[width = 14cm]{imgs/5_1_riemann.eps}
+	\end{center}
+	\vspace{-1cm}
+	\caption{To calculate the Riemann integral over a surface we select a grid and refine it}
+	\label{fig:5_1_riemsum}
 \end{figure}
 
-So what we actually need is a way to assign values to areas $s$- any 'function' that does this can be integrated easily. Say $\omega$ does just this, then
+Differential forms arise very naturally when considering integrals. Suppose that we have a two dimensional surface $M$ and a function $f$ defined on the surface. We want to integrate $f$ over $M$ i.e. calculate the Riemann integral
+\[\int_{M} f dA.\]
+To compute the integral by brute force we can use Riemann sums: we choose a grid, sum up the areas of the parallelograms $s$ weighted by the  function value $f(s)$, and take the limit under grid refinement:
+\[\lim_{diam(s\in grid)\rightarrow 0} \sum_{s \in grid} f(s)\cdot area(s) \]
+We take a step back and consider what is essential for an 'object` to be integrated in this way.
+Basically we can integrate anything that assigns values to the areas $s$. Say $\omega$ assigns the value $\omega(s)$ to $s$, then its integral can be computed as:
 \[\int_M \omega = \lim_{diam(s\in grid)\rightarrow 0} \sum_{s \in grid} \omega(s)\]
-Obviously $\omega$ has to follow some rules to be useful for integration. For one it should scale with the area of $s$. Assume a grid segment $s$ is spanned by two vectors $a_s$,$b_s$, then we can write $\omega(s)$ as $\omega(a_s,b_s)$ \note{image}. For $\omega$ to scale properly with the area of $s$ we need it to be linear in both $a_s$ and $b_s$
+Obviously $\omega$ has to follow some rules to be useful for integration. For one it should scale with the area of $s$. Assume a grid segment $s$ is spanned by two vectors $a_s$,$b_s$, then we can write $\omega(s)$ as $\omega(a_s,b_s)$ \note{image}. For $\omega$ to be proportional to the area of $s$ we need it to be linear in both $a_s$ and $b_s$
 \[\omega(\lambda a_s, b_s) =\lambda \omega(a_s,b_s)\]
 \[\omega(a_s , \lambda b_s) =\lambda \omega(a_s,b_s)\]
-Furthermore, $\omega$ should behave well when the parameters are swapped:
-\[\omega(a_s,b_s) = ? \omega(b_s,a_s)\]
-There are two possibilities- we could chose ? to be 1 which makes sense if we want $\omega$ to depend solely on the absolute area of $s$. Or we can choose ? to be -1 and $\omega$ respects the orientation of $s$. We will chose the second variant where $\omega$ then is a \emph{differential form}. The first variant leads to so called \emph{pseudo forms}. Respecting the orientation of underlying surfaces will be crucial for many results.
+Furthermore, $\omega$ should behave well when the parameters are swapped, as the vector pairs $(a_s,b_s)$ and $(b_s,a_s)$ span the same area, but for orientation. There are two possibilities that make sense: we can choose $\omega$ to be symmetric or to be antisymmetric
+\[\omega(a_s,b_s) = \omega(b_s,a_s)\]
+\[\omega(a_s,b_s) = - \omega(b_s,a_s).\]
+Symmetry would mean that $\omega$ only depends on the absolute area of $s$. Antisymmetry means that $\omega$ respects the orientation of $s$. We choose antisymmetry, $\omega$ then is a \emph{differential form}. The first variant would lead to so called \emph{pseudo forms}. 
 
-One last note on $a_s$ and $b_s$. If you look at the grid in Figure \note{...} you see that they nearly lie in the tangential spaces of the surface $M$, anyway they do in the limit. Therefore some $\omega$ is very well suited for integration over a surface if, at any point $p$ on the surface $M$ it provides a function $\omega_p$ that takes 2 vectors from the tangential space $T_pM$, is linear in both arguments and antisymmetric. I.e. for all $p$
-\[\omega_p: T_p M \to \mathbb R\]
-\[\omega_p \text{ bilinear and antisymmetric } \forall p \in M\]
-Obviously $\omega$ should also  change smoothly between neighbouring $p$'s; we will ensure this later.
+Lastly we have to clarify what $a_s$ and $b_s$ are. The vectors $a_s$ and $b_s$ are bound to some position $p$ \note{img}. Also, if you look at the grid in Figure \ref{fig:5_1_riemsum}, you see that the grid elements nearly lie in the tangential spaces of the surface $M$. At least they do so in the limit. This gets us to the full definition of a differential form on a two dimensional surface: some $\omega$ is very well suited for integration over a surface if, at any point $p$ on the surface $M$, it provides a function $\omega_p$ that takes two vectors from the tangential space $T_pM$, is linear in both arguments and antisymmetric. I.e. for all $p \in M$
+\[\omega_p: T_p M \times T_p M \to \mathbb R\]
+\begin{align*}&\omega_p(\lambda a,b) = \lambda \omega_p(a,b) = \omega_p(a,\lambda b) &\text{bilinearity} \\
+&\omega_p(a,b) = -\omega_p(b,a)  &\text{antisymmetry}\end{align*}
+A differential form $\omega$ should also  change smoothly between neighboring $p$'s; we will ensure this later.
 
 
 \section{Forms and Differential Forms}
-\note{Concretize The space of multilinear antisymmetric functions: bases, dimension, wedge. Define Differentialforms}
-More formally: a $k$-form on $\mathbb R^l$ is a multi linear asymmetric mapping $\mathbb R^l \times ... \times \mathbb R^l \to \mathbb R$ which depends on $k$ vectors from the $\mathbb R^l$. 
-\begin{definition}[$k$ Form]
- A $k$-Form (not a differential $k$ differential form, mind you) on a $l$ dimensional space $\mathbb R^l$ is a mapping $\omega : \mathbb R^l \times \mathbb R^l\times \cdots \times  \mathbb R^l \rightarrow \mathbb R$ with following properties:
+The motivational section provides the intuition that differential forms assign weights to local oriented volumes. In this section we clarify the details of what differential forms are. First of all we will describe their local structure. At any point a differential form $\omega$ provides a \emph{form} $\omega_p$, a multilinear, antisymmetric mapping. These multilinear mappings form a vector space of a finite dimension, as described in Section \ref{subsec::forms}. Using the so called wedge product $\wedge$, we describe simple bases for them in Section \ref{subsec:wedge}. Having understood the local structure of differential forms we give a clean definition of them in Section \ref{subsec:defDiffform} and finally use everything to relate the differential forms to the more intuitive well known objects from standard calculus in Section \ref{subsec:diffformsare}.
+
+\subsection{Forms}
+\label{subsec::forms}
+A $k$-form on $\mathbb R^l$ is a multilinear antisymmetric mapping $\mathbb R^l \times ... \times \mathbb R^l \to \mathbb R$ which depends on $k$ vectors from $\mathbb R^l$. 
+\begin{definition}[$k$-form]
+ A $k$-form (not a differential $k$ form, mind you) on a $l$ dimensional space $\mathbb R^l$ is a mapping $\omega : \mathbb R^l \times \mathbb R^l\times \cdots \times  \mathbb R^l \rightarrow \mathbb R$ with the following properties:
 \begin{enumerate}
 \item $\omega(x_1,...,x_k)$ is linear in all $k$ parameters, meaning that \[\omega(x_1,..,\lambda a + b,..., x_k) = \lambda \omega(x_1,..,a,..., x_k) + \omega(x_1,.., b,..., x_k)\].
-\item $\omega(x_1,...,x_k)$ is skew symmetric, meaning that switching any two variables leads to a change of sign:
+\item $\omega(x_1,...,x_k)$ is skew symmetric or antisymmetric, meaning that switching any two variables leads to a change of sign:
 \[\omega(x_1,...,x_i,...,x_j,...,x_k) = - \omega(x_1,...,x_j,...,x_i,...,x_k)\]
-\item These properties also mean that 
+\item In particular:
 \[\omega(x_1,...,x_k) = 0 \;\text{ if }\;x_1,...,x_k \text{ are linearly dependent}\]
 \end{enumerate}
 \end{definition}
 
-The third property follows from $\omega$'s antisymmetry $\omega(...,v,...,v,...) = -\omega(...,v,...,v,...)$, i.e. $\omega(...,v,...,v,...) = 0$ and its
- linearity.  
-The space of all $k$-Forms on $\mathbb R^l$ is denoted by $\Lambda^k (\mathbb R^l)$ and build a vector space: if $\omega$ and $\nu$ are $k$ forms so are $\omega + \nu$ and any multiples $\lambda \omega$. A natural question is what dimension $\Lambda^k(\mathbb R^l)$ has and to find a suitable basis of this space.
+The first property makes sure that $\omega$ is proportional to the volume spanned by the input vectors, while the second ensures that $\omega$ respects the orientation of the input.
+The third property follows from the first two\footnote{From $\omega$'s antisymmetry follows $\omega(...,v,...,v,...) = -\omega(...,v,...,v,...)$, i.e. $\omega(...,v,...,v,...) = 0$. Then from the linearity directly follows  $\omega(x_1,...,x_{k-1}, \sum_{j=1}^{k-1} a_jx_j) = 0$}. The space of all $k$-Forms on $\mathbb R^l$ is denoted by $\Lambda^k (\mathbb R^l)$ and is a vector space: if $\omega$ and $\nu$ are $k$ forms so are $\omega + \nu$ and any multiples $\lambda \omega$. A natural question is what dimension $\Lambda^k(\mathbb R^l)$ has and to find a suitable basis of this space.
 
-\subsection{Basis and Dimension of $\Lambda^k(\mathbb R^l)$}
-Given a $k$-form $\omega$ on $\mathbb R^l$ and a basis $e_1,...,e_l$ then $\omega(a_1,...,a_k)$ can be rewritten the following way. We can express the $a_j$ explicitly as sum of basis vectors
+\subsubsection{Basis and Dimension of $\Lambda^k(\mathbb R^l)$}
+Given a $k$-form $\omega$ on $\mathbb R^l$ and a basis $e_1,...,e_l$ of $\mathbb R^l$, then $\omega(a_1,...,a_k)$ can be rewritten the following way: we express the $a_j$ explicitly as a sum of basis vectors
 \[a_j = \sum_{i}a_j^ie_i\]
-and inserting this and using linearity we get
+and using the linearity of forms we get
 \[\omega(a_1,...,a_l) = \omega(\sum_{i}a_1^ie_i,...,\sum_{i}a_l^ie_i)\]
-\[= \sum_{i_1,...,i_k \in\{1,...,l\}}a_1^{i_1}\cdot ... \cdot a_k^{i_k} \omega(e_{i_1},...,e_{i_k})\]
-We can reorder this sum such that all terms treating the same set of basis vectors are grouped together:
-\[=\sum_{i_1<...<i_k}\left(\sum_{\sigma \in S^k} a_1^{i_{\sigma(1)}}\cdot ... \cdot a_k^{i_{\sigma(k)}} \omega(e_{i_{\sigma(1)}},...,e_{i_{\sigma(k)}})\right)\]
-where $S^k$ is the permutation group and the inner sum goes over all orderings of basis vectors.
-Because of the antisymmetry reordering $e_{i_{\sigma(1)}},...e_{i_{\sigma(k)}}$ to $e_{i_1},...,e_{i_k}$ such that $i_1<...<i_k$ affects only the sign of $\omega(e_{i_1},...,e_{i_k})$:
-\[\omega(e_{i_1},...,e_{i_k}) = sgn(\sigma)\omega(e_{i_{\sigma(1)}},...e_{i_{\sigma(k)}})\]
-and rewriting the sum above yields
+\[= \sum_{i_1,...,i_k \in\{1,...,l\}}a_1^{i_1}\cdot ... \cdot a_k^{i_k} \omega(e_{i_1},...,e_{i_k}).\]
+We can reorder this sum such that all terms treating the same set of basis vectors are grouped together
+\begin{equation}=\sum_{i_1<...<i_k}\left(\sum_{\sigma \in S^k} a_1^{i_{\sigma(1)}}\cdot ... \cdot a_k^{i_{\sigma(k)}} \omega(e_{i_{\sigma(1)}},...,e_{i_{\sigma(k)}})\right),\label{eq:diffformsum}\end{equation}
+where the permutation group $S^k$ is used to express that the inner sum goes over all orderings of basis vectors. Because of the antisymmetry, reordering $e_{i_{\sigma(1)}},...e_{i_{\sigma(k)}}$ to $e_{i_1},...,e_{i_k}$ such that $i_1<...<i_k$, affects only the sign of $\omega(e_{i_1},...,e_{i_k})$:
+\[\omega(e_{i_1},...,e_{i_k}) = sgn(\sigma)\omega(e_{i_{\sigma(1)}},...e_{i_{\sigma(k)}}).\]
+Rewriting the sum \ref{eq:diffformsum} yields
 \[\sum_{i_1<...<i_k}\left(\sum_{\sigma \in S^k} sgn(\sigma) a_1^{i_{\sigma(1)}}\cdot ... \cdot a_k^{i_{\sigma(k)}}\right) \omega(e_{i_1},...,e_{i_k})\]
-\[ = \sum_{i_1<...<i_k} det_{i_1,...,i_k}(a_{i_1},...,a_{i_{k}}) \omega(e_{i_1},...,e_{i_k})\]
-where $det_{i_1,...,i_k}(a_{i_1},...,a_{i_{k}})$ is a subdeterminant of the matrix formed by the vectors $a_1,...,a_k$ restricted to the lines $i_1,...,i_k$.
+\[ = \sum_{i_1<...<i_k} det_{i_1,...,i_k}(a_{i_1},...,a_{i_{k}}) \omega(e_{i_1},...,e_{i_k}),\]
+where $det_{i_1,...,i_k}(a_{i_1},...,a_{i_{k}})$ is a sub determinant of the matrix formed by the vectors $a_1,...,a_k$ restricted to the lines $i_1,...,i_k$:
 \[det_{i_1,...,i_k}(a_1,...,a_k) = det \begin{pmatrix}
 a_1^{i_1} &a_2^{i_1} &...&a_k^{i_1} \\
 \vdots & & & \vdots \\
 a_1^{i_k} &a_2^{i_k} &...&a_k^{i_k} 
 \end{pmatrix}\]
+Put on one line we get
 
-We can read a few things out of this. For one, the $k$-form $\omega$ is determined uniquely by the values it assumes on $k$-tuples of basis vectors $e_{i_1},...,e_{i_k}$ with $i_1 <...< i_k$. And the $k$ forms (you can easily check that they are $k$-forms)
+%\fbox{\parbox{\textwidth}{
+\[\omega(a_1,...,a_k)= \sum_{i_1<...<i_k} \omega(e_{i_1},...,e_{i_k}) \cdot det_{i_1,...,i_k}(a_{i_1},...,a_{i_{k}})\]
+%}}
+We can read a few things out of this. For one, the $k$-form $\omega$ is determined uniquely by the values it assumes on $k$-tuples of basis vectors $e_{i_1},...,e_{i_k}$ with $i_1 <...< i_k$. And the $k$-forms
 \[det_{i_1,...,i_k}(a_{1},...,a_{k})\]
 which calculate $k$-subdeterminants of the input vectors, form a basis of $\Lambda^k(\mathbb R^l)$. From this follows directly that that the dimension of the  space of $k$-forms on $\mathbb R^l$ equals the number of ordered tuples $i_1<...<i_k$ of integers $i_1,...,i_k \in \{1,...,l\} $ i.e.
 \[\dim (\Lambda^k(\mathbb R^l)) = \begin{pmatrix}
@@ -114,12 +119,24 @@ k
 In particular, the space of $k$ forms on $\mathbb R^l$ with $k>l$ is 0-dimensional, which means that there are no $k>l$-forms.
 
 \subsection{The Wedge Product}
-The wedge product for forms is a way to create higher order forms out of lower order forms, for example out of a $j$ form $\omega^j$ and a $k$ form $\nu^k$ you can make a $j+k$ form $\omega^j\wedge \nu^k$. The important points to grasp in this section are that you can use the wedge product to create higher order forms, you can use the wedge product to simply describe bases of the spaces of $k$-Forms $\Lambda^k(\mathbb R^l)$ and that the wedge product is associative, distributive and has some symmetry. 
+\label{subsec:wedge}
+The wedge product for forms is a way to create higher order forms out of lower order forms, for example out of a $j$ form $\omega^j$ and a $k$ form $\nu^k$ you can make a $j+k$ form $\omega^j\wedge \nu^k$. The important points to understand in this section are that the wedge product can be used to create higher order forms and to simply describe a base of the space of $k$-Forms $\Lambda^k(\mathbb R^l)$. Furthermore, the wedge product is associative, distributive and has some symmetry. 
 
-We start wedging $1$-forms. The space $\Lambda^1(\mathbb R^l)$ has dimension $l$ and is spanned by a special set of basis forms
-\[de_i(a) := det_i(a) = a^i\]
-i.e. the projection to the $i$th coordinate of $a$ with respect to the chosen base $e_1,...,e_l$. Note that often $x_1,...,x_l$ or $x,y,z$ or similar is chosen to denote the base of $\mathbb R^l$ or $\mathbb R^3$ and these basis functions become $dx_1,..., dx_l$ or $dx,dy,dz$. For two arbitrary 1-forms $\omega^1$, $\nu^1$ we define
-\[\omega^1\wedge\nu^1(a,b):= det \begin{pmatrix}
+\subsubsection{Definition of the Wedge Product}
+The wedge product is easy to define but not very intuitive. You directly define the wedge product as
+\[\omega^j\wedge \nu^k (v_1,...,v_{l+k}) = \frac{1}{k!l!}\sum_{\sigma \in S^{k+l}} sgn(\sigma) \omega^j(v_{\sigma(1)},...,v_{sigma(j)})\nu^l(v_{\sigma(k+1)},...,v_{\sigma(k+l)}).\]
+The wedge product has the following properties, as is easy to show and is done e.g. in \cite{globalAnalysis}
+\emph{
+\begin{enumerate}
+\item Linearity in both arguments, i.e. $(\lambda\omega_1^k + \omega_2^k)\wedge\nu^l = \lambda(\omega_1^k \wedge\nu^l) + \omega_2^k \wedge \nu^l$ and the same for $\nu^l$
+\item Associativity, i.e. $ (\omega^j \wedge \nu^k) \wedge \mu^l = \omega^j \wedge (\nu^k \wedge \mu^l)$
+\item Symmetry: $\omega^k\wedge \nu^l = (-1)^{kl} \nu^l \wedge \omega^k$
+\end{enumerate}
+}
+
+\subsubsection{Using the Wedge Product}
+We start wedging $1$-forms. For two arbitrary 1-forms $\omega^1$, $\nu^1$ we get
+\[\omega^1\wedge\nu^1(a,b)= det \begin{pmatrix}
 \omega(a) & \omega(b) \\
 \nu(a) & \nu(b)
 \end{pmatrix}\]
@@ -129,105 +146,107 @@ and for $k$ one forms $\omega_1^1,...\omega_k^1$
 \vdots & & \vdots \\
 \omega_k(a_1) &... & \omega_k(a_k)
 \end{pmatrix}\]
-If we apply the wedge product to the 'standard' basis 1 forms $de_1,..., de_l$ 
+
+ The space of one forms $\Lambda^1(\mathbb R^l)$ has dimension $l$ and is spanned by the special set of basis forms
+\[de_i(a) := det_i(a) = a^i\]
+i.e. the projection to the $i$th coordinate of $a$ with respect to the chosen base $e_1,...,e_l$. Note that often $x_1,...,x_l$ or $x,y,z$ or similar is chosen to denote the base of $\mathbb R^l$ and these basis functions become $dx_1,..., dx_l$ or $dx,dy,dz$. If we apply the wedge product to the 'standard' basis 1-forms $de_1,..., de_l$ we get
 \begin{eqnarray*}de_{i1}\wedge de_{i2} \wedge ... \wedge de_{ik}(a_1,...,a_k) &= &det \begin{pmatrix}
 de_{i1}(a_1) &  ... & de_{i1}(a_k) \\
 \vdots & & \vdots \\
 de_{ik}(a_1) &... & de_{ik}(a_k)
 \end{pmatrix} \end{eqnarray*}
-which is $det_{i_1,...,i_k}(a_1,...,a_k)$ when $i_1 <...<i_k$. These are exactly the 'standard' basis forms for the space of $k$-forms from the last section. Finally for a $k$ and an $l$ form $\omega^j$ and $\nu^k$ we define the wedge product by writing them in such a basis
+which is $det_{i_1,...,i_k}(a_1,...,a_k)$ when $i_1 <...<i_k$. These are exactly the 'standard' basis forms for the space of $k$-forms from the Section \ref{subsec::forms}. Finally for a $k$ and an $l$ form $\omega^j$ and $\nu^k$ we define the wedge product by writing them in such a basis
 \[\omega^j = \sum_{i_1<...<i_j} w_{i_1,..,i_j} de_{i_1}\wedge...\wedge de_{i_j} \]
-\[\nu^k = \sum_{i_1<...<i_k} v_{i_1,..,i_k} de_{i_1}\wedge...\wedge de_{i_k} \]
-and then imposing associativity and distributivity to the wedge product
+\[\nu^k = \sum_{h_1<...<h_k} v_{h_1,..,h_k} de_{h_1}\wedge...\wedge de_{h_k} \]
+and then using the associativity and distributivity of the wedge product you can compute
 \begin{eqnarray*}
 \omega^j\wedge \nu^k &=& \sum_{i_1<...<i_j} w_{i_1,..,i_j} de_{i_1}\wedge...\wedge de_{i_j} \\
-& & \wedge \sum_{i_1<...<i_k} v_{i_1,..,i_k} de_{i_1}\wedge...\wedge de_{i_k} 
+& & \wedge \sum_{h_1<...<h_k} v_{h_1,..,h_k} de_{h_1}\wedge...\wedge de_{h_k} \\
+& =& \sum_{\begin{subarray}
+\{\{ i_1,...,i_j\}\cap \{h_1,...,h_k\} = \emptyset \\
+i_1 < ... < i_j,\;\; h_1 <...<h_k
+\end{subarray}} w_{i_1,..,i_j} \cdot v_{h_1,..,h_k} de_{i_1}\wedge...\wedge de_{i_j} \wedge de_{h_1}\wedge...\wedge de_{h_k}
 \end{eqnarray*}
 
-Note that introducing the wedge like this is not very clean. You could directly define the wedge product as
-\[\omega^j\wedge \nu^k (v_1,...,v_{l+k} = \frac{1}{k!l!}\sum_{\sigma \in S^{k+l}} sgn(\sigma) \omega^j(v_{\sigma(1)},...,v_{sigma(j)})\nu^l(v_{\sigma(k+1)},...,v_{\sigma(k+l)}).\]
-Anyway; the wedge product has the following properties as is easy to show (and is done e.g. in [Global Analysis])
-\emph{
-\begin{enumerate}
-\item Linearity in both arguments, i.e. $(\lambda\omega_1^k + \omega_2^k)\wedge\nu^l = \lambda(\omega_1^k \wedge\nu^l) + \omega_2^k \wedge \nu^l$ and the same for $\nu^l$
-\item Associativity, i.e. $ (\omega^j \wedge \nu^k) \wedge \mu^l = \omega^j \wedge (\nu^k \wedge \mu^l)$
-\item Symmetry: $\omega^k\wedge \nu^l = (-1)^{kl} \nu^l \wedge \omega^k$
-\end{enumerate}
-}
-
 \subsection{Differential Forms}
-Now we can formulate what a differential form, this 'perfectly integrable' object, is. As motivated in the motivational section our objects need to assign to each point $p$ of a manifold $M$ a form $\omega_p$ defined on the tangential space $T_pM$. Remember that a local map $\phi: \mathbb U \subset R^l \to M$ induces a basis to all  points in $\phi(U)$, namely $\frac{\partial \phi}{\partial u_i}$. We can directly use this basis to define a basis for the space of one forms (and then higher order forms)  as done in the last section. Instead of  writing $d\frac{\partial \phi}{\partial u_i}$ we will write $d u_i$; the $u_i$ are rad as the coordinates given by the local map $\phi$.
+\label{subsec:defDiffform}
+Now we can correctly define differential forms. They are exactly as motivated in Section \ref{sec:dfmotivation}; a differential form assigns to each point $p$ of a manifold $M$ a form $\omega_p$ defined on the tangential space $T_pM$. With the wedge product we can now formulate that the differential form should vary smoothly between points. A local map 
+\[\phi:  U \subset\mathbb R^l \to M\] 
+induces a basis to all tangential spaces of points in $\phi(U)$, namely $\frac{\partial \phi}{\partial u_i}$. We can directly use this basis to define a basis for the space of $k$-forms, as done in the last section. Henceforth we will use the notation 
+\[d u_i:=\frac{\partial \phi}{\partial u_i}.\]
 
 \begin{definition}[Differential Form]
-A $k$-differential form $\omega^k$ is a mapping that assigns a $k$-form $\omega_p \in \Lambda^k(T_pM)$ to every point $p\in M$.
+A differential $k$-form $\omega^k$ is a mapping that assigns a $k$-form $\omega_p \in \Lambda^k(T_pM)$ to every point $p\in M$.
 
 Given a local map $\phi: U \rightarrow M$ all $k$-Forms $\omega_p$ with $p\in \phi(M)$ can be expressed in the by $\phi$ induced coordinates:
 \[\omega_p = \sum_{i_1<...<i_k}\omega_{i_1,...,i_k}(p) du_{i_1}\wedge...\wedge du_{i_k}\]
-for some realvalued functions $\omega_{i_1,...,i_k}(p)$. We then say that the differential form $\omega$ is $k$ times differentiable if ex pressed in local coordinates $\omega_{i_1,...,i_k}(p)$ are $k$ times differentiable. For simplicity sake we will always assume that $\omega$ is infinitely often differentiable, i.e. smooth.
+for some realvalued functions $\omega_{i_1,...,i_k}(p)$. We then say that the differential form $\omega$ is $k$ times differentiable if expressed in local coordinates, the $\omega_{i_1,...,i_k}(p)$ are $k$ times differentiable. For simplicity sake we will always assume that $\omega$ is infinitely often differentiable, i.e. smooth.
 
 \end{definition}
 
-So this is a differential form. We will see examples an relate differential forms to more common things like vector fields in the next section. Note that any operation defined for forms can point-wisely be defined for differential forms. For example the wedge product $\wedge$ for two differential forms $\omega^k$ and $\nu^l$ would be
+We will see examples and relate differential forms to more common things like vector fields in the next section. Note that any operation defined for forms can point-wisely be defined for differential forms. For example the wedge product $\wedge$ for two differential forms $\omega^k$ and $\nu^l$ would be
 \[(\omega^k\wedge \nu^l)_p := \omega^k_p\wedge \nu^l_p\]
 
 
-\subsection{What Differential Forms are in $\mathbb{R}^3$}
-\note{Using a metric (or simply by saying we look only at embedded manifolds with induced metric) we can associate
-Vector fields etc to Forms.}
-To get a feeling for differential forms we look at them in $\mathbb R^3$ or 3 Manifolds. In $\mathbb R^3$ differential forms have very simple presentations.
+\section{Interpretation of Differential Forms in $\mathbb{R}^3$}
+\label{subsec:diffformsare}
+Differential forms are of high practical relevance because standard calculus objects like vector fields are just realizations of differential forms. Therefore, the theory about differential forms can be applied directly to a wide range of standard problems. In the following we focus on $\mathbb R^3$, or equivalently, 3-dimensional manifolds, and relate the differential forms to standard calculus objects.
 
-\subsubsection{Differential 0 Forms}
+\subsubsection{Differential 0-Forms}
 \note{curvature img}
-Yes, differential 0 forms make sense! By definition a differential 0 form assigns a 0-form, i.e. a constant, to every point $p$ on a Manifold. This means a 0 differential form is simply a function $\omega: M \to \mathbb R$ that is infinitely  often differentiable we only want to talk about smooth differential forms. Some special examples would be the spacial coordinates of points $p \in M$ e.g. the $x_i$-coordinate function $ p = (x_1,...,x_n) \mapsto x_i$ or curvature.
-
+Differential 0-forms are real valued functions. By definition a differential 0-form assigns a 0-form, i.e. a constant, to every point $p$ on a manifold. This means a differential 0-form is simply a smooth function $\omega: M \to \mathbb R$. 
 
 \subsubsection*{Differential 1 Forms}
 \note{image VField}
-Differential $1$-Forms are equivalent to (tangential) vector fields. A 1-Form is a linear mappings from $\omega: \mathbb R^l \rightarrow \mathbb R$. And these can be simply represented as the scalar product of some vector $\omega^{\#} \in \mathbb R ^l$ with the input vector.
+Differential $1$-Forms are equivalent to tangential vector fields. A 1-Form is a linear mapping $\omega: \mathbb R^k \rightarrow \mathbb R$. Linear mappings to $\mathbb R$ can be represented as the scalar product of some vector $\omega^{\#} \in \mathbb R ^k$ with the input vector:
 \[\omega(v) = \langle \omega^{\#}, v \rangle\]
-This works just as well in tangential spaces. BUT there is a but, we need a scalar product on the tangential spaces that does not depend on the choice of basis vectors of the tangential spaces, or rather 'cancels out' the choice. As we look only at manifolds embedded in a higher dimensional space $M \subset \mathbb R^n$ the most natural choice of a scalar product on the tangential spaces is the scalar product induced by the surrounding space. We have already looked at this and established that this induced scalar product for all tangential spaces is described by the Riemannian metric induced by the euclidean scalar product (see Section \note{... now in the chapter Differential Structure, that will be killed}). 
+This works just as well on manifolds with tangential spaces. Yet, there is an additional technical difficulty to mention: we need a scalar product on the tangential spaces. As we look only at manifolds embedded in a higher dimensional space $M \subset \mathbb R^n$, the most natural choice of a scalar product on the tangential spaces is the scalar product induced by the surrounding space. A scalar product that is consistently defined for all tangential spaces is called a \emph{Riemannian metric}.
 
-Note that in principle you could use a different metric i.e. different scalar products in which case $\omega$ would be described by a different vector $\omega^{\#}$. This is why the sharp operator is \emph{depending on a metric}. The operation of making a 1 Form out of a vector $w$ is usually denoted by the 'flat' operator $\flat$, i.e. $w^\flat$.
+Note that in principle you could use a different metric i.e. different scalar products. In that case $\omega$ would be described by a different vector $\omega^{\#}$. This is why the sharp operator is \emph{depending on a metric}. The reverse operation of making a 1-form out of a vector $v$ is usually denoted by the 'flat' operator $\flat$, i.e. $v^\flat$.
 
-\subsubsection*{Differential 2 Forms}
-If we look only at three dimensional manifolds then the space of two forms on tangential spaces $\Lambda^2(T_pM)$ has dimension \[\dim\Lambda^2(T_pM) =\begin{pmatrix}
+\subsubsection*{Differential 2-Forms}
+The space of two forms on tangential spaces $\Lambda^2(T_pM)$ on three dimensional manifolds $M$ has dimension \[\dim\Lambda^2(T_pM) =\begin{pmatrix}
 3\\
 2
-\end{pmatrix} =3\] such that a differential $2$-form can again be represented as a vector field. In the $\mathbb R^3$ with the standard basis and euclidean scalar product a basis of $\Lambda^2(\mathbb R^3)$ is given by $dy \wedge dz$, $dz \wedge dx$, $dx \wedge dy$. As $dy \wedge dz (a,b) = a_yb_z -a_zb_y$ (and so on) a 2-Form $\omega^2(a,b)$ can be written as
-\[\omega^2(a,b) = w_1 dy \wedge dz + w_2 dz \wedge dx + w_3 dx \wedge dy = \langle \widehat{w}, a \times b \rangle\] 
-where $\widehat{w} = (w_1,w_2,w_3)$ is a vector that can be used to represent $\omega^2$. This means if we want a vector $\widehat{w} \in \mathbb R^3$ to act like a two form on two input vectors $a,b$ in $\mathbb R^3$, it amounts to taking the scalar product of $\omega^\sharp$ and a vector normal to $a,b$ scaled by the area spanned by $a,b$.
-
-If we are in some tangential space $T_pM$ with some (usually the induced) scalar product we can do the same. The representing vector is consistent under change of basis \note{i think, as this amounts to $(\star \omega)^\sharp$ } but again depends on the chosen scalar product /Riemannian metric.
-
+\end{pmatrix} =3.\] Therefore a differential $2$-form can again be represented as a vector field. In the $\mathbb R^3$ with the standard basis and euclidean scalar product a basis of $\Lambda^2(\mathbb R^3)$ is given by $dy \wedge dz$, $dz \wedge dx$, $dx \wedge dy$. As $dy \wedge dz (a,b) = a_yb_z -a_zb_y$,  a 2-Form $\omega^2(a,b)$ can be written as
+\begin{align*}
+\omega^2(a,b) &= (w_1 dy \wedge dz + w_2 dz \wedge dx + w_3 dx \wedge dy)(a,b) \\
+&= w_1(a_2b_3 - b_2 a_3) + w_2(a_3b_1-b_3a_1) + w_3(a_1b_2 - a_2b_1) \\
+&= \langle \widehat{w}, a \times b \rangle\end{align*} 
+where $\widehat{w} = (w_1,w_2,w_3)$ is a vector that can be used to represent $\omega^2$. This means if we want a vector $\widehat{w} \in \mathbb R^3$ to act like a two form on two input vectors $a,b$ in $\mathbb R^3$, it amounts to taking the scalar product of $\widehat{\omega}$ and a vector normal to $a,b$ scaled by the area spanned by $a,b$. 
+This can be done for $(n$-$1)$-forms on $n$-manifolds in general.
 
 \subsubsection*{Differential 3 Forms: Volume Forms}
-In general there is a special differential $l$-form on an l dimensional manifold $M^l$: the 'volume form'. The volume on some space $V$ is sometimes denoted as $dV$ or $dVol$. As the dimension of the space of $l$ forms on $T_pM^l$ is
-\[\dim(\Lambda^l(\mathbb R^l)) = 1\]
-and every $l$-form is simply a multiple of the volume form $dV$. The volume form measures the signed (orientation dependent) volume spanned by the input vectors. In $\mathbb R^l$ with the standard basis $e_1,...,e_l$ and the euclidean scalar product this is exactly the determinant:
+Differential $3$-forms on $\mathbb R^3$ can again be represented as real valued functions. As can differential $k$-forms on $k$-dimensional manifolds in general.
+There is a special differential $k$-form on an $k$ dimensional manifold $M^k$: the 'volume form'. The volume form measures the signed (orientation dependent) volume spanned by the input vectors. In $\mathbb R^l$ with the standard basis $e_1,...,e_l$ and the euclidean scalar product this is exactly the determinant:
 \[d\mathbb R^l (v_1,..., v_l) = det(v_1,...,v_l) = de_1\wedge ...\wedge d e_l\]
-In $T_p M$ with an arbitrary basis and the induced scalar product, the notion of volume has to be treated a bit more carefully as we want it to be consistent under basis changes. The bottom line is that you need to chose a basis $e_1,...,e_n$ that is orthonormal relative to the chosen scalar product such that the volume form is given by
-\[dT_pM = de_1 \wedge ... \wedge de_n\]
-
-If your l dimensional manifold $M\subset \mathbb R^n$ has the induced  euclidean metric / scalar product and $\phi$ is a map assigning local coordinates $u_1,...,u_l$ to some tangential spaces $T_pM$
-\[c \cdot du_1\wedge...\wedge du_l = dT_pM\]
-has to be a multiple of the volume form; The volume spanned by $\frac{\partial \phi}{\partial u_i}$ is (as already seen) $\sqrt{det((D\phi)^TD\phi)}$ such that
-\[c = \frac{dT_pM(...\frac{\partial \phi}{\partial u_i}...)}{du_1\wedge...\wedge du_l (...\frac{\partial \phi}{\partial u_i}...)} = \frac{\sqrt{det((D\phi)^TD\phi)}}{det((D\phi)^TD\phi)}\]
-and therefore the volume form in local coordinates is
-\[dT_pM =\frac{1}{\sqrt{det((D\phi)^TD\phi)}}  du_1\wedge...\wedge du_l\]
-\note{Is this correct?NO-well yes but not useful at all-  TODO}
-
-Anyway as any $l$ form on an $l$ dimensional space is the multiple of the volume form any $l$ differential form can be represented as a real valued function $f:M \rightarrow \mathbb R$ and the related $l$ form $\omega^l$ is then
+The volume on some space $V$ is sometimes denoted as $dV$ or $dVol$.
+ As the dimension of the space of $k$-forms on $T_pM^k$ is
+\[\dim(\Lambda^k(\mathbb R^k)) = \begin{pmatrix}
+	k\\k
+\end{pmatrix}= 1,\]
+every $k$-form is simply a multiple of the volume form $dV$. Therefore any differential $k$-form can be represented with a real valued function $f:M \rightarrow \mathbb R$ as
 \[\omega^l = f \cdot dVol\]
-Note that again, as the notion of volume is related to the chosen scalar product/ metric, this representation is also depending on the metric. This is also why the set of scalar products is called a riemannian metric as it is directly related to how volumes are measured. Note that even thought  in these sections there is always an emphasis that the riemannian metric can be chosen, as we work with embedded manifolds $M \subset \mathbb R^n$ we will always chose the metric induced by the euclidean metric on the embedding space. \note{Is this needed?}
 
-\subsubsection{Differential $n$-Forms on $\mathbb R^n$}
-The one-dimensionality of the space of $n$-forms on $\mathbb R^n$ can also be used to get a very simple description of what happens to a $n$ differential form under a base change.
-If $A$ is a linear map $\mathbb R^n \to \mathbb R^n$ 
-\[det(Av_1,Av_2,...,Av_n) = det(A)\cdot det(v_1,...,v_n)\]
-and therefore if $\omega^n$ is a $n$ differential form on $\mathbb R^n$
-\[\omega^n(Av_1,...,Av_n) = det(A)\cdot \omega^n(v_1,...,v_n)\]
-as any $n$ form is simply a multiple of the volume form $\omega^n = c \cdot det$. We can play around with this a bit more such that for fixed $v_1,...,v_n$ building a matrix $V$ we get
-\[\omega^n(Av_1,...,Av_n) = det(A)\cdot \omega^n(v_1,...,v_n)= det(V) \cdot \omega^n(a_1,...,a_n)\]
+%\subsubsection{Example: Volume Forms in Local Coordinates}
+%As an example we express the volume form on a $k$-manifold $M^k$ in local coordinates given by a map $\phi$.
+%The $k$-dimensional volume spanned by the vectors $\frac{\partial \phi}{\partial u_i}$ is $\sqrt{det((D\phi)^TD\phi)}$, therefore
+%\[dT_pM (\frac{\partial \phi}{\partial u_1},...,\frac{\partial \phi}{\partial u_k}) = \sqrt{det((D\phi)^TD\phi)}.\]
+%As any $k$-form is a multiple of the volume form, the $k$-form given by $\phi$ must be
+%\[du_1\wedge...\wedge du_k = c \cdot dT_pM\]
+%for some $c$. The $c$ can be computed by
+%\[c = \frac{dT_pM(\frac{\partial \phi}{\partial u_1},...,\frac{\partial \phi}{\partial u_k})}{du_1\wedge...\wedge du_l (\frac{\partial \phi}{\partial u_1},...,\frac{\partial \phi}{\partial u_k})} = \frac{\sqrt{det((D\phi)^TD\phi)}}{det((D\phi)^TD\phi)}\]
+%and therefore the volume form in local coordinates is
+%\[dT_pM =\frac{1}{\sqrt{det((D\phi)^TD\phi)}}  du_1\wedge...\wedge du_k.\]
+
+%\subsubsection{Differential $n$-Forms on $\mathbb R^n$}
+%The one-dimensionality of the space of $n$-forms on $\mathbb R^n$ can also be used to get a very simple description of what happens to a $n$ differential form under a base change.
+%If $A$ is a linear map $\mathbb R^n \to \mathbb R^n$ 
+%\[det(Av_1,Av_2,...,Av_n) = det(A)\cdot det(v_1,...,v_n)\]
+%and therefore if $\omega^n$ is a $n$ differential form on $\mathbb R^n$
+%\[\omega^n(Av_1,...,Av_n) = det(A)\cdot \omega^n(v_1,...,v_n)\]
+%as any $n$ form is simply a multiple of the volume form $\omega^n = c \cdot det$. We can play around with this a bit more such that for fixed $v_1,...,v_n$ building a matrix $V$ we get
+%\[\omega^n(Av_1,...,Av_n) = det(A)\cdot \omega^n(v_1,...,v_n)= det(V) \cdot \omega^n(a_1,...,a_n)\]
 
 \subsubsection*{Summary}
 Images or tables that summarise what differential forms are on 2 dimensional and 3 dimensional manifolds. \note{Todo, as image, consistent with later images...}
@@ -252,63 +271,46 @@ Images or tables that summarise what differential forms are on 2 dimensional and
 %\end{longtable}
 %\end{table}
 
-\section{Integrating Forms}
-\note{Now again lets have a look at integration of Diffforms.} We started this chapter saying that we wanted to design objects that are perfect to be integrated. We ended up with differential forms that in 3-dimensional spaces turn out to be either vector fields or functions. Let's now look in detail at how differential forms are integrated. 
+\section{Integration of Forms}
+\label{sec:integralOfForms}
+\note{Now again lets have a look at integration of Diffforms.} We started this chapter saying that we wanted to design objects that are well suited for integration. We ended up with differential forms that in 3-dimensional spaces turn out to be either vector fields or functions. Let's now look at how differential forms are integrated. We ommit various technicalities-f or a clean introduction of the integral see e.g. \note{[global analysis]}; for an even less clean, but very understandable introduction see \note{[geometric diffforms]}.
 
-A $k$ form can be integrated over $k$-dimensional regions. There are a couple of technicalities like that regions on a manifold can not generally be covered by one map but these are omitted here, for a clean introduction of the integral see e.g. \note{[global analysis]}; for an even less clean introduction (but quite understandable) see \note{[geometric diffforms]}. If $\phi : U \subset \mathbb R^k \to M$ is a map, $M$ a $k$-dimensional manifold and $\omega^k$ a differential $k$-form on $M$ and a region $\Omega = \phi(U)$ parametrized with $\phi$. The integral 
+A $k$-form can be integrated over $k$-dimensional regions. If $\phi : U \subset \mathbb R^k \to M$ is a map, $M$ a $k$-dimensional manifold and $\omega^k$ a differential $k$-form on $M$ and a region $\Omega = \phi(U)$ parametrized with $\phi$. The integral 
 \[\int_{\phi(U)} \omega^k \]
 is defined and calculated by pulling everything back to $\mathbb R^l$:
 \[\int_{\phi(U)} \omega^k = \int_{U\subset\mathbb R^k} \omega_{\phi(x_1,...,x_k)}(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) d x_1...d x_k\]
-Here there are some things to note: the the thing on the integral on the right is simply a function depending on $k$ variables and is integrated as such things are always integrated. But more importantly: the expression on the left  lacks any '$d x_i$'s. The integral is independent of local coordinates; just as intended in the motivating example $\omega$ automatically scales according to the volume spanned by the vectors $\frac{\partial \phi}{\partial x_i}$. 
+The integral on the right integrates a function depending on $k$ variables as usual. But note: the integral on the left  lacks any '$d x_i$`s. It is independent of local coordinates, and can be computed with any set of coordinates, see also Appendix \ref{app:integrals}. As intended $\omega$ automatically scales according to the volume spanned by the vectors $\frac{\partial \phi}{\partial x_i}$ for any coordinates $\phi$. 
 
-That this definition really is independent of the chosen map $\phi$ follows directly from the common transformation formula. Say we use a different map $\psi: V \rightarrow \Omega \subset M$, then $\psi = \phi \circ h$ for some mapping $h:U \subset \mathbb R^k \rightarrow V \subset \mathbb R^k$ \note {image}. 
-\[\int_{\psi(V)} \omega^k = \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \psi}{\partial x_1},...,\frac{\partial \psi}{\partial x_k}) d x_1...d x_k\]
-\[= \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \phi \circ h}{\partial x_1},...,\frac{\partial \phi \circ h}{\partial x_k}) d x_1...d x_k\]
-\[= \int_V \omega_{\phi\circ h(x_1,...,x_k)}(D\phi \cdot Dh) d x_1...d x_k\]
-\[= \int_{V} det(Dh) \omega_{\phi\circ h(x_1,...,x_k)}(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) d x_1...d x_k\]
-and using the transformation formula
-\[= \int_U \omega_{\phi(x_1,...,x_n)} (\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) d x_1...d x_k \]
-
-Note that when $\omega$ is written in some local map it becomes $\sum ... \wedge d u_i$ gets '$du_i$'s. They play in the integral an equivalent roles to the $d x_i$'s in the old well known integrals, but for an additional sign from orientation, i.e $\int du_1\wedge du_2 = - \int du_2 \wedge du_1$.
-\note{will have to overwork this section, dunno if it helps much...}
-\note{Question: Do I really need to say how integration works in Detail? it's not really needed anywhere.... Emphasis that integrqals make sense only over the right dimension and a $j$ form on a $k$ dimensional manifold can be integrated over any $j$ dimensional submanifold. Example a one form can be integrated over any curve}
-
-\note{Functions are somewhat special... as they can be interpreted as a $k$ form on any (sub) manifold it can be integrated over anything}
+The way differential forms are designed, they can be integrated only over sets of a fixed dimensionality- a 1-form over one dimensional smooth sets, a $2$-form over 2-dimensional sets etc. A $k$-form defined on a $n$-dimensional manifold $M$ can only be integrated over any $k$-dimensional subset of $M$. This restriction is somewhat softened by the Hodge star operator $\star$, introduced in Section \note{...}. The $\star$ allows to make a $n-k$-form out of a $k$-form. Like that a $0$-form can indirectly be integrated over a $n$-dimensional set too.
 
 \section{Pull-Backs}
-\note{Pulling back differential forms from one manifold to another}
-This 'Pulling back' used to define an integral can be done more generally. If we have a mapping between two manifolds $N$ and $M$ $h: N\to M$ (for simplicity say smooth and with $det(Dh) \neq 0$), then, as seen before $Dh$ is a mapping between the tangential spaces of $N$ and $M$. Therefore if we have a differential $k$-Form $\omega$ on $M$ we can 'pull it back' to $N$ via
-\[(h^*\omega)_p (v_1,...,v_k) := \omega_{h(p)}(Dh v_1,...,Dh v_k) \]
-\note{image} where the action of pulling back $\omega$ using $h$ is denoted by $h^* \omega$. This mapping preserves the integral (check it by using the definitions!)
+The 'pulling back` used to define an integral can be done more generally. Suppose we have a mapping between two manifolds $N$ and $M$ $h: N\to M$, which for simplicity  is smooth and has $det(Dh) \neq 0$. As seen in Section \ref{sec:derivativeBetweenMfs}, $Dh$ is a mapping between the tangential spaces of $N$ and $M$. Therefore if we have a differential $k$-Form $\omega$ on $M$ we can 'pull it back' to $N$ via
+\[(h^*\omega)_p (v_1,...,v_k) := \omega_{h(p)}(Dh v_1,...,Dh v_k). \]
+\note{image} The action of pulling back $\omega$ using $h$ is denoted by $h^* \omega$. This mapping preserves the integral (check it by using the definitions!)
 \[\int_{h(U)\subset M} \omega = \int_{U \subset N} h^*\omega \]
 This means that we can integrate either $\omega$ over a subset of $M$ or the pulled back mapping over a subset of $N$. Usually, as in the definition of the integral, you pull back forms to $\mathbb R^k$.
-
+The pullback is very powerful as it conserves properties under the integral. 
 
 \section{Discrete Forms}
-\note{What discrete forms are and where they live}
-As we did earlier, we will introduce the discrete analogue of the continuous object at once. Differential forms are defined on Manifolds (and their tangential spaces). Just as it is to be expected discrete forms are defined on discrete manifolds. But we do not have tangential spaces on discrete manifolds. Therefore instead of (multi-) linear mappings a discrete differential form will simply be a set of averaged values. Thought this seems like a huge downgrade, with time we will see that this simple representation is still very powerful.
+Differential forms are defined on Manifolds and as it is to be expected, discrete forms are defined on discrete manifolds. But we do not have tangential spaces on discrete manifolds. Therefore, while differential forms are spatially varying multilinear mappings, a discrete differential is simply a set of averaged values.
 
-A discrete form is simply the following:
 \begin{definition}[Discrete Form]
-A discrete $j$ form on a discrete $k$ manifold assigns a real number to every $j$ simplex contained in the discrete manifold. \note{image} This vector of values is also sometimes called a $j$ co-chain. \note{it is, isn't it?}
+A discrete $j$ form on a discrete $k$ manifold assigns a real number to every $j$ simplex contained in the discrete manifold. \note{image} This vector of values is also sometimes called a $j$ co-chain. 
 \end{definition}
-The question to be answered now is how this set of values relates to a non-discrete differential form.
+The question to be answered is how this set of values relates to a non-discrete differential form.
 
 \subsection{Sampling Forms}
-\note{How you sample vector fields etc / what the sampled values mean. Here the duality of forms already emerges.}
+To relate discrete forms with differential forms, the discrete manifold $K$ needs to be related somehow to a non-discrete manifold $M$. We will just assume that the discrete manifold $K$ approximates the manifold $M$ and for any simplex $\sigma \in K$ there is a continuous analogue $\sigma \subset M$ on the manifold $M$, as in Figure \note{img}. We denote both the discrete simplex and the continuous counterpart by the same symbol, what is meant should be clear from the context.
 
-To relate discrete forms with differential forms, the discrete manifold $K$ needs to be related somehow to a non-discrete manifold $M$. We will just assume that the discrete manifold $K$ approximates the manifold $M$ and for any simplex $\sigma \in K$ there is a continuous analogue on $\sigma \subset M$ as in Figure \note{img}. We denote both the discrete and the continuous counterpart by the same symbol, what is meant should be clear from the context.
-
-The relation then is very simple: given a differential $k$-form $\omega^k$ on $M$ the value of the discrete $k$ form $\textbf{w}$ on a $k$-simplex $\sigma$ is value of $\omega^k$ accumulated over $\sigma$.
+The relation then is simple: given a differential $k$-form $\omega^k$ on $M$ the value of the discrete $k$ form $\textbf{w}$ on a $k$-simplex $\sigma$ is value of $\omega^k$ accumulated over $\sigma$.
 
  \[\textbf{w}(\sigma) = \int_\sigma \omega^k\]
-
-To make the meaning of discrete forms completely clear we look at some examples in $\mathbb R^2$ and $\mathbb R^3$. In practice we will not sample any differential forms, these examples are only here to help you understand what the discrete forms represent.
+In the following we look at some examples in $\mathbb R^2$ and $\mathbb R^3$.
 
 \subsubsection{Sampling 0 Forms}
 \note{img from talk}
 
-As seen, $0$-Forms can simply be represented as functions $f: M\to \mathbb R$. A $0$ has to be 'integrated' over 0 dimensional sets, i.e. points. The discrete 0-form is therefore a set of values associated to vertices. The value at a vertex position $v$ (or differently frased: at a 0 simplex $v$) is
+As seen in Section \ref{subsec:diffformsare}, $0$-forms can simply be represented as functions $f: M\to \mathbb R$. A $0$-form has to be integrated over 0-dimensional sets, i.e. points. The discrete 0-form is a set of values associated to vertices. The value at a vertex position $v$ or 0-simplex $v$) is
 \[\textbf{w}^0(v) = f(v)\]
 i.e. $f$ evaluated at $v$.
 
@@ -318,44 +320,39 @@ A $1$-form $\omega^1$ on a manifold $M$ can be represented by a tangential vecto
 \[\omega^1_p(v) = \langle\nu(p),v\rangle.\] 
 A $1$-form can be integrated over $1$-dimensional curves. A discrete $1$-form is therefore a set of values associated to the $1$-simplices i.e. edges of the discrete manifold. The value on an edge $e$ is
 \[\textbf{w}^1(e) = \int_{e} \omega^1 = \int_{0}^1 \langle\nu(e(t)),\frac{\partial}{\partial t}e(t)\rangle dt\]
-where in the last integral (in a very dirty notation) $e(t)$ is thought of as some parametrization of the curve on the manifold $M$ associated to the edge $e$. This means a discrete $1$ -form samples (and represents) a vectorfield by projecting the field on the edge and 'summing' these values up along the edge. This value can be thought of as measuring how much the vectorfield 'flows' along the edge. If the edge $e$ is a straight line and the vectorfield a constant vector  $\textbf{w}^1(e)$ is simply the projection of the vector to the edge
+where in the last integral $e(t)$ is a parametrization of the curve on the manifold $M$ associated to the edge $e$. A discrete $1$-form samples a vectorfield by projecting the field on the edge and accumulating these values along the edge. The resulting value can be thought of as measuring how much the vectorfield 'flows' along the edge. If the edge $e$ is a straight line and the vectorfield a constant vector  $\textbf{w}^1(e)$ is simply the projection of the vector to the edge
 \[\textbf{w}^1(e) = \langle \nu, e \rangle.\]
 
-Note that on a $2D$ manifold there is a second way of how to sample the vectorfield by measuring the flow THROUGH the edge instead of ALONG the edge (we will come back to this in a while when talking about the Hodge star $\star$ operator and 'duality' in section \note{[...]}). \note{Image}
-\[\textbf{w}^1(e) = \int_{0}^1 \langle\nu(e(t)),\left(\frac{\partial}{\partial t}e(t)\right)^\perp \rangle dt\]
+On a $2$-manifold there is a second way of how to sample the vectorfield by measuring the flow \emph{through} the edge instead of \emph{along} the edge; we will come back to this in a while when talking about the Hodge star $\star$ operator in Section \note{[...]}). \note{Image}
+\[\textbf{w}^1(e) = \int_{0}^1 \langle\nu(e(t)),(\frac{\partial}{\partial t}e(t))^\perp \rangle dt\]
 Here $^\perp$ denotes the vector rotated by $90^\circ$ according the orientation of the surface.
 
 \subsubsection{Sampling 2 Forms}
-A $2$-form can be integrated over $2$D patches and the discrete 2 form associates values to the 2-simplices i.e. the triangles of the discrete manifold.
+A $2$-form can be integrated over $2$D patches and the discrete 2-form associates values to the 2-simplices i.e. the triangles of the discrete manifold.
 
-On a 2D manifold: Here a differential $2$-form $\omega^2$ again is represented by a function $f$ and the value on a triangle $t$ and the value $\textbf{w}^2(t)$ is simply the integral of $f$ over $t$.
+On a 2-manifold: here a differential $2$-form $\omega^2$ is represented by a function $f$. The value $\textbf{w}^2(t)$ on a triangle $t$ is the integral of $f$ over $t$:
 \[\textbf{w}^2(t)= \int_{t} f\, dVol\]
-Note that a $3$-Form on a 3 manifold, or generally a $n$-Form on an $n$ manifold is represented as a function $f$ and is sampled in the same way.
 
-On a 3D manifold: Here a differential $2$-Form $\omega^2$ is again represented as a vectorfield $\nu: M\to TM$, but evaluating it on two vectors amounts to
+On a 3-manifold: here a differential $2$-form $\omega^2$ is represented by a vectorfield $\nu: M\to TM$, but evaluating it on two vectors amounts to
 \[\omega_p(a,b) = \langle \nu(p) , a \times b \rangle\]
 such that the value of the discrete $2$-Form associated to a triangle $t$ is
 \[\textbf{w}^2(t)= \int_{t} \langle \nu(p), n(p) \rangle \, dp\]
-where $n(p)$ denotes the normal on the surface $t$ at the point $p$ (according to its orientation). This measures the flow of the vectorfield THROUGH the surface $t$. \note{image}
+where $n(p)$ denotes the normal on the surface $t$ at the point $p$ (according to its orientation). This measures the flow of the vectorfield \emph{through} the surface $t$. \note{image}
 
-\subsubsection{Some Observations}
-\note{is this needed?? Is this the right place? Should Duality be introduced here for real? Decide this later} This is the right place to make some observations. As we have seen on 3 manifolds vectorfields can either be interpreted as $1$ OR as $2$ forms, which decides on how they are integrated. The same is true for functions $f$ that can be interpreted as $0$ forms or $3$ forms, which again decides on how to integrate them. 
-
-On 2D surfaces $0$ and $2$ forms are represented the same way and for $1$-forms there were 2 ways to integrate them. There is a principle behind this: on an $n$-dimensional manifold there is a strong relation between differential $(n-k)$-forms and differential $k$-forms. We can make a $(n-k)$-form out of a $k$-form and vice versa. This is mirrored in the representation of differential forms above: a $1$-form can be interpreted as a $(3-1) =2$ form in an $(n =3)$D spaces and so on. The 'related' form will be called 'dual' form and you will get from the $k$ form $\omega^k$ to its dual $\nu^{n-k}$ using the so called Hodge operator $\star$:
-\[\nu^{k} = \star \omega^{n-k}\]
-In a 2D setting the dual of a $1$-forms is again a $1$-form, which explains (or at least motivates) why we gave two ways to sample $1$ forms.
+%\subsubsection{Some Observations}
+%\note{is this needed?? Is this the right place? Should Duality be introduced here for real? Decide this later} This is the right place to make some observations. As we have seen on 3 manifolds vectorfields can either be interpreted as $1$ OR as $2$ forms, which decides on how they are integrated. The same is true for functions $f$ that can be interpreted as $0$ forms or $3$ forms, which again decides on how to integrate them. 
+%
+%On 2D surfaces $0$ and $2$ forms are represented the same way and for $1$-forms there were 2 ways to integrate them. There is a principle behind this: on an $n$-dimensional manifold there is a strong relation between differential $(n-k)$-forms and differential $k$-forms. We can make a $(n-k)$-form out of a $k$-form and vice versa. This is mirrored in the representation of differential forms above: a $1$-form can be interpreted as a $(3-1) =2$ form in an $(n =3)$D spaces and so on. The 'related' form will be called 'dual' form and you will get from the $k$ form $\omega^k$ to its dual $\nu^{n-k}$ using the so called Hodge operator $\star$:
+%\[\nu^{k} = \star \omega^{n-k}\]
+%In a 2D setting the dual of a $1$-forms is again a $1$-form, which explains (or at least motivates) why we gave two ways to sample $1$ forms.
 
 %Functions $f$ are special anyway as, restricted to any $k$-manifold they can be interpreted as a $k$-form and integrated over it.
 
-\subsection{Integrating Discrete Forms}
-\note{Its just a scalar product! Will be a very short section}
-
+\subsection{Integration of Discrete Forms}
 A discrete form can very easily be integrated over a set of simplices. Integrating a discrete $k$-Form $\textbf{w}^k$ over a set of $k$-simplices $\{\sigma_1,...,\sigma_l\}$ can be done simply by summing up the values on those simplices. If $\textbf{w}^k$ is the sampled version of $\omega^k$ this sum is exactly the integral of $\omega^k$  over the k dimensional set $\{\sigma_1,...,\sigma_l\}$
 \[\int_{\{\sigma_1,...,\sigma_l\}} \omega^k = \sum_{i=1}^l \textbf{w}^k(\sigma_i)\]
 as
 \[\textbf{w}^k(\sigma_i) = \int_{\sigma_i} \omega^k\]
-As we have seen in section \note{...} we can describe a set of simplices in a discrete manifold as a vector $\sigma$ of dimension $\# k-simplices$ consisting of plus/minus ones and zeros when the simplices have a fixed enumeration. $\textbf{w}^k$ is a vector as well and the discrete integral is just the scalar product of those two vectors
+As we have seen in section \note{...} we can describe a set of simplices in a discrete manifold as a vector $\sigma$ of dimension $\# k$-$simplices$ consisting of plus/minus ones and zeros. The discrete form $\textbf{w}^k$ is a vector of the same dimension and the discrete integral over $\sigma$ is the scalar product of those two vectors
 $$\langle \sigma , \textbf{w}^k \rangle$$
-
-\subsection{(?) Interpolating discrete differential Forms and the $^\#$ }
-\note{Either in this chapter or later: how to interpolate discrete forms and how to gain vectors from 1 forms. write this/ decide this later}
+The discrete analogon of the integral is in our setting the scalar product!

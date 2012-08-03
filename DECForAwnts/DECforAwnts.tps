@@ -3,9 +3,9 @@ Type=TeXnicCenterProjectSessionInformation
 Version=2
 
 [SessionInfo]
-ActiveTab=0
-FrameCount=9
-ActiveFrame=2
+ActiveTab=2
+FrameCount=10
+ActiveFrame=5
 
 [Frame0]
 Columns=1
@@ -63,13 +63,13 @@ cxMin=10
 [Frame1_View0,0]
 Cursor.row=135
 Cursor.column=309
-TopSubLine=171
+TopSubLine=182
 
 [Frame2]
 Columns=1
 Rows=1
-Flags=2
-ShowCmd=3
+Flags=0
+ShowCmd=1
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -82,17 +82,17 @@ Class=CLatexEdit
 Document=DECforAwnts.tex
 
 [Frame2_Row0]
-cyCur=721
+cyCur=127
 cyMin=10
 
 [Frame2_Col0]
-cxCur=1607
+cxCur=835
 cxMin=10
 
 [Frame2_View0,0]
-Cursor.row=45
+Cursor.row=0
 Cursor.column=0
-TopSubLine=32
+TopSubLine=33
 
 [Frame3]
 Columns=1
@@ -119,9 +119,9 @@ cxCur=484
 cxMin=10
 
 [Frame3_View0,0]
-Cursor.row=439
-Cursor.column=0
-TopSubLine=554
+Cursor.row=1
+Cursor.column=10
+TopSubLine=0
 
 [Frame4]
 Columns=1
@@ -155,8 +155,8 @@ TopSubLine=281
 [Frame5]
 Columns=1
 Rows=1
-Flags=0
-ShowCmd=1
+Flags=2
+ShowCmd=3
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -169,17 +169,17 @@ Class=CLatexEdit
 Document=Chapters\DifferentialForms.tex
 
 [Frame5_Row0]
-cyCur=127
+cyCur=721
 cyMin=10
 
 [Frame5_Col0]
-cxCur=637
+cxCur=1607
 cxMin=10
 
 [Frame5_View0,0]
-Cursor.row=0
+Cursor.row=147
 Cursor.column=0
-TopSubLine=0
+TopSubLine=168
 
 [Frame6]
 Columns=1
@@ -237,7 +237,7 @@ cxMin=10
 [Frame7_View0,0]
 Cursor.row=198
 Cursor.column=13
-TopSubLine=242
+TopSubLine=269
 
 [Frame8]
 Columns=1
@@ -267,4 +267,33 @@ cxMin=10
 Cursor.row=0
 Cursor.column=0
 TopSubLine=0
+
+[Frame9]
+Columns=1
+Rows=1
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-8
+MaxPos.y=-28
+NormalPos.left=207
+NormalPos.top=207
+NormalPos.right=1605
+NormalPos.bottom=719
+Class=CLatexEdit
+Document=chapters\thesis.bib
+
+[Frame9_Row0]
+cyCur=455
+cyMin=10
+
+[Frame9_Col0]
+cxCur=1361
+cxMin=10
+
+[Frame9_View0,0]
+Cursor.row=53
+Cursor.column=20
+TopSubLine=27
 
