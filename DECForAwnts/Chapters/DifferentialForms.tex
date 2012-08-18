@@ -284,6 +284,7 @@ The integral on the right integrates a function depending on $k$ variables as us
 The way differential forms are designed, they can be integrated only over sets of a fixed dimensionality- a 1-form over one dimensional smooth sets, a $2$-form over 2-dimensional sets etc. A $k$-form defined on a $n$-dimensional manifold $M$ can only be integrated over any $k$-dimensional subset of $M$. This restriction is somewhat softened by the Hodge star operator $\star$, introduced in Section \note{...}. The $\star$ allows to make a $n-k$-form out of a $k$-form. Like that a $0$-form can indirectly be integrated over a $n$-dimensional set too.
 
 \section{Pull-Backs}
+\label{sec:pullbacks}
 The 'pulling back` used to define an integral can be done more generally. Suppose we have a mapping between two manifolds $N$ and $M$ $h: N\to M$, which for simplicity  is smooth and has $det(Dh) \neq 0$. As seen in Section \ref{sec:derivativeBetweenMfs}, $Dh$ is a mapping between the tangential spaces of $N$ and $M$. Therefore if we have a differential $k$-Form $\omega$ on $M$ we can 'pull it back' to $N$ via
 \[(h^*\omega)_p (v_1,...,v_k) := \omega_{h(p)}(Dh v_1,...,Dh v_k). \]
 \note{image} The action of pulling back $\omega$ using $h$ is denoted by $h^* \omega$. This mapping preserves the integral (check it by using the definitions!)
@@ -300,6 +301,7 @@ A discrete $j$ form on a discrete $k$ manifold assigns a real number to every $j
 The question to be answered is how this set of values relates to a non-discrete differential form.
 
 \subsection{Sampling Forms}
+\label{subsec:samplingForms}
 To relate discrete forms with differential forms, the discrete manifold $K$ needs to be related somehow to a non-discrete manifold $M$. We will just assume that the discrete manifold $K$ approximates the manifold $M$ and for any simplex $\sigma \in K$ there is a continuous analogue $\sigma \subset M$ on the manifold $M$, as in Figure \note{img}. We denote both the discrete simplex and the continuous counterpart by the same symbol, what is meant should be clear from the context.
 
 The relation then is simple: given a differential $k$-form $\omega^k$ on $M$ the value of the discrete $k$ form $\textbf{w}$ on a $k$-simplex $\sigma$ is value of $\omega^k$ accumulated over $\sigma$.
@@ -310,7 +312,8 @@ In the following we look at some examples in $\mathbb R^2$ and $\mathbb R^3$.
 \subsubsection{Sampling 0 Forms}
 \note{img from talk}
 
-As seen in Section \ref{subsec:diffformsare}, $0$-forms can simply be represented as functions $f: M\to \mathbb R$. A $0$-form has to be integrated over 0-dimensional sets, i.e. points. The discrete 0-form is a set of values associated to vertices. The value at a vertex position $v$ or 0-simplex $v$) is
+As seen in Section \ref{subsec:diffformsare}, $0$-forms can simply be represented as functions $f: M\to \mathbb R$. A $0$-form has to be integrated over 0-dimensional sets, i.e. points. The discrete 0-form is a set of values associated to vertices. The value at a vertex position $v$ or 0-simplex $v$
+ is
 \[\textbf{w}^0(v) = f(v)\]
 i.e. $f$ evaluated at $v$.
 

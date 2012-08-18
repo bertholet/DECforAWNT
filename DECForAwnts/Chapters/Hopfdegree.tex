@@ -1,0 +1,41 @@
+
+\subsection{Hopf Index Theorem}
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height=5cm]{imgs/6_vfsingularities.eps}%	
+\end{center}
+\caption{The computation of the index of some singularities, which is the winding number of $f = v / \abs{v}$. $f$ is depicted by the dashed arrows. Sources (a) and sinks (b) have index 1, saddles (c) have index -1 and (d) is a singularity with index 2. }%
+\label{fig:vfsingularities}%
+\end{figure}
+
+The Hopf index theorem \note{proof and an introduction to differential topology in ....} describes the composition of the singularities of a vector field. Singularities are isolated points where the vector field vanishes. It states that, depending only on the topology, singularities can not be avoided and gives an invariant that is always fulfilled by the singularities. 
+The formulation of the Hopf index theorem is the following:
+\begin{thm}(Poincar\'e-Hopf Index Theorem) Let $M$ be a compact orientable smooth manifold. Let $v$ be a smooth tangential vector field (i.e. a 1-form) on $M$ with isolated zeros. If $M$ has a boundary $v$ has to point in the outward normal direction on the border. Then
+\[\sum_{x_i: v(x_i) = 0} index_v(x_i) = \chi(M),\]
+where $\chi(M)$ is the Euler characteristic of $M$.
+\end{thm}
+Let's clarify the different ingredients of this theorem. The Euler characteristic on a $k$-dimensional manifold is similar as for 2 dimensions. Instead of taking a triangulation you take a simplicial $k$-cell complex and the Euler characteristic is:
+\[\chi(M) = \# \textit{0-cells} - \# \textit{1-cells} + \# \textit{2-cells} - \# \textit{3-cells} ...\]
+The index of a zero $x_i$ is the degree of the map $\frac{v}{\abs{v}}$ at $x_i$, also called turning number. If $M$ is two dimensional, the index basically counts the number of times 
+\[f: x \mapsto \frac{v(x)}{\abs{v(x)}}\] 
+rotates when you follow a small circle around $x_i$.In Figure \ref{fig:vfsingularities} you find some images to develop an intuition for the index. For example sources and sinks have index $+1$, vanishing points where the field spirals or rotates have index $+1$ as well.
+
+ In higher dimensions, you choose a small $k$-dimensional ball around $x_i$; then the mapping $f$ maps this ball to the $k$ dimensional unit ball and you calculate the \emph{degree} of $f$. Basically you chose some point $z$ and take the number of source points in $f^{-1}(z)$ where $f$ is orientation preserving minus the number of source points where $f$ is not. %You look at the source image of some point $z$ of the unit ball, which has a finite set of source points $f^{-1}(z)$. For every of these source points you decide if $x \mapsto \frac{v(x)}{\abs{v(x)}}$ is orientation preserving or not and assign a $+1$ to the point if it is and a $-1$ if it is not. Summing up all these $+-1$ then gives you the index. Provably this sum does not depend on the chosen $z$.
+
+
+So what is the meaning of the Poincar\'e-Hopf index theorem? 
+The theorem ties the existence of vanishing points of a vector field to the topology of the surface. By tying the sum of indices to the Euler characteristic, it gives an additional constraint on the composition of the singularities. That the topology of a surface constrains the possible look of vector fields is mirrored very elegantly in the short formula
+\[\sum_{x_i: v(x_i) = 0} index_v(x_i) = \chi(M).\]
+
+Therefore, by the Poincar\'e-Hopf theorem, any borderless compact manifold with non zero Euler characteristic has only vector fields $v$ with singularities. For example a sphere has Euler characteristic $2$. This means that any smooth vector field has to have one vanishing point with index two or two vanishing points with index one (e.g sources and sinks). If there are two sources and one sink then there has to be at least one additional vanishing point with characteristic $-1$ e.g. a saddle. 
+
+A torus has characteristic $0$- it is possible to have vector fields without sources and sinks. It is not possible to have a field with exactly one source and one sink (giving a total index 2), but you could have one source and one saddle. 
+
+\begin{figure}%
+\includegraphics[height = 5cm]{imgs/6_torusvf.eps}%
+\caption{An example for the Hopf index theorem: a torus with a vector field that has one source (yellow) and one saddle (blue). The torus has Euler characteristic 0, a source index +1 and a saddle index -1.}%
+\label{fig:torusvf}%
+\end{figure}
+
+%Now how does this relate to the search for parametrization of surfaces? The coordinate $0$-Forms $x$ and $y$ that we seek should have non vanishing gradients $dx$ and $dy$ which are 1-Forms or vectorfields. And here the Hopf theorem says that on any compact manifold without border with nonzero Euler characteristic this is not possible, e.g. for spheres or torus. As soon as there are holes present you can not say anything in general, as you can 'cheat' by moving all singularities in the hole. Still, in the setting of parametrizations we do not allow arbitrary behavior on the exterior border. As it is mapped to a simple polygon, the border has to act like a singularity of type (d) when pulled to a point. Therefore we can not parametrize a torus like this. 

@@ -1,0 +1,45 @@
+
+
+\subsection{Dimension of Harmonic spaces }
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3.5cm]{imgs/7_torusharmonic.eps}%	
+\end{center}
+\caption{The first Bettinumber for the torus is 2, as it consists of one loop. Therefore the space of harmonic vectorfields on the torus has dimension 2, every harmonic vector field is a combination of the two fields depicted here.}%
+\label{fig:vftorusharmonic}%
+\end{figure}
+
+To round off the description of harmonic forms we want to mention the following reformulation of de Rham's theorem.
+The result we are interested in states \note{[p373 physics book]}: 
+\vspace{0.5cm}
+
+\emph{The dimension of the kernel of the Laplacian on the space of $k$-forms on a compact borderless manifold is equal to the dimension of the de Rham cohomology group of degree $k$, the dimension of which is the $k$-th Bettinumber.} 
+
+\vspace{0.5cm}
+We mention cohomology groups here only because they have to be mentioned in this context at least once; we are interested in the statement that the $\dim ker(\Delta) = Betti_p$. The Bettinumbers are finite natural numbers that depend only on the topology of the manifold. 
+
+The zeroth and the first Bettinumber capture the following properties on two dimensional compact Riemannian manifolds: the 0-Bettinumber is the number of connected components of the manifold. The first Bettinumber is two times the number of ''handles`` or ''loops`` the manifold has. Here ''handle`` is meant in its plainest sense. A coffee cup usually has exactly one loop-like handle, therefore the first Betti number of its surface is 2. A donut consist of exactly one loop-like handle, so its first Bettinumber is 2 as well. It is also merely a deformation of a classical coffee cup. A pretzel consist of three handles so its surface has Bettinumber 6. And a sphere has no handles at all, therefore it has Betti number 0.
+
+The result therefore states not only that the space of harmonic forms always has a finite dimension, but the dimension also only depends on the topology of the manifold, and this, again, is very nice. Figure \ref{fig:vftorusharmonic} shows the result on the torus for vector fields.
+
+The theory about harmonic forms, closed forms and co-closed forms on closed (i.e. compact and borderless) manifolds is rich and beautiful but also deep. To see more of it I recommend the great book 'The Geometry of Physics` \note{[...]}, Chapters 13 and 14 which describes the theory and its backgrounds in a concise, yet very intuitive way, mentioning also the technical problems without getting lost in them.
+
+%The result we are interested in states \note{[p373 physics book]}: 
+%\[\]
+%\emph{The dimension of the kernel of the Laplacian on the space of $k$-forms is equal to the dimension of the de Rham cohomology group of degree $k$; the dimension of this kernel is the $k$-th Betti number.} 
+%\[\]
+%This needs some explanation; we go through this statement term by term. The kernel of the Laplacian on the space of $k$-Forms is easy to understand: it is the vector space of $k$-Forms for which $\Delta \omega^k = 0$ i.e. the space of harmonic $k$-forms. The harmonic $k$-forms form a vector space over $\mathbb R$ as any multiple of a harmonic $k$-form is a harmonic $k$-form and the sum of two harmonic $k$-forms is again harmonic.
+%
+%The $k$-th de Rham cohomology group is quite abstract. It is the space $Ker(d_k)/Img(d_{k-1})$ where $/$ is the 'modulo' operator. \note{Just now it is of no immediate importance; but we will meet this again when treating the Hodge decomposition and here is the right context to mention it. .... do i need to mention it?}
+%
+%A Betti number is a natural number and a topological invariant. Topological invariants stay the same when the underlying space is deformed. For example if you deform a manifold to an other manifold without tearing new holes in it or glueing multiple points to each other, topological invariants stay the same. You can really think of the manifold being made out of plasticine and any deformation which does not tear new holes in it or where you merge outer faces is allowed. 
+%
+%Even without understanding Betti numbers any further you can see that the result is quite strong: the solution space of harmonic $k$-forms on compact Riemannian manifolds is of some fixed finite dimension that depends only on the topology of the manifold i.e. its very general form. 
+%
+%The zeroth, and the first Bettinumber capture the following properties on two dimensional compact Riemannian manifolds: the 0-Betti number is simply the number of connected components of the manifold. The first Betti number is two times the number of ''handles`` or ''loops`` the manifold has. Here ''handle`` is meant in its plainest sense. A coffee cup usually has exactly one loop like handle, therefore the first Betti number of its surface is 2. A donut consist of exactly one loop like handle so its first Betti number is 2, it is also merely a deformation of a classical coffee cup. A pretzel consist of three handles so its surface has Betti number 6. And a sphere has no handles at all, therefore it has Betti number 0. \note{image}
+%
+%
+%Just to mention it: the $k$-th Betti number for smooth Riemannian manifolds is more or less directly defined as the dimension of a cohomology group $Ker(d_k)/Img(d_{k-1})$. But we don't care about this. The important point is that they are topological invariants and therefore the dimension of the space of harmonic $k$-forms also only depends on the topology of the manifold.
+%
+%
+%\note{Note that here there is a lot that is left unsaid. Bettinumbers, chain complexes, cochain complexes - you can get abstracted and abstracter - and see the symmetry between border operator, simplicial complexes etc clearer and clearer.}

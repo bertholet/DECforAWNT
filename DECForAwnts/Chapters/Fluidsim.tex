@@ -1,71 +1,88 @@
 \chapter{A Fluid Simulation with DEC}
-\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-	\hline
-	Smooth Theory& Discrete Theory& Implementation (Notes)\\
-	\hline
-		\begin{packed_enum}
-			\item[-] Introduction to the fluid equations and reformulation in DEC.
-		\end{packed_enum}
-		&
-		\begin{packed_enum}
-			\item[-] Second approach to Borderconstraints.
-			\item[-] Reformulation / solving for rot part etc.
-		\end{packed_enum}
-		 & 
-		 Implementing Fluid Sim with DEC
-		 \begin{packed_enum}
-			\item[-] Solving for Exact harmonic 1 Form
-			\item[-] continuous Vfield interpolation
-			\item[-] pathtracing
-			\item[-] Results
-		\end{packed_enum}
-		 \\		
-	\hline
-\end{longtable}
-All theory but fluid dynamics is already introduced, so this chapter really is a demonstration of DEC in use. \note{reference}
 
-Problem of standard fluid simulations.
+\begin{figure}[h]%
+\begin{center}
+\includegraphics[height = 4cm]{imgs/8_fluidsphereI.eps}%	
+\end{center}
+\caption{The simulation of a viscous fluid on a sphere with 1920 triangles. Motion was induced by stirring.}%
+\label{fig:8_fluidsphere}%
+\end{figure}
+
+%\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+%	\hline
+%	Smooth Theory& Discrete Theory& Implementation (Notes)\\
+%	\hline
+%		\begin{packed_enum}
+%			\item[-] Introduction to the fluid equations and reformulation in DEC.
+%		\end{packed_enum}
+%		&
+%		\begin{packed_enum}
+%			\item[-] Second approach to Borderconstraints.
+%			\item[-] Reformulation / solving for rot part etc.
+%		\end{packed_enum}
+%		 & 
+%		 Implementing Fluid Sim with DEC
+%		 \begin{packed_enum}
+%			\item[-] Solving for Exact harmonic 1 Form
+%			\item[-] continuous Vfield interpolation
+%			\item[-] pathtracing
+%			\item[-] Results
+%		\end{packed_enum}
+%		 \\		
+%	\hline
+%\end{longtable}
+In this chapter a fluid simultation using DEC is presented, following the approach from \note{names [reference]}. 
+All theory but fluid dynamics has been introduced, so this chapter really is a demonstration of DEC in use. 
+
+One of the difficulties with fluid simulations is the simulation of vortices and the guarantee of  divergence freeness. Because of the geometric nature of DEC and because DEC conserves the geometry of the curl and divergence operator these difficulties drop away. On the other hand various simplifying assumptions are taken, and together with the interpolation scheme used, it is not clear how correct the simulation is. The authors of \note{reference} have taken the pragmatic point that their simulation is designed to preserve and simulate visually important features, namely the vorticity of the flow, and left thoughts about exactness as future work.
+
+%Problem of standard fluid simulations.
 
 \section{Continuous Problem Statement}
-\subsection{Properties of Fluids}
-Viscosity, incompressibility.
 
-\subsection{Laplacian II}
-\note{put this somewhere}
-$E(\omega) = \int_M \langle d\omega, d\omega \rangle + \langle \partial\omega, \partial\omega \rangle$. Then $E(\omega + \epsilon\phi) = \epsilon^2\int_M \langle d\phi, d\phi \rangle + 2\epsilon\int_M \langle d\phi, d\omega \rangle + \int_M \langle d\omega, d\omega \rangle$. Taking $\frac{\partial}{\partial \epsilon} |_{\epsilon = 0}$ we have $=2\int_M \langle d\phi, d\omega \rangle$. But if $\phi = 0$ on borders or $M$ has no borders $\langle d\phi, d\omega \rangle + \langle \partial\phi, \partial\omega \rangle= \langle \phi, \partial d + d \partial\omega \rangle$. This means that any equation 
-\[\frac{\partial \omega}{ \partial t} = - \Delta \omega \]
-describes a flow that minimizes the energy $E$, i.e. smoothing $\omega$ and describes a diffusion. Example $1D$...
-	
+\subsection{Properties of Fluids}
+Formally, fluids are described by the Navier Stokes equation in the next section. Viscosity, incompressibility, vorticity.  \note{Todo: The Karman Vortex street. Viscous fluids have an interesting behaviour close to boundaries of non moving objects. As they have internal friction the velocity on the boundaries of such objects is zero. This leads to some vorticity which then are carried away}
+
 \subsection{Navier Stokes}
-The first step is to formulate the behaviour of fluids appropriately with exterior calculus. In this case the formulation should be designed to describe the behaviour of vortices as we want to concentrate on them.
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height=3cm]{imgs/7_vfvarying2.eps}%	
+\end{center}
+\caption{The velocity field is constant, but the velocity of the tracked particle changes; the material derivative is non-zero.}%
+\label{fig:fsmaterialderivative}%
+\end{figure}
+
+The first step is to formulate the behaviour of fluids appropriately with exterior calculus. In this case the formulation is designed to describe the behaviour of vorticities as vortices are visually prominent.
 
 Physics provide the following description of incompressible viscous fluids, that is fluids with interior friction; the Navier-Stokes equation:
 \[\frac{\partial u}{\partial t} + Du \cdot u = -\nabla p + \nu \Delta u\]
 \begin{equation}div(u) = 0\label{eq:NS}\end{equation} 
 The single terms have the following meanings:
+
 \begin{itemize}
 	\item $u(x,t)$ is a time and position dependent vector field of velocities. The velocities describe the speed and the direction of 'particles` at fixed positions
 	\item The condition $div(u) = 0$ describes that the fluid is incompressible; at every point all incoming flow has to go out and the total volume of the fluid is preserved.
-	\item $\frac{\partial u}{\partial t} + D u \cdot u$ is the material derivative or derivative along the motion. The material derivative is based on the idea that you track particles or parcells moving along a path $\alpha$ determined by the velocities $u$
-	\[\frac{\partial \alpha(t)}{\partial t} = u(\alpha(t), t)\]
-	You can then answer how the velocity of such a tracked particle that currently is at some position $x = \alpha(t_0)$ changes, simply by using the chain rule \note{img: steady flow (no temporal change of u vs direction change of the particle}
-	\begin{align*}\frac{\partial}{\partial t} u(\alpha(t),t) &= Du \cdot \frac{\partial}{\partial t}\begin{pmatrix}
-	\alpha(t) \\
-	t
-	\end{pmatrix}\\
-	&= (\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y},\frac{\partial u}{\partial z}, \frac{\partial u}{\partial t}) \cdot \begin{pmatrix}
-	u(\alpha(t),t) \\
-	1
-	\end{pmatrix} \\
-	&= \frac{\partial u}{\partial t} + Du \cdot u
-	\end{align*}
-	\item $p(x,t)$ is a scalar field that describes the pressure at the position $x$ at time $t$. The vectors $-\nabla p$ therefore point in the direction of the largest pressure decrease.
-	\item The factor $\nu \Delta u$ is the diffusion factor (see Section \note{diffusion and energy min...}) and $\nu$ is the viscosity, a real valued material dependent constant. The viscosity $\nu$ describes how 'thick` the fluid is, how much internal friction it has. For example honey is thicker than water, water having a viscosity of $0.001$. The term $\nu \Delta u$ then describes that the higher the friction is, the more the velocities get diffused.
+	\item $\frac{\partial u}{\partial t} + D u \cdot u$ is the material derivative or derivative along the motion (see Figure \ref{fig:fsmaterialderivative}). The material derivative is based on the idea that you track particles or parcells moving along a path $\alpha$ determined by the velocities $u$ described by:
+\[\frac{\partial \alpha(t)}{\partial t} = u(\alpha(t), t)\]
+The change of velocity of such a particle that currently is at some position $x = \alpha(t_0)$ can simply be computed by using the chain rule 
+\begin{align*}\frac{\partial}{\partial t} u(\alpha(t),t) &= Du \cdot \frac{\partial}{\partial t}\begin{pmatrix}
+\alpha(t) \\
+t
+\end{pmatrix}\\
+&= (\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y},\frac{\partial u}{\partial z}, \frac{\partial }{\partial t}) \cdot \begin{pmatrix}
+u(\alpha(t),t) \\
+1
+\end{pmatrix} \\
+&= \frac{\partial u}{\partial t} + Du \cdot u
+\end{align*}
+\item $p(x,t)$ is a scalar field that describes the pressure at the position $x$ at time $t$. The vectors $-\nabla p$ therefore point in the direction of the largest pressure decrease.
+\item The factor $\nu \Delta u$ is the diffusion factor (see Section \note{diffusion and energy min...}) and $\nu$ is the viscosity, a real valued material dependent constant. The viscosity $\nu$ describes how 'thick` the fluid is, how much internal friction it has. For example honey is thicker than water, water having a viscosity of $0.001$. The term $\nu \Delta u$ then describes that the higher the friction is, the more the velocities get diffused.
 \end{itemize}
 
 The Navier-Stokes equation therefore states that the movement of small parcels is influenced by pressure differences and a diffusion term. Every particle is pulled both in the direction of the largest pressure decrease and in a direction such that curl and divergence are decreased \note{see}, where the influence of the second depends on the fluid, i.e. its viscosity.
 
-\subsubsection*{}
+\subsubsection{Navier Stokes for Vorticities}
 To emphasis the behavior of vortices in the fluid simulation, the authors of \note{[Fluid sim]} use the Navier Stokes equation reformulated in terms of vorticities. You can get to such a description by applying $\nabla \times$ to both sides of Equation \ref{eq:NS}
 \[\nabla \times \frac{\partial u}{ \partial{t}} + \nabla \times (u \cdot \nabla u) = - \underbrace{\nabla\times \nabla}_{=0} p + \nu \nabla \times \Delta u,\]
 %\[\Delta = grad(div) + curl(curl) = \nabla(\nabla \cdot) - \nabla \times (\nabla \times) \]
@@ -74,71 +91,82 @@ leading to\footnote{You need to use $\nabla u = 0$ to show the identity $\nabla 
 \begin{equation}w = \nabla \times u,\hspace{0.5cm} div(u) = 0\label{eq:NS2}\end{equation}
 Simulating the curl $\nabla \times u$ of the velocity field instead of the velocities $u$ has some benefits. For one the pressure term disappears. And simulating the curl leads to a better simulation of the vortices. 
 
-The left hand side of Equation \ref{eq:NS2} describes the derivative of curl along the motion, similarly as Equation \ref{eq:NS} described the derivative of $u$ along the motion. Equation \ref{eq:NS2} therefore describes that the vorticity gets carried with the flow but is diffused with time, where the viscosity $\nu$ describes how fast the diffusion happens. And for an inviscid fluid i.e. when $\nu = 0$ and there is no internal friction vorticities are carried with the flow without being diminished. 
+The left hand side of Equation \ref{eq:NS2} describes the derivative of curl along the motion, similarly as Equation \ref{eq:NS} described the derivative of $u$ along the motion. Equation \ref{eq:NS2} therefore describes that  vorticity is carried along the flow while being diffused with time. The viscosity $\nu$ describes how fast the diffusion happens. For an inviscid fluid, i.e. when $\nu = 0$ and there is no internal friction, the derivative of the curl along the motion is 0. Therefore the curl along the motion is constant, vorticities are carried with the flow without being diminished.
 
-\note{Todo: The Karman Vortex street. Viscous fluids have an interesting behaviour close to boundaries of non moving objects. As they have internal friction the velocity on the boundaries of such objects is zero. This leads to some vorticity which then are carried away- Kelvins circulation theorem}
-
+\subsubsection{Stirring}
+To take account of additiional forces $F$, for example induced by stirring, the Equations \ref{eq:NS} and \ref{eq:NS2} need to be slightly adapted to
+\[\frac{\partial u}{\partial t} + Du \cdot u = -\nabla p + \nu \Delta u + F\]
+and
+\begin{equation}\frac{\partial w}{\partial t} + Dw\cdot u - Du \cdot w =  \nu \Delta w + \nabla \times F \label{eq:NS3},\end{equation}
+where $F$ is a vector valued function.
 
 \subsection{A numerical integration scheme}
-The authors of \note{...} propose to use the equation \ref{eq:NS2} for the simulation of the fluid using what they call a geometric integration scheme. They compute the vorticity at some time $t_{n+1}$ by using that vorticity is simply carried along the flow plus some diffusion. Assuming that all velocities are known at the time $t$ and the fluid parcel at position $p$ is carried to some position $p'$ at some time $t'$. Then implicit numerical integration according to the Equation \ref{eq:NS2} amounts to
-\begin{equation}w(p',t') \approx w(p,t) + (t'-t) \cdot \nu \Delta w(p',t')\label{eq:vortDiffusion}\end{equation}
-This leads to the following algorithm for a 'geometric` integration
+The authors of \note{...} propose to use the equation \ref{eq:NS3} for the simulation of the fluid, using what they call a geometric integration scheme. The scheme is a combination of implicit numerical integration and the tracking of particles and mimics the geometric behavior of the flow. Suppose a fluid particell with space time position $(p_{t_n},t_n)$ is carried to the position $(p_{t_{n+1}},t_{n+1})$. Then Equation \ref{eq:NS3} is integrated via
+\begin{align}w(p_{t_{n+1}},t_{n+1}) \approx \;& w(p_{t_n},t_n) + (t_{n+1}-t_n) \cdot \nu \Delta w(p_{t_{n+1}},t_{n+1}) \nonumber \\ &{}+ (t_{n+1}-t_n) \cdot\nabla \times F_{t_{n+1}}\label{eq:vortDiffusion}\end{align}
+
 
 \begin{figure}[t]
 \begin{center}\fbox{\parbox{12cm}{
 \emph{
 \begin{enumerate}
 \item Velocities $u_{t_n}$ are known at time $t_n$
-\item Compute vorticities $w$ at time $t_{n+1}$ at some positions $p'$
+\item Compute vorticity $w_{t_{n+1}}$ at time $t_{n+1}$ at some positions $p'$:
 \begin{enumerate}
-	\item Backtrack $p'$ according to the velocity field $u_{t_n}$ to the position $p$ it was at $t_n$
-	\item Use $u_{t_n}$ to compute $w_{t_n}$ at time $t_n$ and position $p$.
-	\item Add diffusion to the vorticities according Equation \ref{eq:vortDiffusion} to get $w_{t_{n+1}}$ at $t_{n+1}$ at the positions $p'$
+	\item Backtrack $p'$ according to the velocity field $u_{t_n}$ to the position $p$ it was at time $t_n$
+	\item Use $u_{t_n}$ to compute $w_{t_n}(p,t_n)$.
+	\item Solve $w_{t_{n+1}}(p',t_{n+1}) = w_{t_n}(p,t_n) + (t_{n+1} - t_n)\Delta w_{t_{n+1}}(p',t_{n+1})$ for $w_{t_{n+1}}(p',t_{n+1})$ to add diffusion.
 \end{enumerate}
+\item Add forces $\omega_{t_{n+1}} += (t_{n+1}-t_n)\cdot\nabla \times F$
 \item Use the vorticities $w_{t_{n+1}}$ to compute a velocity field $u_{t_{n+1}}$
 \end{enumerate}}
 }}\end{center}
 \caption{The numerical integration scheme}
+\label{fig:fd_numericalIntegration}
 \end{figure}
 
-Now we can implement this integration scheme using discrete exterior calculus combined with other techniques; the backtracing of positions according to the velocity field for example is not DEC related.
+%They compute the vorticity at some time $t_{n+1}$ by using that vorticity is simply carried along the flow plus some diffusion. Assuming that all velocities are known at the time $t$ and the fluid parcel at position $p$ is carried to some position $p'$ at some time $t'$. Then implicit numerical integration according to the Equation \ref{eq:NS3} amounts to
+%\begin{equation}w(p',t') \approx w(p,t) + (t'-t) \cdot \nu \Delta w(p',t')\label{eq:vortDiffusion}\end{equation}
+This leads to the integration procedure listed in Figure \ref{fig:fd_numericalIntegration}. Its greatest issue is that in step 4 a velocity field needs to be computed from vorticities alone. Before we discretize the equation we will consider this step.
 
-While most steps above are clear and easy to implement, the question of how a field of vorticities $w$ can be used to compute a velocity field $u$ still needs to be answered.
+\subsection{Formulation with Exterior Calculus}
+We restrict ourself to flow on two dimensional surface. 
 
-\subsection{Vorticities to Velocities}
+\subsection{From Vorticities to Velocities}
+\note{Constraint on border to get the adjointness of the operators, hodge decomp?}
+This step is the most problematic of the algorithm. From the Point-carr\'e Lemma we know that the problem $\partial u^1 = w^0$ can not uniquely be solved for $u$. But using the incompressibility of the fluid and taking some assumptions you can still solve for $u$. The setting is the following: Given a $2$-form $w$ we want to solve for $u$ such that
+\begin{equation*}\left.\begin{aligned}\partial u &= 0 \;\; (incompressibility) \\ 
+du &= w \end{aligned}\right\}\end{equation*}
 
-\note{Constraint on border: dw and deltaw = 0, ie no curl and no div on border condition. This also leads to the adjointness of the operators, does it not?}
-This step is the weakest of the algorithm, quite a few assumptions have to be made and it is not clear that these assumptions do not affect the correctness of the fluid simulation; in \note{[Fluid sim]} no consideration on this subject is taken and the deduction of this method to recover velocities is banned to their appendix.
-
-The goal is to use vorticities to compute velocities. This is deduced using exterior calculus.
-We are on a $2$ or $3$ manifold $M$, possibly with borders. We represent $u$ as a $1$-Form and the vorticities are given by $w = du$. Further more we have $div(u) = 0$, which means $\partial u = 0$ in exterior calculus terms.
-
-From the Hodge decomposition theorem we know that
+\note{hodge decomp applicable?} The first step is to apply the Hodge decomposition theorem to $u$:
 \[u = \partial a + db + c \]
-where $c$ is harmonic, if \note{...boundaries...?}. But from $\partial u = 0$ we know that the non $\partial$ free part $db$ above needs to be zero. We can get this by the usual argument
-\[0 = \partial u = \partial \partial a + \partial db + \partial c = \partial d b\]
-and as we have seen repeatedly \note{Boundary constraints!!!!!?????}
-\[\partial d b = 0 \Rightarrow \langle \partial d b , b \rangle = 0 \Rightarrow \langle db, db \rangle = 0 \Rightarrow db = 0\]
-so from $\partial u = 0$ follows that 
+where $c$ is harmonic. But from the incommpressibility condition $\partial u = 0$ we know that the non divergence free part $db$ above needs to be zero.\nobreak
+%
+\footnote{ We can get this by the usual argument using the no divergence constraint: $0 = \partial u = \partial \partial a + \partial db + \partial c = \partial d b$ and then the adjointness of $d$ and $\partial$: $\partial d b = 0 \Rightarrow \langle \partial d b , b \rangle = 0 \Rightarrow \langle db, db \rangle = 0 \Rightarrow db = 0 $}
+%
+Therefore: 
 \[u = \partial a + c\]
-But then, as the harmonic part $c$ fulfils $dc = 0$,
-\[w = du = d\partial a\]
-therefore $w = du = d\partial a$. And we see that there is no way to reconstruct the harmonic part $c$ of the field $u$ solely from the vorticity $du$. And from $w = d \partial a$ not even $a$ is well defined. But then, as we are solely interested in $\partial a$ and if $ d \partial a = d \partial b$ follows $d \partial (a- b) = 0$ and therefore $\partial (a-b) = 0$ \note{boundaries!}, meaning that $\partial a = \partial b$, it does not matter what $a$ with $w = d \partial a$ we choose. And from the Hodge theorem we know that we can constrain $da$ independently from $\partial a$, so we can add the constraint
-\[da = 0\]
-But for such an $a$
-\[w = d\partial a + \partial d a\]
-as the second term vanishes. So we get 
-\[w = \Delta a\]
-which we will be able to solve for $a$.
+And as the harmonic part $c$ fulfils $dc = 0$,\note{condition: adjointness?}
+\begin{equation} w = du = d\partial a \label{eq:fd_vort2vel0}\end{equation}
+The harmonic part $c$ of $u$ can not be solved for and needs to be computed separately.  From $w = d \partial a$ not even $a$ is well defined. But we are solely interested in $\partial a$ and using the adjointness of $d$ and $\partial$ you can show \footnote{If $ d \partial a = d \partial b$, then $d \partial (a- b) = 0$ and therefore, using the adjointness of $d$ and $\partial$ $\partial (a-b) = 0.$}
+\note{condition: adjointness?}
+$$d \partial a = d \partial b \;\;\;\Rightarrow\;\;\; \partial a = \partial b$$
+So it does not matter what $a$ with $w = d \partial a$ we choose. From the Hodge decomposition theorem we also know that we can constrain $da$ independently from $\partial a$, so we can add the constraint $da = 0$ to Equation \ref{eq:fd_vort2vel0}. Then the term $\partial d a$ vanishes, and Equation \ref{eq:fd_vort2vel0} can be transformed to
+\begin{equation} w = d\partial a + \partial d a = \Delta a .\label{eq:fd_vort2vel}\end{equation}
+This is the Poisson problem, which we are able to solve for $a$.
 
-So from the vorticities $w$ we can get the vorticity part $da$ of the velocity field $u$, but not the harmonic part $c$. Therefore the authors of \note{[...]} simply assume that the harmonic part $c$ is non-time dependent and can be computed once and for all from user given border constraints.
+So from the vorticities $w$ we can get the vorticity part $da$ of the velocity field $u$, but not the harmonic part $c$. Therefore the authors of \note{[...]} simply assume that the harmonic part $c$ is non-time dependent and can be computed once and for all from application dependent constraints. Lets reformulate this Section in a Theorem:
 
-Note that from section \note{...} we know that depending on the topology of the manifold such a harmonic $c$ needs not to exist. Namely on the surface of a sphere the space of harmonic one forms has no elements \note{true?}. A fluid simulation on the surface of a sphere (without holes) therefore is a bit simpler than one on a plane with borders. 
+\begin{thm}(Vorticity to Velocity) If the harmonic component $c$ of a $1$-form $u$ is given, the space of forms allows a Hodge decomposition and the operators $d$ and $\partial$ are adjoint, then the system
+\begin{equation}\left.\begin{aligned}\partial u &= 0 \;\; (incompressibility) \\ 
+du &= w \end{aligned}\right\}\end{equation}
+can be solved for by
+\[\Delta a = w\]
+\[u = \partial a + c\]
+\end{thm}
 
-The new velocity field is then computed from a vorticity field in two steps. First $a$ will be computed using the equation
-\[w = \Delta a\]
-and then $u$ is computed using a precomputed fixed harmonic field $c$ via
-\[u = \delta a + c\]
+From Section \note{...} we know that depending on the topology of the manifold such a harmonic $c$ needs not to exist. Namely on the surface of a sphere there are no harmonic 1-forms. A fluid simulation on the surface of a sphere (without holes) therefore is less complicated than one on a plane with borders. 
+
+From Sections \note{...} and \note{...} we also know that on manifolds with borders, the operators $d$ and $\partial$ need not to be adjoint and the Hodge decomposition needs not to hold either. In \note{[Physics Book]14.34 p377} more general results are mentioned. The Hodge decomposition does for example hold for 'tangential' forms, that is forms $\omega$ for which $\star\omega$ restricted to the border $\delta M$ is 0. One example would be vector fields whose vectors are tangential to the borders on the borders. 
 
 \section{Implementation}
 We restrict the implementation to flows on surfaces i.e. discrete 2 manifolds. There is no difference in the algorithm when working on 3 dimensions, but it is easier to display flow that is restricted to 2 dimensions, which is why we stay in 2 dimensions. 
@@ -275,7 +303,19 @@ This section gives a short overview where to go from here, after reading this th
 
 Various texts introduce DEC rigorously as an independent theory, targeting an audience well acquainted with differential forms and possible applications of differential forms. After reading this thesis you should have enough background to understand the relevance and context of the different DEC operators for these texts being of interest. \note{....}
 
+\subsection{?? Alternative $\star_0$ matrices ??}
+\note{Where to put this section? And i don't know how to put mean value coordinates in the perspective}
+As mentioned when introducing it, the discrete $\star$ is less than perfect. That it is a simple diagonal matrix is a great strength, but as seen there are some issues. For one, other than the discrete $d$ operator, it is not wholly consistent with the theoretical sampling scheme. But more importantly the weights degenerate if the mesh degenerates because of choosing the Voronoi mesh as dual mesh: the Voronoi cells for obtuse simplices are not bounded and therefore the approximation of the $\star$ operator which relies on a guess of the dual form integrated over the dual cell, gets arbitrary bad.
 
+We have considered exactly this problem in Section \note{...} and came up with the mixed area weights \note{...}. In DEC the interpretation is ...
+
+But even thought the mixed area weights are pretty good we want to mention some further alternatives:
+
+\subsubsection{Mean value weights}
+
+\subsubsection{Uniform weights}
+
+\subsubsection{Alternative $\star_k$ matrices}
 
 On the advanced pure math side a more rigorous study of chain complexes and co chain complexes will give a more abstract view on DEC emphasising the important common properties that EC and DEC share, as they are always what you call 'exact sequences`. 
 Hodge theory and the de-Rham complex will give deeper insights but the mathematics are very involved. \note{...}

@@ -4,14 +4,14 @@ Version=2
 
 [SessionInfo]
 ActiveTab=2
-FrameCount=14
-ActiveFrame=0
+FrameCount=12
+ActiveFrame=3
 
 [Frame0]
 Columns=1
 Rows=1
-Flags=2
-ShowCmd=3
+Flags=0
+ShowCmd=1
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -24,17 +24,17 @@ Class=CLatexEdit
 Document=Chapters\FluidSim.tex
 
 [Frame0_Row0]
-cyCur=721
+cyCur=150
 cyMin=10
 
 [Frame0_Col0]
-cxCur=1607
+cxCur=462
 cxMin=10
 
 [Frame0_View0,0]
-Cursor.row=168
-Cursor.column=228
-TopSubLine=193
+Cursor.row=103
+Cursor.column=20
+TopSubLine=134
 
 [Frame1]
 Columns=1
@@ -61,9 +61,9 @@ cxCur=1288
 cxMin=10
 
 [Frame1_View0,0]
-Cursor.row=272
-Cursor.column=1
-TopSubLine=386
+Cursor.row=135
+Cursor.column=309
+TopSubLine=182
 
 [Frame2]
 Columns=1
@@ -92,13 +92,13 @@ cxMin=10
 [Frame2_View0,0]
 Cursor.row=60
 Cursor.column=1
-TopSubLine=55
+TopSubLine=54
 
 [Frame3]
 Columns=1
 Rows=1
-Flags=0
-ShowCmd=1
+Flags=2
+ShowCmd=3
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -111,17 +111,17 @@ Class=CLatexEdit
 Document=Chapters\DifferentialCalculus.tex
 
 [Frame3_Row0]
-cyCur=166
+cyCur=721
 cyMin=10
 
 [Frame3_Col0]
-cxCur=484
+cxCur=1607
 cxMin=10
 
 [Frame3_View0,0]
-Cursor.row=479
-Cursor.column=6
-TopSubLine=651
+Cursor.row=29
+Cursor.column=48
+TopSubLine=0
 
 [Frame4]
 Columns=1
@@ -148,9 +148,9 @@ cxCur=484
 cxMin=10
 
 [Frame4_View0,0]
-Cursor.row=2
-Cursor.column=26
-TopSubLine=0
+Cursor.row=287
+Cursor.column=6
+TopSubLine=391
 
 [Frame5]
 Columns=1
@@ -177,9 +177,9 @@ cxCur=637
 cxMin=10
 
 [Frame5_View0,0]
-Cursor.row=0
-Cursor.column=0
-TopSubLine=0
+Cursor.row=286
+Cursor.column=20
+TopSubLine=401
 
 [Frame6]
 Columns=1
@@ -235,9 +235,9 @@ cxCur=997
 cxMin=10
 
 [Frame7_View0,0]
-Cursor.row=59
-Cursor.column=0
-TopSubLine=64
+Cursor.row=198
+Cursor.column=13
+TopSubLine=269
 
 [Frame8]
 Columns=1
@@ -293,9 +293,9 @@ cxCur=1361
 cxMin=10
 
 [Frame9_View0,0]
-Cursor.row=34
-Cursor.column=16
-TopSubLine=9
+Cursor.row=53
+Cursor.column=20
+TopSubLine=27
 
 [Frame10]
 Columns=1
@@ -322,8 +322,8 @@ cxCur=1361
 cxMin=10
 
 [Frame10_View0,0]
-Cursor.row=0
-Cursor.column=0
+Cursor.row=14
+Cursor.column=137
 TopSubLine=0
 
 [Frame11]
@@ -351,65 +351,7 @@ cxCur=1361
 cxMin=10
 
 [Frame11_View0,0]
-Cursor.row=0
+Cursor.row=121
 Cursor.column=0
-TopSubLine=0
-
-[Frame12]
-Columns=1
-Rows=1
-Flags=0
-ShowCmd=1
-MinPos.x=-1
-MinPos.y=-1
-MaxPos.x=-8
-MaxPos.y=-28
-NormalPos.left=23
-NormalPos.top=23
-NormalPos.right=1421
-NormalPos.bottom=535
-Class=CLatexEdit
-Document=Chapters\Hopfdegree.tex
-
-[Frame12_Row0]
-cyCur=455
-cyMin=10
-
-[Frame12_Col0]
-cxCur=1361
-cxMin=10
-
-[Frame12_View0,0]
-Cursor.row=30
-Cursor.column=35
-TopSubLine=24
-
-[Frame13]
-Columns=1
-Rows=1
-Flags=0
-ShowCmd=1
-MinPos.x=-1
-MinPos.y=-1
-MaxPos.x=-8
-MaxPos.y=-28
-NormalPos.left=46
-NormalPos.top=46
-NormalPos.right=1444
-NormalPos.bottom=558
-Class=CLatexEdit
-Document=Chapters\dimHarmonicSpace.tex
-
-[Frame13_Row0]
-cyCur=455
-cyMin=10
-
-[Frame13_Col0]
-cxCur=1361
-cxMin=10
-
-[Frame13_View0,0]
-Cursor.row=0
-Cursor.column=0
-TopSubLine=0
+TopSubLine=172
 

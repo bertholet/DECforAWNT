@@ -1,5 +1,12 @@
 \begin{appendix}
 
+\subsection{Laplacian II}
+\note{put this somewhere}
+$E(\omega) = \int_M \langle d\omega, d\omega \rangle + \langle \partial\omega, \partial\omega \rangle$. Then $E(\omega + \epsilon\phi) = \epsilon^2\int_M \langle d\phi, d\phi \rangle + 2\epsilon\int_M \langle d\phi, d\omega \rangle + \int_M \langle d\omega, d\omega \rangle$. Taking $\frac{\partial}{\partial \epsilon} |_{\epsilon = 0}$ we have $=2\int_M \langle d\phi, d\omega \rangle$. But if $\phi = 0$ on borders or $M$ has no borders $\langle d\phi, d\omega \rangle + \langle \partial\phi, \partial\omega \rangle= \langle \phi, \partial d + d \partial\omega \rangle$. This means that any equation 
+\[\frac{\partial \omega}{ \partial t} = - \Delta \omega \]
+describes a flow that minimizes the energy $E$, i.e. smoothing $\omega$ and describes a diffusion. Example $1D$...
+	
+
 \chapter{The integral of differential forms}
 \label{app:integrals}
 
@@ -18,7 +25,7 @@ And as $dVol(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partia
 \[\int_{\phi(U)} f dVol = \int_{U} f(\phi(x)) \sqrt{det((D\phi)^TD\phi)} dx_1...dx_k\]
 
 \chapter{Primal and Dual Discrete Border Operator}
-
+\label{app:dualborder}
 \note{What follows now comes in the Appendix - this is already a much clearer formulation than anything i found anywhere, but still a bit technical. Could put a short note on orientation definition using forms in Appendix too} 
 [Inspired by Discrete Exterior Calculus by Desbrun et al.]
 The setting is the following: we are on an $n$-dimensional (discrete) manifold and the $n$-simplex $\sigma^n$ is oriented according to the orientation of the manifold. $\sigma^k$ is some face on $\sigma^n$ with an arbitrary orientation and $\sigma^{k-1}$ is a face of $\sigma^k$. On the dual-mesh side we have the cells $\star \sigma^k$ that lies on the border of $\star \sigma^{k-1}$; both these dual have an orientation induced by the primary cells. Our goal is to relate the primary border matrix $\delta_k$ which stores the relative orientation of $\sigma^k$ and $\sigma^{k-1}$ 

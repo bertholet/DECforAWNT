@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<txcop:outputProfiles version="1" xmlns:txcop="http://schemas.ToolsCenter.org/TeXnicCenter/OutputProfiles.xsd">
+	<outputProfileList>
+		<outputProfile name="LaTeX =&gt; PS =&gt; PDF" stopOnLatexError="false">
+			<texCommand execute="true" path="latex.exe" arguments="--src -interaction=nonstopmode &quot;%Wm&quot;"/>
+			<bibTexCommand execute="true" path="bibtex.exe" arguments="&quot;%bm&quot;"/>
+			<makeIndexCommand execute="true" path="makeindex.exe" arguments="&quot;%bm&quot;"/>
+			<postProcessors>
+				<processor name="DviPs (PDF)" path="dvips.exe" arguments="-P pdf &quot;%Bm.dvi&quot;" inputFile="" outputFile=""/>
+				<processor name="Ghostscript (ps2pdf)" path="gswin64c.exe" arguments="-sPAPERSIZE=a4 -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=&quot;%bm.pdf&quot; -c save pop -f &quot;%bm.ps&quot;" inputFile="" outputFile=""/>
+			</postProcessors>
+			<viewer path="AcroRd32.exe" closeBeforeCompilation="true">
+				<viewProjectCommand type="dde">
+					<commandLineCommand path="" arguments=""/>
+					<ddeCommand path="AcroRd32.exe" server="acroviewR10" topic="control" command="[DocOpen(&quot;%bm.pdf&quot;)][FileOpen(&quot;%bm.pdf&quot;)]"/>
+				</viewProjectCommand>
+				<viewCurrentFileCommand type="dde">
+					<commandLineCommand path="" arguments=""/>
+					<ddeCommand path="AcroRd32.exe" server="acroviewR10" topic="control" command="[DocOpen(&quot;%bm.pdf&quot;)][FileOpen(&quot;%bm.pdf&quot;)]"/>
+				</viewCurrentFileCommand>
+				<viewCloseCommand type="dde">
+					<commandLineCommand path="" arguments=""/>
+					<ddeCommand path="" server="acroviewR10" topic="control" command="[DocClose(&quot;%bm.pdf&quot;)]"/>
+				</viewCloseCommand>
+			</viewer>
+		</outputProfile>
+	</outputProfileList>
+</txcop:outputProfiles>
