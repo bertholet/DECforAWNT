@@ -1,51 +1,51 @@
 \chapter{Exterior Calculus \& Discrete Exterior Calculus}
 \label{chap:EC}
 
-This chapter constitutes the core of the theory of this thesis. The anticlimax is that this chapter can be summed up in the following three lines:
+This chapter constitutes the core of the theory of this thesis. We introduce the exterior derivative, describe its geometry and use its geometry to build discrete exterior calculus on discrete manifolds. Yet, the main argument of this chapter can be summed up in the following three lines:
 \begin{equation} \int_{\delta \Omega} \omega = \int_{\Omega} d \omega \label{eq:stokes}\end{equation}
 therefore
 \[d_{discrete} := \delta_{discrete}^T.\]
-These three lines are rather compact and use quite a few concepts. While manifolds ($\Omega$), the border operators ($\delta, \delta_{discrete}$), forms ($\omega$) and their integrals have already been treated, the discrete exterior derivative $d$ has yet to be introduced. The differential operator $d$ is interesting, because it generalizes various operators like the divergence and curl and has very nice properties.
-The three line argument above says, that according to Stokes theorem (Equation \ref{eq:stokes}), the discrete exterior derivative should be defined as the transposed of the discrete border operator. Because curl and divergence etc. are special cases of $d$, by defining $d_{discrete}$ you get discrete versions of these operators. 
+These three lines are rather compact and use most of the concepts introduced up to now. While manifolds ($\Omega$), the border operators ($\delta, \delta_{discrete}$), forms ($\omega$) and their integrals have already been treated, the discrete exterior derivative $d$ has yet to be introduced. The three line argument above says, that according to Stokes theorem (Equation \ref{eq:stokes}), the discrete exterior derivative should be defined as the transposed of the discrete border operator. 
+Discretizing the differential operator $d$ is interesting, because $d$ generalizes various operators like the divergence and curl. By discretizing $d$ we directly get discrete versions of these operators. 
 
-This chapter begins with an introduction of $d$ and Stokes theorem. Then follows a description of
-how $d$ is discretized. In the fourth section we introduce the Hodge star operator $\star$ and its discrete version, the last missing elements needed to formulate various operators known from classical calculus.
+This chapter begins with an introduction of the exterior derivative in Section \ref{sec:EC_exteriorDerivative} and an explanation of Stokes theorem and the geometry of $d$ in Section \ref{sec:EC_stokes}. Then follows a description of
+how $d$ is discretized. In the fourth section, Section \ref{sec:hodgeStar}, we introduce the Hodge star operator $\star$ and its discrete version, the last missing elements needed to formulate various operators known from classical calculus.
 
-\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-\hline
-Smooth Theory& Discrete Theory& Implementation (Notes)\\
-\hline
-	External Calculus
-	\begin{packed_enum}
-		\item[-] Gradient, Curl and Divergence
-		\item[-] d
-		\item[-] Stokes Theorem
-		\item[-] Star and DeRham Complex
-	\end{packed_enum}
-	&
-	Discrete External Calculus
-	\begin{packed_enum}
-		\item[-] Discrete d
-		\item[-] Dual Mesh
-		\item[-] Show also intuitive match to curl etc
-	\end{packed_enum}
-	 & 
-	 A look at the Laplacian from chapter 2
-	 \begin{packed_enum}
-		\item[-] The DEC matrices (and tests)
-	\end{packed_enum}
-	 \\		
-\hline
-\end{longtable}
+%\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+%\hline
+%Smooth Theory& Discrete Theory& Implementation (Notes)\\
+%\hline
+%	External Calculus
+%	\begin{packed_enum}
+%		\item[-] Gradient, Curl and Divergence
+%		\item[-] d
+%		\item[-] Stokes Theorem
+%		\item[-] Star and DeRham Complex
+%	\end{packed_enum}
+%	&
+%	Discrete External Calculus
+%	\begin{packed_enum}
+%		\item[-] Discrete d
+%		\item[-] Dual Mesh
+%		\item[-] Show also intuitive match to curl etc
+%	\end{packed_enum}
+%	 & 
+%	 A look at the Laplacian from chapter 2
+%	 \begin{packed_enum}
+%		\item[-] The DEC matrices (and tests)
+%	\end{packed_enum}
+%	 \\		
+%\hline
+%\end{longtable}
 
 \section{The Exterior Derivative $d$}
-
-The discrete exterior derivative $d$ is somewhat a generalization of the usual derivative. But it is better to look at $d$ as something completely new and unknown, because thinking of it as the 'derivative for differential forms' can lead to wrong associations and expectations. For example applying the differential operator multiple times to get an $n$th derivative does not make sense. But it generalizes the usual derivative in the sense that the exterior derivative is the counterpart to the integral, by Stokes theorem.
-An example of the exterior derivative is the gradient. The gradient takes a function $f:\mathbb R^n\to \mathbb R$ and returns a vector field $grad(f)$. In terms of forms the gradient takes a $0$-form $f$ and returns a $1$-form $grad(f)$. This is the general behavior of the differential operator $d$: it takes $k$-forms and returns $k+1$-forms.
+\label{sec:EC_exteriorDerivative}
+The exterior derivative $d$ is a generalization of the usual derivative. But it is better to look at $d$ as something completely new and unknown, because thinking of it as the 'derivative for differential forms' can lead to wrong associations and expectations. For example applying the differential operator multiple times to get an $n$th derivative does not make sense. But the exterior derivative generalizes the usual derivative in the sense that the exterior derivative is the counterpart to the integral, by Stokes theorem.
+%An example of the exterior derivative is the gradient. The gradient takes a function $f:\mathbb R^n\to \mathbb R$ and returns a vector field $grad(f)$. In terms of forms the gradient takes a $0$-form $f$ and returns a $1$-form $grad(f)$. This is the general behavior of the differential operator $d$: it takes $k$-forms and returns $k+1$-forms.
 
 The exterior derivative allows a rich theory and is of great practical relevance because  many differential operators from classical calculus can be expressed using it. We give examples in Section \ref{subsec:EDeuclidean} and also coordinate free examples in Section \ref{subsec:geometryCDO}.
 
-\subsection{Defining $d$} 
+\subsection{Definition} 
 The differential operator $d$ is easy to define on $\mathbb R^n$, its relevance is not obvious on first sight, but is explained in the following sections.
 \begin{definition}[Exterior Derivative on $\mathbb R^n$]
 The exterior derivative $d$ maps differential $k$-forms to differential $k+1$-forms. If $\omega^k$ is given in standard coordinates $x_1,..,x_n$ as 
@@ -57,10 +57,10 @@ given by
 
 To define $d$ on manifolds in general we use pullbacks, as introduced in Section \ref{sec:pullbacks}, namely: if $M$ is a manifold, $h$ a local map and $\omega^k$ a $k$-form, then
 \[d\omega^k := (h^*)^{-1}d(h^*\omega^k).\]
-The first pullback $h^*$ transforms $\omega^k$ to a $k$-form on $\mathbb R^n$, where the exterior derivative is already defined and can be used. Then the result is pulled back to the manifold.\footnote{There are some technicalities about $(h^*)^{-1}$ that are omitted, see e.g. \note{[..]}. Also, this definition does not depend on the map $h$.}
+The first pullback $h^*$ transforms $\omega^k$ to a $k$-form on $\mathbb R^n$, where the exterior derivative is already defined and can be used. Then the result is pulled back to the manifold.\footnote{There are some technicalities about $(h^*)^{-1}$ that are omitted, see e.g. \cite{globalAnalysis}. Also note that this definition does not depend on the map $h$.}
 
-\subsection{Properties of the exterior derivative}
-The exterior derivative has the following properties that are more or less straight forward to check by plugging in the definitions; you can find detials e.g. in [globalAnalysis]
+\subsection{Properties}
+The exterior derivative has the following properties that are more or less straight forward to check by plugging in the definitions; you can find detials e.g. in \cite{globalAnalysis}.
 
 \begin{enumerate}
 \item $d(\omega^k + \psi^k) = d\omega^k + d\psi^k$
@@ -68,19 +68,29 @@ The exterior derivative has the following properties that are more or less strai
 \item $d(d\omega^k) = 0$
 \item $f^*(d\omega^k) = d(f^* \omega^k)$
 \end{enumerate}
- The third and fourth property are the most noteworthy.  Applying $d$ two times in a row always leads to zero (as you can check by simply writing it down). And the exterior derivative commutes with pullbacks. This means that you can freely chose where and in what map you want to work and calculate derivatives; just pull everything to a space where you want to have it.
+ The third and fourth property are the most noteworthy.  Applying $d$ two times in a row always leads to zero (as you can check by simply writing out $dd$). And the exterior derivative commutes with pullbacks. This means that you can freely chose where and in what map you want to work and calculate derivatives; just pull everything to a space where you want to have it.
 
 
-\subsection{The Exterior Derivative $d$ in Euclidean Coordinates}
+\subsection{The Exterior Derivative in Euclidean Coordinates}
 \label{subsec:EDeuclidean}
-Let's look at the exterior derivative on $\mathbb R^n$ with the standard base. The differential forms are interpreted as functions and vectorfields, as described in Section \ref{subsec:diffformsare}.
+Let's look at the exterior derivative on $\mathbb R^n$ with the standard basis. The differential forms are interpreted as functions and vectorfields, as described in the last chapter in Section \ref{subsec:diffformsare}.
 
 \subsubsection{0-Forms}
-If we have a $0$-form on $\mathbb R^n$  given by $f:\mathbb R^n \to \mathbb R$, then the exterior derivative is by definition
+If we have a $0$-form on $\mathbb R^n$  given by $f:\mathbb R^n \to \mathbb R$, then the exterior derivative is by definition the 1-form
 \[df = \sum_{\alpha = 1}^n \frac{\partial f}{\partial x_\alpha} dx_\alpha .\]
-Then $df$ at any point $p$ applied to a vector $v$ is
+Therefore, applying $df$ at any point $p$ to a vector $v$ is
 \[df_p(v) = \langle \nabla f, v \rangle,\]
 where $\nabla f = (\frac{\partial f}{\partial x_1},...,\frac{\partial f}{\partial x_n})$ is the gradient in euclidean coordinates. This means that $d$ acts on $0$-forms like the gradient operator.
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[height=3cm]{imgs/6_1_SCvsEC_2d.eps}
+\caption{The differential forms arising on 2-manifolds and the exterior derivative (EC) and the corresponding objects and operators in standard calculus (SC).}
+\label{fig::6_1_SC2d}
+\end{center}
+
+\end{figure}
 
 %\note{Auskommentiert: kommentar ueber die notation $dx_i$ / $du_i$... Braeuchtes das...?}
 %On a side note: this also motivates the notation $dx_\alpha$ for the special one forms we use as a basis of the space of $1$-forms; $x_\alpha$ is the $\alpha$th coordinate of a point $x$, i.e. short for the function $f(x) = f(x_1,...,x_n) = x_\alpha$. Therefore if we interpret $d$ as the exterior derivative 
@@ -96,7 +106,7 @@ A vector field
 \[\mathcal V(x) = (v_1(x),...,v_n(x))\]
  interpreted as a one form is
 \[\omega^1_p = \sum_{i = 1}^n v_i(p) d x_i .\]
-To apply the exterior derivative  amounts to
+To apply the exterior derivative to $\omega^1$ amounts to
 \[d\omega^1 = \sum_{i=1}^n \sum_{j = 1} ^n \frac{\partial v_i(p)}{\partial x_j} dx_j \wedge d x_i.\]
 If we reorder these terms we get
 \[= \sum_{1\leq i < j \leq n } (\frac{\partial v_j(p)}{\partial x_i} - \frac{\partial v_i(p)}{\partial x_j}) dx_i \wedge d x_j\]
@@ -115,50 +125,51 @@ A differential 2-form can be represented as a vector field $\mathcal V = (v_1,v_
 \[\omega^2 = v_1 dx_2 \wedge dx_3 + v_2 dx_3 \wedge dx_1 + v_3 dx_1 \wedge dx_2.\]
 The exterior derivative is then
 \[d \omega^2 = (\frac{\partial v_1}{\partial x_1} + \frac{\partial v_2}{\partial x_2} + \frac{\partial v_3}{\partial x_3})dx_1\wedge dx_2 \wedge dx_3\]
-which is exactly the divergence operator.
+which means that $d$ is exactly the divergence operator.
 
 \subsubsection{Summary}
-This is a good place to summarize the relations between differential forms, exterior calculus and standard calculus. The Figure \ref{fig::6_1_SC2d} depicts the relation on 2-manifolds and \ref{fig::6_1_SC3d} on 3-manifolds.
+The Figures \ref{fig::6_1_SC2d} and  \ref{fig::6_1_SC3d} summarize the relation between differential forms and standard calculus on 2-manifolds and  on 3-manifolds.
+
 
 \begin{figure}
 \begin{center}
-\includegraphics[height=3.5cm]{imgs/6_1_SCvsEC_2d.eps}
-\caption{Top: The differential forms arising on 2 dimensional manifolds and the exterior derivative. Bottom: The corresponding objects and operators in standard calculus}
-\label{fig::6_1_SC2d}
+\includegraphics[height=3cm]{imgs/6_1_SCvsEC_3d.eps}
 \end{center}
-
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\includegraphics[height=3.5cm]{imgs/6_1_SCvsEC_3d.eps}
-\end{center}
-\caption{Top: The differential forms arising on 3 dimensional manifolds and the exterior derivative. Bottom: The corresponding objects and operators in standard calculus}
+\caption{The differential forms arising on 3-manifolds and the exterior derivative (EC) and the corresponding objects and operators in standard calculus (SC)}
 \label{fig::6_1_SC3d}
 \end{figure}
 
 
 \section{Stokes Theorem}
+\label{sec:EC_stokes}
+
 Now we finally explain Stokes theorem
 \[\int_{\delta\Omega} \omega = \int_{\Omega} d \omega.\]
 Stokes theorem is a generalization of and follows from the fundamental theorem of calculus: if $f:\mathbb R \to \mathbb R $ has an antiderivative $F$ i.e. $F' = f$, then
 \[\int_a^b f(x) dx = F(b) - F(a).\]
-This can be rewritten in differential form notation: say $\Omega = [a,b]$ is an oriented line with border $\delta \Omega = -\{a\} + \{b\}$. If we identify $F$ with a 0-form $\omega^0 = F$, then $d F = F' =f$ is a 1-form. As $dF$ is a 1-form defined on a one manifold it can also be represented as a function. The fundamental theorem then becomes:
+The fundamental theorem of calculus can be rewritten in differential form notation: say $\Omega = [a,b]$ is an oriented line with border $\delta \Omega = -\{a\} + \{b\}$. If we identify $F$ with a 0-form $\omega^0 = F$, then $d F = F' =f$ is a 1-form. As $dF$ is a 1-form defined on a one manifold it can also be represented as a function. The fundamental theorem then becomes:
 \[\int_{[a,b]} d\omega^0 = \int_{\delta [a,b]} \omega^0 = \int_{-\{a\}}\omega^0 + \int_{\{b\}} \omega^0 = -\omega^0(a) + \omega^0(b)\]
 So the fundamental theorem is Stokes theorem applied to $0$-forms. Note how it is important that $\omega^0$ respects the orientation of the points it is applied to.
 
 We will only sketch a proof for Stokes theorem. 
-There are a few technical difficulties that are omitted. A clean proof can for example be found in \note{[GlobalAnalysis]}.
+There are a few technical difficulties that are omitted. A clean proof can for example be found in \cite{globalAnalysis} or \cite{FRANKEL11}.
 
-\subsection{A Proof Sketch for Stokes Theorem}
+\subsection{Proof Sketch}
 
-This sketch is following strongly the reasoning made in \note{[GlobalAnalysis]}.
-
-It is enough to show the theorem for so called singular cubes. A $k$-dimensional singular cube $c^k$ is a manifold $C^k$ together with a global parametrisation \note{image}
-\[c^k: [0,1]^k \to C^k \subset \mathbb R^n\] 
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 4cm]{imgs/6_singularcube.eps}%	
+\end{center}
+\vspace{-0.5cm}
+\caption{A singular cube: a $k$-dimensional patch that can be parametrized by the cube $[0,1]^k$ using a single map.}%
+\label{fig:6_singularCube}%
+\end{figure}
+This sketch is following strongly the reasoning made in \cite{globalAnalysis}.
+It is enough to show the theorem for so called singular cubes. A $k$-dimensional singular cube $c^k$ is a manifold $C^k$ together with a global parametrisation (see Figure \ref{fig:6_singularCube})
+\[c^k: [0,1]^k \to C^k \subset \mathbb R^n.\] 
 We show
 \[\int_{\delta C^{k+1}} \omega^{k} = \int_{C^{k+1}}d\omega^k.\] 
-To extend the theorem to arbitrary manifolds consider the Figure \ref{fig::6_1_singularCubes}; basically if a manifold is the union of a set of disjoint cubes $\Omega = \bigcup c^k_i$ then
+To extend the theorem to arbitrary manifolds consider the Figure \ref{fig::6_1_singularCubes}; the basic idea is that the theorem holds if a manifold is the union of a set of disjoint cubes $\Omega = \bigcup c^k_i$, as
 \[\int_{\Omega} d\omega = \sum_i \int_{c^k_i} d\omega = \sum_i \int_{\delta c^k_i} \omega = \int_{\delta \Omega} \omega ,\]
 where the second step is the Stokes theorem for singular cubes and the last step holds because internal boundaries cancel out, as motivated in Figure \ref{fig::6_1_singularCubes}.
 
@@ -180,49 +191,66 @@ where in each term the $i$th $dx_i$ is omitted. Then
 \[d\omega^k = \sum_{i=1}^{k+1}(-1)^{i-1}\frac{\partial f}{\partial x_i}dx^1\wedge ... \wedge dx^k\]
 and
 \[\int_{I^{k+1}} d \omega^k = \sum_{i=1}^{k+1}(-1)^{i-1} \int_{[0,1]^{k+1}} \frac{\partial f}{\partial x_i} dx_1 \wedge...\wedge dx_{k+1}\]
+
+
 Now we can simply use the known fundamental theorem to integrate the single terms in the sum relative to $x_i$
 \[\int_{0}^1 \frac{\partial f}{\partial x_i} (x_1,...,x_{i-1},t,x_{i+1},...) dt = f(x_1,...x_{i-1},1,x_{i+1},...) - f(x_1,...x_{i-1},0,x_{i+1},...)\]
 getting 
 \[\int_{[0,1]^{k+1}} d \omega^k = \sum_{i=1}^{k+1}(-1)^{i-1} \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k+1 integrals}} \frac{\partial f}{\partial x_i} dx_1...dx_{k+1}\]
 \[= \sum_{i=1}^{k+1}(-1)^{i-1} \left(\underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},1,x_{i+1}...,x_{k+1}) dx \right.\]
 \[- \left. \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},0,x_{i+1}...,x_{k+1}) dx \right)\]
-where the integrals used are the 'common' integrals. Every term in the last sum integrates $f$ over one side of the cube $[0,1]^{k+1}$, because plugging in a $1$ or a $0$ for one parameter and integrating over the others has exactly that effect. The factors $(-1)^{i-1}$ together with the minus from the fundamental theorem, result exactly in assigning to every term a sign matching the orientation of the respective cube side induced by the border operator applied to $[0,1]^{k+1}$\note{image}. Therefore
+where the integrals used are the 'common' integrals. Every term in the last sum integrates $f$ over one side of the cube $[0,1]^{k+1}$, because plugging in a $1$ or a $0$ for one parameter and integrating over the others has exactly that effect. The factors $(-1)^{i-1}$ together with the minus from the fundamental theorem, result exactly in assigning to every term a sign matching the orientation of the respective cube side induced by the border operator applied to $[0,1]^{k+1}$, see Figure \ref{fig:6_stokesproof}. Therefore
 \[\int_{[0,1]^{k+1}} d \omega^k = \int_{\delta [0,1]^{k+1}}\omega^k\]
 \qed
 
+\begin{figure}[t]%
+\includegraphics[width=\columnwidth]{imgs/6_stokesproof.eps}%
+\caption{On the left the orientations of the borders when computing the integrals $\int_0^1\int_0^1$ are depicted, on the right are the orientations induced by the border operator. The additional signs $(-1)^{i-1}$ for the faces $x_i=1$ and $(-1)^{i}$ for the faces $x_i=0$ lead to the induced border orientation.}%
+\label{fig:6_stokesproof}%
+\end{figure}
+
 \subsection{Geometry of $d$}
 
-Stokes' theorem is more then a  valuable tool for calculations and for reformulations. It unmasks the geometry of the exterior derivative $d$. Stokes theorem binds the exterior derivative to the border operator, which is a purely geometric operation. Both operations are equivalent, as you can chose either to apply the border operator to a region or to apply the exterior derivative to the differential form at hand.
-This can be made even clearer by using a bracket notation for the integral; the first argument is the manifold, the second argument the differential form:
+Stokes theorem is more then a  valuable tool for calculations and for reformulations. It unmasks the geometry of the exterior derivative $d$. Stokes theorem binds the exterior derivative to the border operator, which is a purely geometric operation. Both operations are equivalent, as you can choose either to apply the border operator to a region or to apply the exterior derivative to the differential form at hand.
+This can be made even clearer by using a bracket notation for the integral; the first argument is the manifold, the second argument is the differential form:
 \[[\Omega, \omega] := \int_{\Omega} \omega\]
 Then Stokes theorem can be formulated as
-\[[\Omega, d\omega] = [\delta \Omega, \omega]\]
-and the border operator and the exterior operator play an equivalent role.
+\[[\Omega, d\omega] = [\delta \Omega, \omega].\]
+The border operator and the exterior operator play an equivalent role.
 
 \subsection{The Geometry of Classical Differential Operators}
 \label{subsec:geometryCDO}
-That Stokes' theorem captures the geometry of $d$ can be highlighted at the example of the standard calculus operators $div$ and $curl$ on $\mathbb R^3$.  The geometric, coordinate free definition of the curl $\nabla \times v$ of a vector field $v$ is 
+That Stokes' theorem captures the geometry of $d$ can be highlighted by looking at the standard calculus operators $div$ and $curl$ on arbitrary 3-manifolds.  The geometric, coordinate free definition of the curl $\nabla \times v$ of a vector field $v$ is 
 
 \[(\nabla \times v) \cdot n = \lim_{diam(A)\rightarrow 0 } \frac{\int_{\partial A} \langle v , t \rangle dx}{Area(A)} \]
-where $n$ is a normal vector, the $A$ are area patches orthogonal to $n$ and $t$ is a tangent to the border of $A$. \note{img}. So the curl operator takes a vector field and returns a linear mapping that can be used to measure how much the vector field curls around a point. This geometric property is exactly captured by Stokes theorem applied to 1-forms, when forms are interpreted as in \ref{subsec:diffformsare}:
+where $n$ is a normal vector, $A$ is an area patch orthogonal to $n$ and $t$ is a tangent to the border of $A$, see Figure \ref{fig:6_curlDiv}. So the curl operator takes a vector field and returns a linear mapping that can be used to measure how much the vector field curls around a point. This geometric property is exactly captured by Stokes theorem applied to 1-forms, when forms are interpreted as in \ref{subsec:diffformsare}:
 \[\lim_{diam(A)\rightarrow 0 }\frac{\int_{\partial A} \omega^1}{Area(A)} = \lim_{diam(A)\rightarrow 0 }\frac{\int_{A} d \omega^1}{Area(A)} = d \omega^1 (a,b)\]
 where $a,b$ are vectors with $a\times b = n$ and $n$ normal to $A$.
 The same is true for the geometric definition of divergence, where the net flow in and out of a volume is measured
-\[div(v) = \lim_{diam(V)\rightarrow 0 } \frac{\int_{\partial V} \langle v , n \rangle dx}{Area(A)}\]
-where $n$ is the normal field on the border of the volume $V$. \note{img} And again, this is exactly captured by Stokes theorem and the exterior derivative for $2$-forms
-\[\lim_{diam(V)\rightarrow 0 }\frac{\int_{\partial V} \omega^2}{Vol(V)} = \lim_{diam(A)\rightarrow 0 }\frac{\int_{V} d \omega^2}{Vol(V)} = d \omega^2\]
+\[div(v) = \lim_{diam(V)\rightarrow 0 } \frac{\int_{\partial V} \langle v , n \rangle dx}{Vol(V)}\]
+where $n$ is the normal field on the border of the volume $V$, see Figure \ref{fig:6_curlDiv}. And again, this is exactly captured by Stokes theorem and the exterior derivative for $2$-forms
+\[\lim_{diam(V)\rightarrow 0 }\frac{\int_{\partial V} \omega^2}{Vol(V)} = \lim_{diam(V)\rightarrow 0 }\frac{\int_{V} d \omega^2}{Vol(V)} = d \omega^2\]
 
+\begin{figure}%
+\begin{center}
+\def\svgwidth{8cm}
+\input{imgs/6_curlDiv.eps_tex}%	
+\end{center}
+\caption{The geometric definition of curl and divergence. Curl measures the flow around a infinitesimal patch orthogonal to a normal $n$. Divergence, here displayed in a 2D setting, measures the local netflow. }%
+\label{fig:6_curlDiv}%
+\end{figure}
 \newpage
 \section{The Discrete Exterior Derivative}
 
-Stokes theorem captures the geometry of the exterior derivative. We can now define the discrete exterior derivative to conserve the geometry of $d$ i.e. conserve Stokes theorem. In the discrete setting the integral of a discrete form $\discrete{w}$ over a set of simplices $\sigma$ is the scalar product $\langle \sigma, \discrete{w} \rangle$.
- We can directly translate Stokes theorem to the discrete setting:
+Stokes theorem captures the geometry of the exterior derivative. Both smooth and discrete manifolds have common geometric operations, namely the border operator. The common geometry of smooth and discrete manifolds can now be used to define a discrete exterior derivative on discrete manifolds, which preserves the geometry of the exterior derivative. The discrete exterior derivative forms the pillar of DEC.
+
+To conserve the geometry of $d$ means to conserve Stokes theorem.  We can directly translate Stokes theorem to the discrete setting- In the discrete setting the integral of a discrete form $\discrete{w}$ over a set of simplices $\sigma$ is the scalar product $\langle \sigma, \discrete{w} \rangle$ and Stokes theorem
 \[[\Omega,d\omega] = [\delta \Omega, \omega]\]
 becomes
-\[\langle \sigma, d_{discrete}^k\textbf{w}^k \rangle = \langle \delta_{k+1} \sigma, \textbf{w}^k \rangle.\]
-But this relation \emph{defines} the yet unknown $d_{discrete}$; it has to be the transposed of the border-operator matrix:
+\[\langle \sigma, d_{discrete}^k\textbf{w}^k \rangle = \langle \delta_{k+1} \sigma, \textbf{w}^k \rangle,\]
+where $d_{discrete}$ is yet unknown. But this relation \emph{defines} the yet unknown $d_{discrete}$; it has to be the transposed of the border-operator matrix:
 \[d_{discrete} = \delta^T\]
-By discretizing the exterior derivative we get at once consistent discretizations of all its special cases: gradient, divergence and curl. 
+By discretizing the exterior derivative like this we get at once consistent discretizations of all its special cases like gradient, divergence and curl. 
 
 \subsection{Examples}
 For example we know that $d$ applied to $0$-forms is the gradient. Our discrete realization of the exterior derivative for $0$-forms is the matrix
@@ -239,18 +267,19 @@ Another example is the curl operator, depicted in Figure \ref{fig::6_1_curl}. Th
 \label{fig::6_1_curl}
 \end{figure}
 
-As this is the incidence matrix of faces, applying $d_1$ to a one Form sums up the values of the discrete $1$-form on edges along a face and assigns the sum to the face. 
+As this is the incidence matrix of faces, applying $d_1$ to a 1-form sums up the values of the discrete $1$-form on edges along a face and assigns the sum to the face. 
 
 \subsection{Correctness}
+The discrete exterior derivative $d_{discrete}$ does not introduce any new errors. It is consistent with the way we interpret and sample discrete differential forms- you can take the exterior derivative before sampling or the discrete exterior derivative after sampling, it does not matter.
+
 Suppose that $\textbf{w}^0$ samples $\omega^0$. Then $d_{discrete}^0 \textbf{w}^0$ exactly samples $d\omega^0$:
 \[\int_{[v_0,v_1]} d\omega^0 = \omega^0(v_1) - \omega^0(v_0)= \textbf{w}^0(v_1) - \textbf{w}^0(v_0)\] 
 But, by design, this is true for all $d_{discrete}^k$: suppose $\textbf{w}^k$ samples $\omega^k$, then
 \[\int_{\sigma^{k+1}} d\omega^k  = \int_{\delta \sigma^{k+1}} \omega^k = \langle \delta_{k+1}(\sigma^{k+1}), \textbf{w}^k\rangle = (d_{discrete}^{k} \textbf{w}^k) (\sigma^{k+1}).\]
-This means that $d_{discrete}$ does not introduce any new errors. It is consistent with the way we interpret discrete forms and sample differential forms- you can take the exterior derivative before sampling or the discrete exterior derivative after sampling, it does not matter.
 
 
 \section{Duality: The Hodge Star}
-
+\label{sec:hodgeStar}
 By having a discrete exterior derivative, we have a discretization of all the operators that arise as special cases of the exterior derivative (see Figures \ref{fig::6_1_SC2d} and \ref{fig::6_1_SC3d}). But there is still an important element missing. For example we would like to apply the divergence operator to the gradient of a function $div(grad(f))$ to get the Laplacian, as it is done in standard calculus:
 \[\Delta = div\circ grad\]
 Looking at Figure $\ref{fig::6_1_SC3d}$ tells us that on 3-dimensional manifolds $grad$ is $d_0$ and $div$ is $d_2$.   This is a problem: $d_0$ takes a $0$-form and maps it to a $1$-Form and we can not apply $d_2$ to $1$-forms!

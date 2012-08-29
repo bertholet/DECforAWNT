@@ -4,14 +4,43 @@ Version=2
 
 [SessionInfo]
 ActiveTab=2
-FrameCount=14
-ActiveFrame=0
+FrameCount=15
+ActiveFrame=4
 
 [Frame0]
 Columns=1
 Rows=1
-Flags=2
-ShowCmd=3
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-8
+MaxPos.y=-28
+NormalPos.left=115
+NormalPos.top=115
+NormalPos.right=1513
+NormalPos.bottom=627
+Class=CLatexEdit
+Document=Chapters\BasicObjects.tex
+
+[Frame0_Row0]
+cyCur=455
+cyMin=10
+
+[Frame0_Col0]
+cxCur=1361
+cxMin=10
+
+[Frame0_View0,0]
+Cursor.row=283
+Cursor.column=0
+TopSubLine=407
+
+[Frame1]
+Columns=1
+Rows=1
+Flags=0
+ShowCmd=1
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -23,20 +52,20 @@ NormalPos.bottom=207
 Class=CLatexEdit
 Document=Chapters\FluidSim.tex
 
-[Frame0_Row0]
-cyCur=721
+[Frame1_Row0]
+cyCur=150
 cyMin=10
 
-[Frame0_Col0]
-cxCur=1607
+[Frame1_Col0]
+cxCur=462
 cxMin=10
 
-[Frame0_View0,0]
-Cursor.row=168
-Cursor.column=228
-TopSubLine=193
+[Frame1_View0,0]
+Cursor.row=256
+Cursor.column=0
+TopSubLine=367
 
-[Frame1]
+[Frame2]
 Columns=1
 Rows=1
 Flags=0
@@ -52,20 +81,20 @@ NormalPos.bottom=505
 Class=CLatexEdit
 Document=Chapters\MeshParametrization.tex
 
-[Frame1_Row0]
+[Frame2_Row0]
 cyCur=356
 cyMin=10
 
-[Frame1_Col0]
+[Frame2_Col0]
 cxCur=1288
 cxMin=10
 
-[Frame1_View0,0]
+[Frame2_View0,0]
 Cursor.row=272
 Cursor.column=1
 TopSubLine=386
 
-[Frame2]
+[Frame3]
 Columns=1
 Rows=1
 Flags=0
@@ -81,24 +110,24 @@ NormalPos.bottom=184
 Class=CLatexEdit
 Document=DECforAwnts.tex
 
-[Frame2_Row0]
+[Frame3_Row0]
 cyCur=127
 cyMin=10
 
-[Frame2_Col0]
+[Frame3_Col0]
 cxCur=835
 cxMin=10
 
-[Frame2_View0,0]
-Cursor.row=60
-Cursor.column=1
-TopSubLine=55
+[Frame3_View0,0]
+Cursor.row=0
+Cursor.column=0
+TopSubLine=0
 
-[Frame3]
+[Frame4]
 Columns=1
 Rows=1
-Flags=0
-ShowCmd=1
+Flags=2
+ShowCmd=3
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -110,47 +139,18 @@ NormalPos.bottom=223
 Class=CLatexEdit
 Document=Chapters\DifferentialCalculus.tex
 
-[Frame3_Row0]
-cyCur=166
-cyMin=10
-
-[Frame3_Col0]
-cxCur=484
-cxMin=10
-
-[Frame3_View0,0]
-Cursor.row=479
-Cursor.column=6
-TopSubLine=651
-
-[Frame4]
-Columns=1
-Rows=1
-Flags=0
-ShowCmd=1
-MinPos.x=-1
-MinPos.y=-1
-MaxPos.x=-8
-MaxPos.y=-28
-NormalPos.left=23
-NormalPos.top=23
-NormalPos.right=544
-NormalPos.bottom=246
-Class=CLatexEdit
-Document=Chapters\BasicObjects.tex
-
 [Frame4_Row0]
-cyCur=166
+cyCur=721
 cyMin=10
 
 [Frame4_Col0]
-cxCur=484
+cxCur=1607
 cxMin=10
 
 [Frame4_View0,0]
-Cursor.row=2
-Cursor.column=26
-TopSubLine=0
+Cursor.row=202
+Cursor.column=17
+TopSubLine=258
 
 [Frame5]
 Columns=1
@@ -177,9 +177,9 @@ cxCur=637
 cxMin=10
 
 [Frame5_View0,0]
-Cursor.row=0
-Cursor.column=0
-TopSubLine=0
+Cursor.row=428
+Cursor.column=16
+TopSubLine=610
 
 [Frame6]
 Columns=1
@@ -237,7 +237,7 @@ cxMin=10
 [Frame7_View0,0]
 Cursor.row=59
 Cursor.column=0
-TopSubLine=64
+TopSubLine=68
 
 [Frame8]
 Columns=1
@@ -293,9 +293,9 @@ cxCur=1361
 cxMin=10
 
 [Frame9_View0,0]
-Cursor.row=34
-Cursor.column=16
-TopSubLine=9
+Cursor.row=163
+Cursor.column=26
+TopSubLine=137
 
 [Frame10]
 Columns=1
@@ -409,7 +409,36 @@ cxCur=1361
 cxMin=10
 
 [Frame13_View0,0]
-Cursor.row=0
-Cursor.column=0
+Cursor.row=3
+Cursor.column=24
 TopSubLine=0
+
+[Frame14]
+Columns=1
+Rows=1
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-8
+MaxPos.y=-28
+NormalPos.left=69
+NormalPos.top=69
+NormalPos.right=1467
+NormalPos.bottom=581
+Class=CLatexEdit
+Document=Chapters\Simplical Complexes.tex
+
+[Frame14_Row0]
+cyCur=455
+cyMin=10
+
+[Frame14_Col0]
+cxCur=1361
+cxMin=10
+
+[Frame14_View0,0]
+Cursor.row=157
+Cursor.column=100
+TopSubLine=202
 

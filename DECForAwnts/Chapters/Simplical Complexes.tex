@@ -1,39 +1,39 @@
 \newpage
-\section{Meshes and Simplicial Complexes}
+\section{Discrete Manifolds}
 \label{sec::2_discreteManifolds}
-In the last sections we had a look at the geometric objects exterior calculus will be defined on, i.e. smooth surfaces and manifolds. The next step is to introduce the discrete analogues we want to do computations with: triangle meshes, or more generally simplices and simplicial complexes. Simplices are for example points (0 dimensional), lines (1 dimensional) triangles (2 dimensional) and tetrahedra (3 dimensions). Simplicial complexes are 'meshes' made out of them.
+In the last sections we had a look at the geometric objects exterior calculus will be defined on, i.e. smooth surfaces and manifolds. The next step is to introduce the discrete analogues we want to do computations with: triangle meshes, or more generally simplices and simplicial complexes. Simplices are for example points (0-dimensional), lines (1-dimensional) triangles (2-dimensional) and tetrahedra (3-dimensional). Simplicial complexes are 'meshes' made out of them. The definitions are taken from \cite{DMK08} and \cite{FRANKEL11}.
 
 \subsection{Simplices and Simplicial Complexes}
 
-\begin{figure}[b]
+\begin{figure}[t]
 \begin{center}
-\includegraphics[width = 10cm]{Imgs/2_3_simplices.eps}
+\includegraphics[height= 2cm]{Imgs/2_3_simplices.eps}
 \end{center}
-\caption{A 0-simplex (point) 1-simplex (line) 2-simplex (triangle) and 3-simplex (tetrahedra) }
+\caption{A 0-simplex (point) 1-simplex (line) 2-simplex (triangle) and 3-simplex (tetrahedron) }
 \label{fig::2_3_simplices}
 \end{figure}
 
-A $k$ simplex is the most basic geometric object with a $k$ dimensional volume: the convex hull of $k+1$ points, as depicted in Fig. \ref{fig::2_3_simplices}. You also have to make sure that no point lies in the convex hull of the others, as else no $k$ dimensional volume is spanned, else you would call the simplex degenerated.
+A $k$-simplex is the most basic geometric object with a $k$-dimensional volume: the convex hull of $k+1$ points, as depicted in Fig. \ref{fig::2_3_simplices}. No point should lie in the convex hull of the others; else no $k$-dimensional volume is spanned and the simplex is called degenerated.
 
-\begin{definition}[Simplex]: A non degenerated $k$ simplex is the convex hull of $k + 1$ points $p_1,...,p_{k+1}$, where the $k$ vectors $p_2 -p_1, p_3,-p_1, ..., p_{k+1} -p_1$ are linearly independent. It is represented as a tuple of its corner vertices $\{p_1,...,p_{k+1}\}$.
+\begin{definition}[Simplex] A non degenerated $k$-simplex is the convex hull of $k + 1$ points $p_1,...,p_{k+1}$, where the vectors $p_2 -p_1, p_3,-p_1, ..., p_{k+1} -p_1$ are linearly independent. It is represented as a tuple of its corner vertices $\{p_1,...,p_{k+1}\}$.
 \end{definition}
 
-Every simplex has faces of various dimensions: any combination of $l+1$ of its corner vertices forms an $l$ dimensional face. For example the tetrahedra has 4 2-dimensional faces (triangles), 6 1-dimensional faces (edges) and 4 0-dimensional faces (vertices) (see Fig. \ref{fig::2_3_simplices}). A 4-Simplex (living at least in $\mathbb R^4$) would have 5 tetrahedral faces and so on.
+Every simplex has faces of various dimensions: any combination of $l+1$ of its corner vertices forms an $l$-dimensional face. For example a tetrahedron has 4 2-dimensional faces (triangles), 6 1-dimensional faces (edges) and 4 0-dimensional faces (vertices),see Figure \ref{fig::2_3_simplices}. A 4-simplex would have 5 tetrahedral faces and so on.
 
-Out of this simplices one can make simplicial complexes, just as you can build meshes out of triangles. The restrictions are the usual: the interior of any two simplices should not overlap, and if the intersection of two simplices is not empty, the intersection has to be a face of both simplices. \note{(image)} A simplicial complex then is a list of simplices. 
+Out of simplices one can build simplicial complexes, in the same way as meshes are built out of triangles. The restrictions are the usual: the interior of any two simplices should not overlap, and if the intersection of two simplices is not empty, the intersection has to be a face of both simplices. A simplicial complex then is a list of simplices, following these restrictions. 
 
-Formally, when a $k$-simplex is listed, its faces are not yet in the list; this situation we don't want to have. If a simplicial complex contains a  $k$-simplex we demand that the faces of those $k$- simplices are contained too. This is not just a tedious technical detail; you will later see that we want to associate values to faces of simplices. In a triangle mesh for example we will therefore need to keep track not only of triangles and vertices but also of the edges; see also section \ref{sec::2_handsOnSimplicialComplexes}.
+If a simplicial complex contains a  $k$-simplex $\sigma$, we also demand that all faces of $\sigma$ are part of the simplicial complex. This is not just a tedious technical detail;  we explicitly want to associate different values to all faces of simplices. In a triangle mesh, for example, we will need to keep track not only of triangles and vertices but also of the edges.
 
 \begin{definition}[Simplicial Complex]
 A simplicial  complex is a collection $\kappa$ of simplices, such that if a simplex is contained in $\kappa$, all its faces are too. Furthermore the intersection of any two simplices in  $\kappa$ is either empty or a common face.
 \end{definition}
 
-Lastly we do not want our discrete manifolds  to have the analogue of dangling triangles. To ensure this formally one has to make a restriction that is similar to the definition of manifolds. Just as we ensured that a (border less) $k$ Manifold locally looks like $\mathbb R^k$, i.e. every point has an open $k$ dimensional environment, we want to make sure our discrete manifold (with border) looks locally like either a $k$-dimensional ball or a $k$-dimensional half-ball. This is a technicality to get rid of dangling things (Fig. \ref{fig::2_2_dangling}).
+Lastly we do not want our discrete manifolds  to have the analogue of dangling triangles (Figures \ref{fig::2_2_dangling} and \ref{fig::2_2_dangling2}). To ensure this formally one has to make a restriction that is similar to the definition of manifolds. Just as we ensured that a $k$-manifold locally looks like $\mathbb R^k$ or $\mathbb H^k$, we want to make sure our discrete manifold looks locally like either a $k$-dimensional ball or a $k$-dimensional half-ball. This gets rid of dangling things.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=13cm]{imgs/2_2_dangling.eps}
-\caption{These are not discrete 2d manifolds: the first mesh has a dangling triangle, the second mesh has a 'wheel' and is not locally equivalent to a plane, the same holds for the third mesh}
+\includegraphics[height=2.5cm]{imgs/2_2_dangling.eps}
+\caption{These are not discrete 2-manifolds: the first mesh has a dangling triangle, the second mesh has a 'wheel' and is not locally equivalent to a plane, the same holds for the third mesh}
 \label{fig::2_2_dangling}
 \end{center}
 \end{figure}
@@ -41,91 +41,120 @@ Lastly we do not want our discrete manifolds  to have the analogue of dangling t
 \begin{definition}[Discrete Manifold]
 A $k$-dimensional discrete Manifold is a simplicial complex where for every vertex in $\kappa$ the union of all incident simplices is equivalent to a $k$-dimensional ball or a $k$-dimensional half ball.
 \end{definition} 
-\note{(defs from the computational modeling paper)}
 
+On discrete manifolds we can define orientations and a border operator with the same geometric meaning as on smooth manifolds.
 
-\subsection{Orientations of Simplicial Complexes}
-As with manifolds we have to deal with orientations in discrete manifolds; as we will later see they will be quite of some practical importance and can be a notorious source of switched sign errors when implementing things using discrete exterior calculus. 
+\subsection{Orientations}
+As on manifolds we can treat orientations on discrete manifolds; they are quite of some practical importance and a notorious source of switched sign errors when implementing things using discrete exterior calculus. 
 
-We can assign one of two orientations to any simplex of any dimension, meaning that the volume represented by the simplex should be considered as positive or negative. While we coded orientation before via the enumeration of basis vectors, for simplices we encode orientation via the enumeration of their corner vertices.  For edges it is the most intuitive what this means: we simply assign a direction to the edge $\{p_1,p_2\}$ by saying the first vertex listed is the start vertex of the edge. Note that for an edge or geometric object there is not a strict 'positive' or a 'negative' orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as
-\[-\{p_1,p_2\} = \{p_2,p_1\}\]
-So the orientation of a $k$-simplex depends on the way its corner vertices are enumerated. Two enumerations of corner vertices result in the same orientation if they are related by an even permutation. A permutation is called even, if it can be reproduced by switching pairs of vertices an even time. E.g.
-\[\{a,b,c,d\} \sim \{c,a,b,d\}\]
+We can assign one of two orientations to any simplex of any dimension, meaning that the volume represented by the simplex should be considered as positive or negative. While we coded orientation before via the enumeration of basis vectors, for simplices we encode orientation via the enumeration of their corner vertices.  For edges it is the most intuitive what this means: we assign a direction to the edge $\{p_1,p_2\}$ by saying the first vertex listed is the start vertex of the edge. Note that for an edge or any geometric object there is not a strict 'positive` or a 'negative` orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as
+\[-\{p_1,p_2\} = \{p_2,p_1\}.\]
+So the orientation of a $k$-simplex depends on the way its corner vertices are enumerated. Two enumerations of corner vertices result in the same orientation if they are related by an even permutation. A permutation is called even, if it can be reproduced by switching pairs of vertices an even number of times. E.g.
+\[\{a,b,c,d\} = \{c,a,b,d\}\]
 \[\{a,b,c,d\} \rightarrow \{c,b,a,d\}\rightarrow \{c,a,b,d\}\]
-by first switching $a$ and $c$ and then $a$ and $b$.
+by using two swaps,swapping  $a$ and $c$ and then $a$ and $b$.
 You can also use the determinant to determine the sign of the permutation; just calculate the determinant of the permutation matrix
 \[\{a,b,c,d\} \rightarrow \{c,a,b,d\}\]
 \[\begin{pmatrix}c\\a\\b\\d \end{pmatrix}=\begin{pmatrix} 0 & 0 & 1 &0 \\ 1 &0&0&0 \\ 0&1&0&0 \\ 0&0&0&1 \end{pmatrix}\begin{pmatrix} a\\b\\c\\d \end{pmatrix}\]
 Or again you can use the simplex to induce a base to the affine space it is aligned to
 \[p_1 -p_2,...,p_{k}-p_{k+1}\]
-and two enumerations induce the same orientation if these bases have the same orientation. This also shows that looking at the orientation of a simplex by looking at the ordering of its corner vertices amounts to the same as orienting its volume by choosing a bases.
+and two enumerations induce the same orientation if these bases have the same orientation. This also shows that defining the orientation of a simplex by looking at the ordering of its corner vertices amounts to the same as orienting volumes by choosing bases.
 
-One exception are vertices or 0-simplices $\{v_0\}$, where orientation is not encodable in the enumeration of the vertex. We need to assign orientations to single points too and say that $-\{v_0\}$ is the negatively oriented version of $\{v_0\}$. Orientation is 'imprinted' on the point. The best way of thinking of orientation is that orientation adds a sign to volumes. A negatively oriented point is then a point whose $0$-dimensional volume is negative. The $0$-dimensional volume of any single point is defined to be either $1$ or $-1$ and the 0 dimensional volume of a point set is then $\#positive\; points - \#negative\; points$.
+\begin{figure}
+\begin{center}
+\includegraphics[height=2.5cm]{imgs/2_3_danglingTetrahedra2.eps}
+\caption{If tetrahedra are not connected by two dimensional faces, they are 'dangling´.}
+\label{fig::2_2_dangling2}
+\end{center}
+\end{figure}
 
-Anyway as long as you stick with calculations in $\mathbb R^3$ it stays pretty simple to determine if two orientations a simplex are the same, if you stick with triangle meshes it is trivial. Just make sure you always remember to respect orientations. In the implementation chapter \ref{sec::2_handsOnSimplicialComplexes} we will also come back to the question of how to compute relative orientations.
+
+One exception are vertices or 0-simplices $\{v_0\}$, where orientation is not encodable in the enumeration of the vertex. We need to assign orientations to single points too and say that $-\{v_0\}$ is the negatively oriented version of $\{v_0\}$. Orientation is 'imprinted` on the point. The best way of thinking of orientation is that orientation adds a sign to volumes. A negatively oriented point is then a point whose $0$-dimensional volume is negative. The $0$-dimensional volume of any single point is defined to be either $1$ or $-1$ and the 0 dimensional volume of a point set is $\#positive\; points - \#negative\; points$.
+
+As long as you stick with calculations in $\mathbb R^3$ it stays pretty simple to determine if two orientations a simplex are the same, if you stick with triangle meshes it is trivial. Just make sure you always remember to respect orientations. In Section \ref{sec::2_handsOnSimplicialComplexes} we will also come back to the question of how to compute relative orientations in practice.
 
 
-\subsection{Border Operations}
+\subsection{The Border Operator}
 \label{sec::2_borderOrientation}
 
 Just as with manifolds we have a border operator for discrete manifolds. And just like with manifolds an oriented discrete manifold induces an orientation to its border.
 
-We first introduce some notation: we can respresent collections of simplices as $formal$ sums, as depicted in Fig. \ref{fig::2_2_formalsum}. The simplices are represented as tuples, a negaitve sign means a change of orientation. Simplices that are different from each other are not summed up (the sum is formal), only if two tuples describe the same simplex (but for orientation) the sum is taken. Particularly simplices of opposed orientation cancel out.
+We first introduce some notation: we can respresent collections of simplices as \emph{formal sums}, as depicted in Figure \ref{fig::2_2_formalsum}. The simplices are represented as tuples, a negaitve sign means a change of orientation. Simplices that are different from each other are not summed up, only if two tuples describe the same simplex but for orientation, the sum is taken. Particularly simplices of opposed orientation cancel out.
 \begin{figure}
 \begin{center}
 \includegraphics[width = 12cm]{imgs/2_2_formalsum.eps}
 \end{center}
-\caption{Two sets of edges expressed as a formal sums that get summed up}
+\caption{Two sets of edges expressed as formal sums that get summed up}
 \label{fig::2_2_formalsum}
 \end{figure}
 
-The border of a single $k$ simplex is then the following formal sum
+The border of a single $k$-simplex is  the following formal sum
 \[\delta\{v_0,v_1,...,v_k\} = \sum_{j=0}^k (-1)^j\{v_0,...,\widehat{v_j},...,v_k\}\]
-where  the $\widehat{v_j}$ means omitting $v_j$. So this expresses that the border of the simplex is a set of $k-1$ simplices. The orientations they get are exactly the ones that the simplex induces. Note that prepending the omitted vertex $v_j$ to $(-1)^j\{v_0,...,\widehat{v_j},...,v_k\}$ exactly leads to a simplex with the orientation of $\{v_0,v_1,...,v_k\}$.
+where  the $\widehat{v_j}$ means omitting $v_j$. This expresses that the border of the simplex is a set of $k-1$ simplices. The orientations they get are the ones that the simplex induces. Note that prepending the omitted vertex $v_j$ to $(-1)^j\{v_0,...,\widehat{v_j},...,v_k\}$ leads to a simplex with the orientation of $\{v_0,v_1,...,v_k\}$. This is consistent with the way we defined that orientation should be induced to borders of smooth manifolds. 
 
-For example the border of a triangle $\{a,b,c\}$ then is \[\{b,c\} -\{a,c\} + \{a,b\} = \{a,b\} + \{b,c\} + \{c,a\},\] just as we want it to be.
+For example the border of a triangle $\{a,b,c\}$ is \[\{b,c\} -\{a,c\} + \{a,b\} = \{a,b\} + \{b,c\} + \{c,a\},\] just as it should be.
 
-But if we can take the border of single simplices, we can also take the border of a set of simplices and especially of discrete manifolds; it is simply the formal sum of the borders of the $k$ simplices the discrete $k$ manifold is made out of. As you see in the figure \ref{fig::2_2_borderUnoriented} this can go 'wrong', and it does so when the discrete manifold was not oriented. 
+But if we can take the border of single simplices, we can also take the border of a set of simplices or of discrete manifolds; it is simply the formal sum of the borders of the $k$-simplices the discrete $k$-manifold is made out of. As you see in the Figure \ref{fig::2_2_borderUnoriented} this can go 'wrong` when the discrete manifold is oriented inconsistently. 
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = 7cm]{imgs/2_2_borderUnoriented.eps}
+\includegraphics[width = 6cm]{imgs/2_2_borderUnoriented.eps}
 \end{center}
-\label{fig::2_2_borderUnoriented}
 \caption{The border operator that respects orientation only makes sense with oriented discrete manifolds. Orientation of faces is depicted by an arrow that says what orientation a simplex induces to its border}
+\label{fig::2_2_borderUnoriented}
 \end{figure}
 
-If all simplices occurring in a complex are enumerated and have a fixed orientation, the border operator can be expressed as a matrix, the incidence matrix. A set of $j$ simplices is represented as vector of integers of dimension $\#(j\;simplices)$. The $k$-th entry of this vector represents the number of times the $k$-th $j$-simplex occurs.
+\subsubsection{The Border Operator as a Matrix}
+If all simplices occurring in a complex are enumerated and have a fixed orientation, the border operator can be expressed as a matrix, the incidence matrix. A set of $j$ simplices is represented as vector of integers of dimension $\#(j\;simplices)$. The $k$-th entry of this vector represents the number of times the $k$-th $j$-simplex occurs. 
+For example in the following enumeration
 \begin{center}
-\includegraphics[width=10cm]{imgs/2_2_complexEnumeration.eps}
+\def\svgwidth{13cm}
+\input{imgs/2_2_complexEnumeration.tex}
 \end{center}
-Using this enumeration the two border matrices are
+the set of edges $e0 - e1 + e2 $ is represented by the vector $(1,-1,1,0,0)$.
+In this example there are two border matrices, one to compute the border of edge sets 
 \[\delta_1 = \begin{pmatrix}
 -1&-1&0 &0 & 0\\
 0&1&1 &1 & 0\\
 1&0&-1 &0&1\\
 0&0&0&-1&-1\\
 \end{pmatrix} \]
+and one to compute the border of face sets:
 \[\delta_2 = \begin{pmatrix}
 1 & -1 & 1 &0&0\\
 0& 0& -1 & 1 & -1
-\end{pmatrix}\]
-We will always make the difference between the border operators; we add to the border operator of $j$-simplices a $j$ as subscript: $\delta_j$. The border of the line segment $e_0 -e_4 + e_3$ is then given by
+\end{pmatrix}^T\]
+For example the border of the line segment $e_0 -e_4 + e_3$ is then given by
 \[\begin{pmatrix}
 -1\\ 1\\ 0 \\0 
 \end{pmatrix} = \delta_1\begin{pmatrix}
 1\\0\\ 0\\1\\-1
 \end{pmatrix}\]
-i.e. $-v_0 + v_1$ saying that $v_0$ is the 'start' and $v_1$ the 'end' border of the line. 
+which is $-v_0 + v_1$, saying that $v_0$ is the 'start` and $v_1$ the 'end` border of the line. 
 
-The entry $(i,j)$ in the border matrix is the relative orientation of the two simplices concerned. For example $\delta_1(0,1) = -1$ because the vertex $v_0$ is oriented negatively relative to the edge $e_1$. Relative orientation means considering the border orientation induced by the edge $e_1$ and the orientation of $v_0$.
+For a $k$-complex there is a total of $k$ border matrices: one border operator for sets of 1-simplices (edges), one for 2-simplices (triangle faces), one for 3-simplices and so on. We will always make the difference between these border operators; we add a $j$ as subscript to the border operator of $j$-simplices : $\delta_j$. 
 
- \note{Think there is no need to say more, is there? Yes image simplex k=> simplex k-1,,,, via $\delta$}
+The entry $(i,j)$ in a border matrix is the relative orientation of the two simplices concerned. For example $\delta_1(0,1) = -1$ because the vertex $v_0$ is oriented negatively relative to the edge $e_1$, considering the border induced orientation.
 
 \subsection{Oriented Discrete Manifold}
 \label{sec::2_orientedDiscreteMF}
-Lastly we can not only orient single simplices, but also a whole discrete manifold. You have seen that the orientation of borders is strongly linked with the orientation of the volume. For convenience we will define well orientedness of a discrete manifold using the border orientations.
+Lastly we can not only orient single simplices, but also a whole discrete manifold. This leads to oriented discrete manifolds, which are the discrete analogue to smooth oriented manifolds. 
 
-Two $k$-simplices that share a $k-1$ dimensional face are oriented consistently exactly if the induced orientation of this face is opposed for both $k$ simplices, as in Fig. \ref{fig::2_2_borderUnoriented}.
-A $k$ manifold is oriented if all $k$ simplices are oriented consistently. As you have seen above, if the manifold is not oriented, the border operation will not be as expected. So make sure that in all implementations your discrete manifolds are well oriented.
+The orientation of a volume is strongly linked to the orientation of borders. For convenience we will define well orientedness of a discrete manifold using the border orientations.
+Two $k$-simplices that share a $k-1$ dimensional face are oriented consistently exactly if the induced orientation of this face is opposed for both $k$-simplices, as depicted in Figure \ref{fig::2_2_borderUnoriented}.
+A $k$-manifold is oriented if all-$k$ simplices are oriented consistently. 
 
+\subsection{Summary}
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height=3cm]{imgs/2_2_snoothVSdiscreteBorderOp.eps}	
+\end{center}
+\caption{Applying the smooth border operator to a $k$-manifold returns a $k-1$-manifold, the same holds in the discrete setting. Also for \emph{oriented} smooth and discrete manifolds $\delta\delta = 0$ holds.}%
+\label{fig:2_2_snoothVSdiscreteBorderOp}%
+\end{figure}
+Discrete manifolds are geometric objects made out of simplices and allow the definition of orientation and border operators, just like smooth manifolds. Also, applying the discrete border operator twice to an oriented discrete manifold leads to an empty set:
+\[\delta_{j-1}\delta_{j} = 0\]
+This mirrors the property of the smooth border operator. The smooth and the discrete border operator are depicted schematically in Figure \ref{fig:2_2_snoothVSdiscreteBorderOp}.
+
+Subsets of $j$-simplices of a discrete $k$-manifold can simply be represented by vectors and the border operators by matrices.  Up to now only the geometry of smooth manifolds has been discretized; to develope an analogue to differential calculus on manifolds we will first need to introduce differential forms.

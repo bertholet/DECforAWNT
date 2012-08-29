@@ -77,6 +77,12 @@
 \newblock DOI 10.1016/S0167--8396(03)00002--5. --
 \newblock ISSN 0167--8396
 
+\bibitem[Fra11]{FRANKEL11}
+\textsc{Frankel}, Theodore:
+\newblock \emph{The Geometry of Physics}.
+\newblock Cambridge University Press, 2011
+  \url{http://dx.doi.org/10.1017/CBO9781139061377}
+
 \bibitem[FSDH07]{Fisher:2007:DTV:1276377.1276447}
 \textsc{Fisher}, Matthew ; \textsc{Schr\"{o}der}, Peter ; \textsc{Desbrun},
   Mathieu  ; \textsc{Hoppe}, Hugues:
