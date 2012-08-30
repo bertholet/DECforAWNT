@@ -32,9 +32,9 @@ cxCur=1361
 cxMin=10
 
 [Frame0_View0,0]
-Cursor.row=283
+Cursor.row=4
 Cursor.column=0
-TopSubLine=407
+TopSubLine=0
 
 [Frame1]
 Columns=1
@@ -92,7 +92,7 @@ cxMin=10
 [Frame2_View0,0]
 Cursor.row=272
 Cursor.column=1
-TopSubLine=386
+TopSubLine=0
 
 [Frame3]
 Columns=1
@@ -140,17 +140,17 @@ Class=CLatexEdit
 Document=Chapters\DifferentialCalculus.tex
 
 [Frame4_Row0]
-cyCur=721
+cyCur=576
 cyMin=10
 
 [Frame4_Col0]
-cxCur=1607
+cxCur=1552
 cxMin=10
 
 [Frame4_View0,0]
-Cursor.row=202
-Cursor.column=17
-TopSubLine=258
+Cursor.row=521
+Cursor.column=9
+TopSubLine=617
 
 [Frame5]
 Columns=1
@@ -177,9 +177,9 @@ cxCur=637
 cxMin=10
 
 [Frame5_View0,0]
-Cursor.row=428
-Cursor.column=16
-TopSubLine=610
+Cursor.row=341
+Cursor.column=0
+TopSubLine=692
 
 [Frame6]
 Columns=1
@@ -237,7 +237,7 @@ cxMin=10
 [Frame7_View0,0]
 Cursor.row=59
 Cursor.column=0
-TopSubLine=68
+TopSubLine=80
 
 [Frame8]
 Columns=1
@@ -293,9 +293,9 @@ cxCur=1361
 cxMin=10
 
 [Frame9_View0,0]
-Cursor.row=163
-Cursor.column=26
-TopSubLine=137
+Cursor.row=0
+Cursor.column=0
+TopSubLine=0
 
 [Frame10]
 Columns=1
@@ -440,5 +440,5 @@ cxMin=10
 [Frame14_View0,0]
 Cursor.row=157
 Cursor.column=100
-TopSubLine=202
+TopSubLine=209
 
