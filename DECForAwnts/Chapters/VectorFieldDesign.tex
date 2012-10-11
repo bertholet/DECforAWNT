@@ -1,52 +1,60 @@
-\chapter{Application: Vectorfield Design and the general Laplacian}
-	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
-		\hline
-		Smooth Theory& Discrete Theory& Implementation (Notes)\\
-		\hline
-			Important External Calculus Results:
-			\begin{packed_enum}
-				\item[-] Point Carre Lemma
-				\item[-] Laplace Beltrami Operator: $d$ and $\delta$ free.
-				\item[-] Hodge Decomposition
-				\item[-] Here on the dim of harmonic spaces?
-			\end{packed_enum}
-			&
-			The same as the smooth ones.
-			\begin{packed_enum}
-				\item[-] Properties still hold exactly.
-				\item[-] Laplacian in Least square sence
-				\item[-] Border Constraints
-				\item[-] One Form interpolation
-			\end{packed_enum}
-			 & 
-			 Implementing it with DEC
-			 \begin{packed_enum}
-				\item[-] Vector Field Design
-				\item[-] =Least square harmonic 1 Form solving
-			\end{packed_enum}
-			 \\		
-		\hline
-	\end{longtable}
-	
-The goal of this chapter is to generate natural looking tangential vector fields on two dimensional meshes, using a few intuitive, user-provided constraints. Possible constraints are the positions of sources and sinks or painted general flow directions. Tangential vector fields are naturally described by 1-forms and therefore the use of exterior and discrete exterior calculus suggests itself. 
+\chapter{Vectorfield Design and the general Laplacian}
+\label{chap:vfs}
 
-This chapter is divided in three sections. In the first (short) section the problem statement is formulated with exterior calculus. The problem statement naturally leads to the formulation of harmonicity for 1-forms.  The second section gives the theoretical background for a better understanding of the harmonicity of forms and of the topological constraints connected to vector field design. In this context we describe the following exterior calculus and differential topology results:
+\begin{figure}[h]%
+\begin{center}\hspace{2cm}
+\includegraphics[height = 5cm]{imgs/7_vfcube.eps}%	
+\end{center}
+\caption{A generated vector field, generated with a user given source sink and directional constraint.}%
+\label{fig:vfCube}%
+\end{figure}
+
+%	\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+%		\hline
+%		Smooth Theory& Discrete Theory& Implementation (Notes)\\
+%		\hline
+%			Important External Calculus Results:
+%			\begin{packed_enum}
+%				\item[-] Point Carre Lemma
+%				\item[-] Laplace Beltrami Operator: $d$ and $\delta$ free.
+%				\item[-] Hodge Decomposition
+%				\item[-] Here on the dim of harmonic spaces?
+%			\end{packed_enum}
+%			&
+%			The same as the smooth ones.
+%			\begin{packed_enum}
+%				\item[-] Properties still hold exactly.
+%				\item[-] Laplacian in Least square sence
+%				\item[-] Border Constraints
+%				\item[-] One Form interpolation
+%			\end{packed_enum}
+%			 & 
+%			 Implementing it with DEC
+%			 \begin{packed_enum}
+%				\item[-] Vector Field Design
+%				\item[-] =Least square harmonic 1 Form solving
+%			\end{packed_enum}
+%			 \\		
+%		\hline
+%	\end{longtable}
+	
+The goal of this chapter is to generate natural looking tangential vector fields on two dimensional meshes, using a few intuitive, user-provided constraints, following the approach from Matthew Fisher et al. \cite{vField}. Possible constraints are the positions of sources and sinks or painted general flow directions. Tangential vector fields are naturally described by 1-forms and therefore the use of exterior and discrete exterior calculus suggests itself. 
+
+This chapter is divided in four sections. In the first (short) section the problem statement is formulated with exterior calculus. The problem statement naturally leads to the formulation of harmonicity for 1-forms.  The second  and third section give the theoretical background for a better understanding of the harmonicity of forms and of the topological constraints connected to vector field design. In this context we describe the following exterior calculus and differential topology results:
 \begin{enumerate}
+\item The Hopf Index Theorem, which describes the possible vector fields on a surface, based on its topology.
 \item The Poincar\'e Lemma, which answers the question when a differential form $\omega$ can be 'integrated', i.e. when there exist differential forms $\nu$ with $d\nu = \omega$
 \item The Hodge Decomposition, which allows to split any differential form in three 'orthogonal' parts that can be treated somewhat independently, one of them harmonic.
-\item The Hopf Index Theorem, which describes the possible vector fields on a surface, based on its topology.
 \item A result from Hodge theory, which describes the dimension of the spaces of harmonic forms, solely depending on the topology of the surface.
 \end{enumerate}
 In the third section we use the continuous theory to  exactly formulate the properties of designed vectorfields and translate this directly to DEC. And we consider vector field design on meshes with borders or holes. 
-
-Vector field design, as presented here, was introduced by Matthew Fisher et al. \note{[Desing of Tangent Vector Fields]}.
 
 \section{Problem Statement}
 \label{sec:vfproblemstatement}
 To produce a nice looking vector field, its visually prominent features need to be controlled. These are general flow directions and singularities.
 Singularities are points where the vector field vanishes. These can be sources, sinks, vortices or of a more exotic nature, see Figure \ref{fig:vfsingularities}. The Hopf index theorem described in the next section sates that depending on the topology of the mesh such singularities are unavoidable. Therefore we want to control their type and positions.
 
-We can do so by controlling the curl and the divergence of a vector field. We want to allow divergence and curl only in small, chosen environments. In terms of exterior calculus, this means that we want a 1-form for which $d\omega^1 = 0$ and $\partial \omega^1 = 0$, but for selected points, or rather for very small areas. These are exactly a zero curl and a zero divergence condition, see the schematic in Figure \ref{fig:deRham2d}.  Additionally we want to constrain the vector field to follow some painted strokes \note{img} but still look natural. This is done by constraining the vector field to fixed vectors on the stroke. But then the zero curl and divergence condition needs to be relaxed. Instead of requiring $d\omega = 0$ and $\partial \omega = 0$ we require the $1$-form only to have a minimal exterior (co)-derivative:
+We can do so by controlling the curl and the divergence of a vector field. We want to allow divergence and curl only in small, chosen environments. In terms of exterior calculus, this means that we want a 1-form for which $d\omega^1 = 0$ and $\partial \omega^1 = 0$, but for selected points, or rather for very small areas. These are exactly a zero curl and a zero divergence condition, see the schematic in Figure \ref{fig:deRham2d}.  Additionally we want to constrain the vector field to follow some painted strokes but still look natural. This is done by constraining the vector field to fixed vectors on the stroke. But then the zero curl and divergence condition needs to be relaxed. Instead of requiring $d\omega = 0$ and $\partial \omega = 0$ we require the $1$-form only to have a minimal exterior (co)-derivative:
 \begin{flalign*}
 %\begin{matrix}
 \begin{aligned} &\omega^1 = v_{fixed} \\
@@ -65,22 +73,25 @@ Note that the manifold we are treating is two dimensional; $d\omega^1$ and $\par
 %\subsection{Point Carre Lemma}
 %When is a form d or delta of another form?
 
-\section{Theoretical Background}
+\section{The Hopf Index Theorem}
 
 \input{Chapters/Hopfdegree.tex}
+
+\section{Harmonic, Closed and Coclosed Forms}
+The formulation of vector field design in Section \ref{sec:vfproblemstatement} actually aims to find  nearly \emph{harmonic} 1-forms with the additional constraint on $d$ and $\partial$ of the form. Here we give some background for the operators $d$, $\partial$ and $\Delta$. The space of $k$-forms on closed  manifolds can be split into three orthogonal spaces: the image of $d$, the image of $\partial$ and the kernel of $\Delta$ which is the space of harmonic forms. The kernel of the Laplacian $\Delta$ also turns out to be the intersection of the kernels of $d$ and $\partial$.
 
 \subsection{General Laplacian}
 For $k$-forms the Laplacian is defined as 
 \[\Delta_k = (-1)^{n-k+1}\star_{k} d_{n-k+1}^{dual} \star_{k+1}d_k + (-1)^{n-k}d_{k-1}\star_{k-1}d_{n-k}^{dual} \star_{k}\]
-or ignoring the implicitely clear sub-indices and using the covariant derivative $\partial_k = (-1)^{n-k}\star^{-1} d \star$ introduced in Section \ref{subsec::coderivativ} \note{image}
+or ignoring the implicitely clear sub-indices and using the covariant derivative $\partial_k = (-1)^{n-k}\star^{-1} d \star$ introduced in Section \ref{subsec::coderivativ} 
 \[\Delta = \partial d + d \partial .\]
-We are interested in harmonic $k$-forms, i.e.
+which generalizes the usual Laplacian. We are interested in harmonic $k$-forms, i.e.
 \[\Delta_k \omega^k = 0\]
 and want to understand what it means for a form to be harmonic. 
 
 \subsection{Curl- and Divergence-Freeness}
-First of all remember that the coderivative is adjoint to the derivative with respect to the scalar product for $k$-forms, as seen in Section. \note{...}%\footnote{We defined the scalar product for forms, not differential forms. It is extended to differential forms by $\langle\omega^k,\nu^k \rangle = \int_M \langle \omega^k,\nu^k\rangle dVol$}. 
-Being the adjoint means that for borderless Manifolds or when the involved forms are zero on the borders of the Manifold%\footnote{The adjointness follows directly from Stokes Theorem and the behavior of $d$ and $\wedge$: $0=\int_{\delta M} \omega^k\wedge \star \nu^{k+1} = \int_M (d\omega\wedge\star \nu + (-1)^k\omega\wedge d\star \nu)$ and then setting $\omega\wedge d\star\nu = (-1)^{n-k}\omega\wedge \star \star d\star\nu$ we end $0= \int_M \langle d\omega,\nu\rangle dVol  - \int_M \langle \omega,\star d \star\nu \rangle dVol$}
+First of all remember that the coderivative is adjoint to the derivative with respect to the scalar product for $k$-forms, as seen in Section \ref{subsec::coderivativ}
+Being the adjoint means that for borderless Manifolds or when the involved forms are zero on the borders of the Manifold
 \[\langle d\omega^k, \nu^{k+1} \rangle = \langle \omega^k,\partial\nu^{k+1}\rangle.\]
 Therefore, for harmonic $k$-forms
 \begin{eqnarray*}0=\langle\Delta\omega^k,\omega^k\rangle &= &\langle \partial d\omega^k + d \partial \omega^k, \omega^k\rangle \\
@@ -95,7 +106,11 @@ and we get on borderless manifolds or if $\omega^k = 0$ on the border
 d\omega^k = 0\\
 \partial \omega^k = 0
 \end{matrix}\right.\]
-For 1-forms, $d$ is the curl operator and $\partial$ is the divergence operator. Therefore, on compact borderless manifolds, harmonic vector fields are curl and divergence free. Harmonic forms are $d$ and $\delta$ free. A slight generalisation is for example a harmonic vector field on $\mathbb R^n$ for which $\lim_{r\to \infty} \int_{\delta B_r} \langle \omega , \omega \rangle  = 0$, as you can show adjointness of the two operators $d$, $\delta$ for such forms as well. That means that harmonic vector fields on $\mathbb R^n$ that decrease fastly enough are also curl and divergence free. \note{think about images}
+For 1-forms, $d$ is the curl operator and $\partial$ is the divergence operator. Therefore, on compact borderless manifolds, harmonic vector fields are curl and divergence free. Harmonic forms are $d$ and $\delta$ free. 
+In the vector field design set up the aim is to minimize
+$$\langle d\omega^1,d\omega^1\rangle + \langle \partial\omega^1,\partial\omega^1\rangle$$
+So we solve for vector fields that are as harmonic as possible. Minimality under $\langle d\omega^1,d\omega^1\rangle + \langle \partial\omega^1,\partial\omega^1\rangle$ is also called weak formulation of harmonicity.
+%A slight generalisation is for example a harmonic vector field on $\mathbb R^n$ for which $\lim_{r\to \infty} \int_{\delta B_r} \langle \omega , \omega \rangle  = 0$, as you can show adjointness of the two operators $d$, $\delta$ for such forms as well. That means that harmonic vector fields on $\mathbb R^n$ that decrease fastly enough are also curl and divergence free. \note{think about images}
 
 \subsection{Poincar\'e-Lemma}
 The Poincar\'e-Lemma describes when a differential form $\omega$ is the derivative of some other form $\nu$, i.e. when there exists a $\nu$ such that
@@ -104,43 +119,57 @@ The Poincar\'e-Lemma states that if a manifold $M$ can be parametrized by one op
 \begin{equation} d\omega = 0 \label{eq:closed}\end{equation}
 A differential form $\omega$ for which there exists a $\nu$ such that Equation \ref{eq:exact} holds is called \emph{exact}, while an $\omega$ fulfilling Equation \ref{eq:closed} is called \emph{closed}. The Poincar\'e Lemma is also true for the codifferential operator $\partial$. Under the same conditions as above a form is co-exact exactly if it is co-closed
 \[\exists \nu : \partial \nu = \omega\] \[\Leftrightarrow\]\[ \partial \omega = 0.\]
-This means that, for general manifolds at least locally, a form is the exterior derivative of another form, exactly if it is $d$-free. The same is true for the coderivative $\partial$. The Lemma is usually proven by construction; you can always construct a solution $\nu$ with $d\nu = \omega$ if $d\omega = 0$. 
+This means that, for general manifolds at least locally, a form is the exterior derivative of another form, exactly if it is $d$-free. The same is true for the coderivative $\partial$. 
+
+%The Lemma is usually proven by construction; you can always construct a solution $\nu$ with $d\nu = \omega$ if $d\omega = 0$. 
 
 The lemma also answers the question how unique a $\nu^{k}$ is, when you require $d\nu^{k} = \omega^{k+1}$. If $\nu_1$ and $\nu_2$ are solutions to Equation \ref{eq:exact}, then $d(\nu_1-\nu_2) = 0$. By the Pointcar\'e-Lemma the difference $ \nu_1 - \nu_2$ is again the exterior derivative of a $(k-1)$-form $\xi^{k-1}$, therefore 
 \[\nu_2 = \nu_1 +  d\xi^{k-1}.\]
 This means that given one special solution $\nu$ you get all solutions by adding the exterior derivative of arbitrary $k-1$ forms.
 
-\note{Image of curl free vector field that is only locally a gradient}
-\note{sketch what we know in a diagram}
-\subsubsection{Examples}
+%\note{Image of curl free vector field that is only locally a gradient}
+%\note{sketch what we know in a diagram}
+\subsubsection{Example}
 On any disc shaped manifold a $1$-form $\omega^1$ is the $d$ of a $0$-form exactly if $d\omega^1 = 0$. In vector calculus terms this means that a vectorfield is the gradient of a function exactly if the vector field is curl free. Or in 3 dimensions a vector field is the curl of another vector field exactly if it is divergence free.
 
-In the last section we saw that harmonic forms on compact manifolds are closed and co-closed. So \emph{locally} a harmonic $k$-form $\omega^k$ is as well the exterior derivative $d$ of a $(k-1)$-Form and the co-derivative of a $(k+1)$-form. \note{Sketch: $d\Omega^{k-1}$ $\cap$ $\partial \Omega^{k-1}$ and kernel $d$ $\cap$ kernel $\delta$.}
 
 \subsection{Hodge Decomposition}
-\note{reference [p372 geo of physics]}
-%The Hodge decomposition theorem explains that it is possible to treat the constraints $d\omega = c_{curl}$ and $\partial \omega = c_{div}$ we met in the problem statement in Section \ref{sec:vfproblemstatement} independently from each other.
+\label{sec:VF_hodgeDecomp}
 
 We have seen three kinds of differential forms: exact forms, co-exact forms and harmonic forms. 
 The Hodge decomposition theorem states that any $k$-form can be split in three orthogonal complements: a harmonic part $\gamma: \Delta \gamma = 0$, an exact part $d\alpha^{k-1}$ and a co-exact part $\partial \beta^{k+1}$:
-\begin{thm}(Hodge Decomposition)
+\begin{thm}(Hodge Decomposition)(p372 in \cite{FRANKEL11})
 On \emph{borderless, compact manifolds} $M$ any differential $k$-form can be expressed as
 \[\omega^k = d\alpha^{k-1} + \partial \beta^{k+1} + \gamma\]
 Exact forms, co-exact forms and harmonic forms are mutually orthogonal to each other:
 \[\langle d \alpha^{k-1}, \partial \beta^{k+1}\rangle = \langle d \alpha^{k-1}, \gamma\rangle = \langle \gamma, \partial \beta^{k+1}\rangle =0\]
 \end{thm}
 
-The idea  behind this result is that the spaces of exact and co-exact differential forms are orthogonal to each other and their orthogonal complement is the space of harmonic forms \note{Sketch!}. The actual proof is very complicated.
-We show that the Hodge decomposition works in Discrete Exterior Calculus, which is very nice. And in DEC the proof is very simple, because all involved spaces have finite dimensions. 
+The idea  behind this result is that the spaces of exact and co-exact differential forms are orthogonal to each other and their orthogonal complement is the space of harmonic forms (Figure \ref{fig:hodgeDecomp}). The actual proof is complicated and technical.
+We show that the Hodge decomposition works in Discrete Exterior Calculus. And in DEC the proof is very simple, because all involved spaces have finite dimensions. 
 
-Realising that these three spaces are orthogonal to each other simplifies the vectorfield design problem: vorticity constraints can be met independently of divergence constraints. %The part $d\alpha^{k-1}$ being $d$ free, fulfilling $dd\alpha = 0$, $\gamma$ being harmonic is also $d$ free, so constraints on the curl of the vector field $\omega$, i.e. $d\omega = c_{curl}$ are met by the component $\partial \beta$. Constraints for the divergence on the other hand have to be fulfilled by the component $d\alpha$.
+Realising that these three spaces are orthogonal to each other simplifies the vectorfield design problem: vorticity constraints can be met independently of divergence constraints.
 Also, if there exist harmonic $1$-forms on a manifold, then specifying only divergence and curl constraints does not uniquely determine a vectorfield, as there is no constraint on the harmonic component $\gamma$.
 
-\subsection{Discrete Hodge decomposition}
-In Discrete Exterior Calculus the discrete version of the Hodge Decomposition holds. This is great because it means that in practice, when using DEC, constraints on $d\omega$ and $\partial \omega$ can be enforced separately. As we have seen with conformal maps, when we enforce border constraints some DEC matrices have to be adapted. To be able to use the Hodge decomposition also when using adapted matrices, we formulate the discrete Hodge theorem generally. We state fundamental properties for the matrices $d$, $\star$ and $\partial$ that need to hold for the Hodge decomposition to hold. \note{img}
+The Hodge decomposition also generalized the Pointcar\'e lemma to arbitrary closed manifolds. The closedness of a form $d\omega = 0$ is not enough for the form to be exact, i.e. to be the exterior derivative of another form $d\nu = \omega$. But additionally the harmonic part of $\omega$ needs to be zero too. Or put differently:
+\[d \omega = 0\]
+\[\Leftrightarrow\]
+\[\omega = d \nu + h\]
+where $h$ is a harmonic form, see also Figure \ref{fig:hodgeDecomp}
 
-\note{calling it a theorem is a bit much}
-\begin{thm}(Discrete Hodge Decomposition) If the matrices $d_k$,$\partial_k$, $\star_k$ and the scalar product $\langle , \rangle_k$ on the space of discrete $k$-forms fulfil
+\begin{figure}%
+\begin{center}
+\includegraphics[height=5cm]{imgs/7_hodgethmSchema.eps}%	
+\end{center}
+\vspace{-0.5cm}
+\caption{By the Hodge decomposition theorem the space of $k$-forms on a closed manifold can be decomposed in the three spaces  of exact forms $d\Omega^{k-1}$, coexact forms $\partial\Omega^{k+1}$ and harmonic forms $Ker(\Delta_k)$. In general, closedness is not enough for a form to be exact, its harmonic component has to vanish too.}%
+\label{fig:hodgeDecomp}%
+\end{figure}
+
+\subsection{Discrete Hodge decomposition}
+In DEC the discrete version of the Hodge Decomposition holds. This  means that in practice, when using DEC, constraints on $d\omega$ and $\partial \omega$ can be enforced independently from each other. As we have seen with conformal maps, when border constraints are enforced, some DEC matrices have to be adapted. To be able to use the Hodge decomposition also when using adapted matrices, we formulate the discrete Hodge theorem generally. We state fundamental properties for the matrices $d$, $\star$ and $\partial$ that need to hold for the Hodge decomposition to hold.
+
+\begin{thm}(Discrete Hodge Decomposition) If the matrices $d_k$,$\partial_k$, $\star_k$ and the scalar product $\langle , \rangle_k$ on the space of discrete $k$-forms fulfill
 \begin{align}
 d_{k-1} d_{k} &= 0 \\
 \langle  d_k\discrete{v}^k,\discrete{w}^{k+1} \rangle_{k+1} &= \langle  \discrete{v}^k,\delta_{k+1}\discrete{w}^{k+1} \rangle_k \label{eq:adjoint}
@@ -172,13 +201,8 @@ Furthermore $(Img(d_{k-1}) \perp Img (\partial_{k+1}))^\perp = \left(Ker(d_k) \c
 
 \input{chapters/dimHarmonicSpace.tex}
 
-\subsection{Overall Picture}
-\note{...}
-
 \section{Application: Vector Field Design}
-\note{Do i need the Theory introducced above? Index Theorem to Appendix, I say, this is nearly stand alone and so short and nice...}
-
-\note{cite paper} By the Hodge decomposition theorem, constraints on the divergence of a vector field are independent of constraints on the curl of a vector field. We solve for a $1$-form $\discrete{w}^1$ with prescribed divergence and curl and additional directional constraints.
+By the Hodge decomposition theorem, constraints on the divergence of a vector field are independent of constraints on the curl of a vector field. We solve for a $1$-form $\discrete{w}^1$ with prescribed divergence and curl and additional directional constraints.
 First of all we note that in DEC the divergence of a discrete vector field $\partial \discrete{w}^1$ is a discrete $0$-form, therefore divergence constraints are given per vertex on a mesh. Rotational constraints are given by triangle, as the curl $d\discrete{w}^1$ is a discrete $2$-form. Finally directional constraints constrain specific values of the discrete $1$-form $\discrete{w}^1$ and therefore are given on selected edges.
 
 All the constraints can be compiled easily in one linear system:
@@ -192,7 +216,7 @@ s_v \\
 c_z
 \end{pmatrix} \label{eq:vfdesign1}
 \end{equation}
-where $Z$ is the identity matrix, constrained to the edges  affected by directional constraints (see subsection...), $r_t$ is the vector of target rotation values of defined by triangle, $s_v$ is the  target divergence values, defined by vertex and $c_z$ is the vector of constraints per edge, given by the directional constraints.
+where $Z$ is the identity matrix, constrained to the edges  affected by directional constraints, $r_t$ is the vector of target rotation values of defined by triangle, $s_v$ is the  target divergence values, defined by vertex and $c_z$ is the vector of constraints per edge, given by the directional constraints.
 
 The constraints $r_t$, $s_v$ and $c_z$ are provided by a user and are very likely to be contradictory. For example constraints on singularities as vortices given by the Hopf Index theorem are easily violated, if an impossible combination of singularities is prescribed. Or directional constraints might induce divergence or curl. Therefore the linear system is solved in a least square sense.
 
@@ -234,14 +258,14 @@ This linear system can be implemented directly and solved with any sparse solver
 Again note the elegance of DEC: the vector field design problem can be formulated directly in DEC and leads to a simple sparse linear system. But there are two points not yet answered: how to treat meshes with borders and how to gain a vectorfield on the mesh surface from a discrete $1$-form, which is only a set of values stored on edges.
 
 \subsection{1-Form to Vector Field}
+\label{sec:vf_1form2vf}
 Up to now we designed a discrete $1$-form $\discrete{w}^1$, without clarifying how the discrete 1-form can be used to generate a tangential vector field on the mesh. So given a discrete  1-form, i.e. a set of values defined per edge that represent values sampled as described in Section  \ref{subsec:samplingForms} how to generate a tangential vector field? In other words we want a discrete analogue to the continuous $\sharp$ operator from Section \ref{subsec:diffformsare}.
 
 The definition of sharp operators for discrete exterior calculus is not obvious and closely related to interpolation schemes. One approach is to interpolate the values of the discrete $1$-forms to define a continuous differential $1$-form on every triangle. The interpolated $1$-forms integrated along an edge $e$ has to lead to the value $\discrete{w}^1(e)$. Then the non-discrete sharp operator can be applied to the interpolated 1-form to get a vector at any position on the mesh.
-If you are interested only in vectors at vertex or dual vertex locations you can take a more direct approach, skipping the theoretical interpolation step.
 
-In \note{[Hirani]} it is argued that there are at least four different $\sharp$ operators that can be gained from any single interpolation scheme. Also discrete dual forms need to be interpolated differently than discrete primary forms, as they are defined on different simplices or cells. 
+In \cite{hirani03} it is argued that there are at least four different $\sharp$ operators that can be gained from any single interpolation scheme. Also discrete dual forms need to be interpolated differently than discrete primary forms, as they are defined on different simplices or cells. 
 
-The authors of the vector field design paper \note{VFDesing} propose to use so called Whitney forms or Whitney elements for the interpolation step. This leads to differentiable $1$-forms on every triangle, but with discontinuities on vertices and edges. We skip all details here and simply give the resulting $\sharp$ operator. For any triangle $t_{ijk}$ with vertices $i,j,k$ and edges $e_{ij}, e_{jk},e_{ki}$ the proposed vector at a point with barycentric coordinates $\alpha_i, \alpha_j, \alpha_k$ is
+The authors of the vector field design paper \cite{vField} propose to use so called Whitney forms or Whitney elements for the interpolation step. This leads to differentiable $1$-forms on every triangle, but with discontinuities on vertices and edges. We skip all details here and simply give the resulting $\sharp$ operator. For any triangle $t_{ijk}$ with vertices $i,j,k$ and edges $e_{ij}, e_{jk},e_{ki}$ the proposed vector at a point with barycentric coordinates $\alpha_i, \alpha_j, \alpha_k$ is
 \begin{align} u(\alpha_i, \alpha_j, \alpha_k) = \frac{1}{2area(t_{ijk})} ( &(\discrete{w}_{ki} \alpha_k - \discrete{w}_{ij} \alpha_j)e_{jk}^\perp ) + {}\nonumber\\
 &(\discrete{w}_{ij} \alpha_i - \discrete{w}_{jk} \alpha_k)e_{ki}^\perp + {}\nonumber\\ 
 &(\discrete{w}_{jk} \alpha_j - \discrete{w}_{ki} \alpha_i)e_{ij}^\perp
@@ -254,7 +278,16 @@ Note that in the context of fluid simulation in the next Chapter we will need to
 
 
 \subsection{Directional Constraints}
-The directional constraints $Z \discrete{w}^1 = c_z$ are provided by the user using strokes \note{img: example of s a stroke providing directions}. The simplest way to translate a stroke into $1$-form constraints is to capture the path of the mouse stroke and translate it to vectors that describe the direction of the mouse motion per triangle.
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height= 2cm]{imgs/7_mousestroke.eps}%	
+\end{center}
+\caption{Getting a directional constraint (blue) from the mouse stroke}%
+\label{fig:7_mouse}%
+\end{figure}
+
+The directional constraints $Z \discrete{w}^1 = c_z$ are provided by the user using strokes (Figure \ref{fig:7_mouse}). The simplest way to translate a stroke into $1$-form constraints is to capture the path of the mouse stroke and translate it to vectors that describe the direction of the mouse motion per triangle.
 A single vector $v$ on a triangle $t$ can then be interpreted as describing a constant vector field on the triangle. According to the sampling scheme described in Section \ref{subsec:samplingForms}, the target value for an edge $e$ of the triangle $t$ simply is the projection of $v$ on $e_t$:
 $$c_z = \langle v, (e.end - e.start) \rangle$$
 If an edge $e$ is part of two triangles with different vector valued constraints $v_1,v_2$, simply taking the value
@@ -266,32 +299,64 @@ For the magnitude of the directional constraints $v$ we propose two schemes. The
 The second one is to solve Equation \ref{eq:vfdesignLQ} once without any directional constraints to generate a first vector field $\nu_{pre}$ and then to scale the directional constraints to have the same length as the precomputed vector field:
 \begin{equation} \abs{v} = \abs{\nu_{pre}} \label{eq:vfconstraint2}\end{equation}
 
-Both constraint types have different properties. Specifying a constraint of the type in Equation \ref{eq:vfconstraint1} can introduce a lot of new divergence or influence the vector field in an unintuitive way \note{img: no border adaptation}. Especially if the constraint is drawn in an environment where the vector field nearly vanishes, the enforcement of the no divergence constraint might lead to a global change of the vectorfield flow \note{img}. On the other hand you can use the introduction of divergence to your advantage: you can directly draw sources or sinks or more complex singularities which then are enforced.
-
-Constraints of the type \ref{eq:vfconstraint2} are less aggressive; the impact on divergence is less pronounced. The constraint makes the designed vector field  follow the given stroke without affecting the global look of the vector field. But you can not use such a constraint to specify new singularities.
-
 \subsection{Results}
-...
 
-\subsection{Border Constraints}
+Both directional constraint types have different properties. Specifying a constraint of the type in Equation \ref{eq:vfconstraint1} can introduce new divergence or influence the vector field globally in an unintuitive way. Especially if the constraint is drawn in an environment where the vector field nearly vanishes, the enforcement of the no divergence constraint might lead to a global change of the vectorfield flow, see Figure \ref{fig:vf_dirconstr}. On the other hand you can use the introduction of divergence to your advantage: you can directly draw sources or sinks or more complex singularities which then are enforced \ref{fig:7_paintedSing}.
+
 \begin{figure}%
 \begin{center}
-\includegraphics[height=3cm]{imgs/7_vfborderconstraint.eps}%	
+\includegraphics[width=0.75\columnwidth]{imgs/7_cube_directionals.eps}%	
 \end{center}
-\caption{A discrete dual 1-form $\star_1\discrete{w}$ stores the flux through the edges (blue arrows) on the dual edges. Inner vertices have a full 1-neighborhood and summing up the dual edges around a vertex is a correct estimation of divergence. Border vertices do not have a full neighborhood, summing up the dual edges around a vertex neglect any flow through the mesh boundary.}%
-\label{fig:vf_borderconstr}%
+\vspace{-15pt}
+\caption{(a) On the front of a cube a source and a sink have been set. On the back of the cube a directional constraint is given by a stroke but is not yet enforced. (b) The directional constraint is enforced following Equation \ref{eq:vfconstraint1}. Because the length of the constraint is not well chosen the field is affected globally.
+(c) The directional constraint is enforced using precalculated vector lengths following Equation \ref{eq:vfconstraint2}. This introduces no new divergence and the front of the cube stays unaffected. }%
+\label{fig:vf_dirconstr}%
 \end{figure}
 
-Meshes with boundaries are not treated correctly or intuitively without further adaptations \note{image}. The problem is that the discrete zero divergence condition
+
+Constraints described by Equation \ref{eq:vfconstraint2} are less aggressive; the impact on divergence is less pronounced. The constraint makes the designed vector field  follow the given stroke without affecting the global look of the vector field. But you can not use such a constraint to specify new singularities.
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/7_paintedsingularities.eps}%
+\caption{The constraint from Equation \ref{fig:7_paintedSing} can be used to induce singularities, e.g. vortices (a), saddles (b) or spirals (c)}%
+\label{fig:7_paintedSing}%
+\end{figure}
+
+\subsection{Border Constraints}
+
+
+Meshes with boundaries are not treated correctly or intuitively without further adaptations, see Figure \ref{fig:7_adaptedvsUnadapted}. The problem is that the discrete zero divergence condition
 \[\partial \discrete{w}^1 = 0\]
 is not enforced correctly on boundaries. The problem is that border vertices do not have a full $1$-neighborhood of faces. 
 
-Let's look at the discrete co-derivative $\partial_1 = \star^{-1}_0 d^{dual} \star_1$. The $\star_1$ applied to the discrete $1$-form $\discrete{w}^1$ leads to a dual $1$-form; the values associated to the dual edges represent the flow of the vector field going through the dual edge. The dual discrete derivative $d^{dual}$ sums up the values on the dual edges along the border of dual faces. At interior vertices the value $d^{dual} \star_1 \discrete{w}^1$ describes the overall flow in or out of the associated dual faces and is a correct approximation of divergence. But dual faces of border vertices are not closed and no flow through the boundary is considered (see Figure \ref{fig:vf_borderconstr}. Therefore, $\partial^{discrete} \discrete{w}^1 = 0$ implicitly enforces that there is no flow through the boundary of meshes, and that the designed vector field is parallel to borders \note{img}.
+Let's look at the discrete co-derivative $\partial_1 = \star^{-1}_0 d^{dual} \star_1$. The $\star_1$ applied to the discrete $1$-form $\discrete{w}^1$ leads to a dual $1$-form; the values associated to the dual edges represent the flow of the vector field going through the dual edge. The dual discrete derivative $d^{dual}$ sums up the values on the dual edges along the border of dual faces. At interior vertices the value $d^{dual} \star_1 \discrete{w}^1$ describes the overall flow in or out of the associated dual faces and is a correct approximation of divergence. But dual faces of border vertices are not closed and no flow through the boundary is considered (see Figure \ref{fig:vf_borderconstr}). Therefore, $\partial^{discrete} \discrete{w}^1 = 0$ implicitly enforces that there is no flow through the boundary of meshes, and that the designed vector field is parallel to borders.
 
 In order to compute the total divergence on a dual face of a border vertex we need to know the flow through primary border edges. But this is a problem. The value stored on primary edges is the flow along the edge. Put differently we would need to know the dual form on primary vertices. %\note{It might be an interesting approach to store the dual and primal values on all simplices. this would fascilitate border constraint treatment and might allow non voronoi duality: from primary and dual value it might be possible to make good guesses of primary and dual value on non orthogonal simplices.}
 
-The authors of \note{Vfdesign} propose to use the zero curl condition $d\discrete{w}^1 = 0$ together with the Whitney based interpolation scheme to compute the flow through a primary border edge. The curl freeness on a triangle $t_{ijk}$ means $\discrete{w}^1_{ij} = - \discrete{w}^1_{jk} - \discrete{w}^1_{ki}$ and using the interpolation scheme from Equation \ref{eq:vfSharp} they compute the flow $f_{ij}$ through the edge $e_{ij}$
+The authors of \cite{vField} propose to use the zero curl condition $d\discrete{w}^1 = 0$ together with the Whitney based interpolation scheme to compute the flow through a primary border edge. The curl freeness on a triangle $t_{ijk}$ means $\discrete{w}^1_{ij} = - \discrete{w}^1_{jk} - \discrete{w}^1_{ki}$ and using the interpolation scheme from Equation \ref{eq:vfSharp} they compute the flow $f_{ij}$ through the edge $e_{ij}$
 \begin{equation}f_{ij} = \int_{e_{ij}}\langle u(t, 1-t, 0), \frac{1}{\abs{e_{ij}}}e_{ij}^{T}\rangle = \discrete{w}^1_{jk} \cot(\theta^i) - \discrete{w}^1_{ki} \cot(\theta^j)\label{eq:vfFluxBorder}\end{equation}
+
+
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/7_borderunadapted.eps}%
+\caption{A square with border. Without further adaptations of the DEC matrices the vectorfield is implicitely enforced to be tangential to the border (a). The adapted matrices allow the vector field to behave freely on the boundary (b). }%
+\label{fig:7_adaptedvsUnadapted}%
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[height=2.5cm]{imgs/7_vfborderconstraint.eps}%	
+\end{center}
+\caption{A discrete dual 1-form $\star_1\discrete{w}$ stores the flux through the edges (blue arrows) on the dual edges. Inner vertices have a full 1-neighborhood (a) and summing up the dual edges around a vertex is a correct estimation of divergence. Border vertices do not have a full neighborhood (b), summing up the dual edges around a vertex neglect any flow through the mesh boundary. Therefore $\partial_1$ needs to be adapted to take the estimated flux over the boundary into account as well (c).}%
+\label{fig:vf_borderconstr}%
+\end{figure}
+
+
+The estimated flow through the border edges can be used to control the behaviour of the vector field on the boundaries. When computing $\delta_1$, we can adapt the matrix $d_1^{dual} \star_1$ to use the estimated flux through the boundary edges as well (see Figure \ref{fig:vf_borderconstr}).
+
+
 
 \begin{figure}
 \begin{center}
@@ -301,9 +366,7 @@ The authors of \note{Vfdesign} propose to use the zero curl condition $d\discret
 \label{fig:8_3_borderWeights}
 \end{figure}
 
-An alternative derivation of these weights without the use of any interpolation is given in Figure \ref{fig:8_3_borderWeights}.
 
-The estimated flow through the border edges can be used to control the behaviour of the vector field on the boundaries. When computing $\delta_1$, we can adapt the matrix $d_1^{dual} \star_1$ to use the estimated flux through the boundary edges as well. \note{img} 
 \subsubsection{Implementation}
 All that needs to be changed is that the matrix $d_1^{dual} \star_1$ needs to be adapted on all rows corresponding to boundary vertices to take the estimated boundary flux into account. Supposing the edges $e_{ij}$, $e_{jk}$ are two boundary edges at the vertex $v_j$, then
 \[(d_1^{dual} \star_1)_{adapted} (v_j) := d_1^{dual} \star_1(v_j) + 0.5 f_{ij} + 0.5 f_{jk}\]
@@ -325,7 +388,12 @@ The second matrix is a square matrix of size $(\# edges \times \# edges)$ that c
 
 %\note{could simply use the equality $e_{1}^\perp = cot(\theta_2)e_2 + cot \theta_3 e_3$}
 
-\subsubsection{ Pros and Cons of this approach} In the vector field design setting using the adapted matrix works very well \note{imgs}. But to generally use the adapted $(d_1^{dual} \star_1)_{adapted}$ on meshes with borders might not be a good idea. First of all the constraint works with the assumption that there is no curl on boundary triangles. Secondly  with the adapted matrix, the property $\partial^{dual}_1\partial^{dual}_2 = 0$ does not hold any more and the adjointness of $d_0$ and $\delta_1$ also fails. And with it the discrete Hodge theorem. Not by much, but still. \note{For the fluid sim some quality measures of the solution of harmonic functions with border constraints using the adapted matrix have been computed and a better approach (for the Fluid Sim setting only) is introduced}
-From a theoretical standpoint where we want the DEC operators to have properties similar to the properties of the continuous operators the loss of adjointness and $\partial^{dual}_1\partial^{dual}_2 = 0$ is bad.
+\subsubsection{ Pros and Cons of this approach} In the vector field design setting using the adapted matrix works very well. But to generally use the adapted $(d_1^{dual} \star_1)_{adapted}$ on meshes with borders might not be a good idea. First of all the constraint works with the assumption that there is no curl on boundary triangles. Secondly  with the adapted matrix, the property $\partial^{dual}_1\partial^{dual}_2 = 0$ does not hold any more and the adjointness of $d_0$ and $\delta_1$ also fails. And with it the discrete Hodge theorem. 
+From a theoretical standpoint where we want the DEC operators to have properties similar to the properties of the continuous operators the loss of adjointness and $\partial^{dual}_1\partial^{dual}_2 = 0$ is bad. 
+
+On the other hand it is natural for the Hodge decomposition theorem to fail on meshes with boundaries- only if the forms fulfill additional boundary constraints the Hodge decomposition holds. That without further adaptation  of the DEC matrices forms tangential to the boundary appear is interesting, as it mirrors the smooth setting, where the Hodge decomposition can be shown to hold on arbitrary manifolds for forms tangential to the border \cite{FRANKEL11}. 
+
+Finding good adaptations for DEC matrices to enforce boundary conditions seems to be highly application dependent.
+In the next Chapter where a fluid simulation using DEC is presented there will also be the need to solve for a harmonic $1$-form with given boundary constraints. But instead of using the approach described here, the tangentiality of the $1$-form searched is used and matrices are derived that are consistent with the discrete Hodge decomposition theorem, in order to achieve higher precision.
 
 Nevertheless, in this vector design setting, or in any setting where the emphasis is on visually pleasant results rather than on optimal precision, the adapted $d^{dual}$ operator is very suitable.

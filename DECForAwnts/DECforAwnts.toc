@@ -1,150 +1,148 @@
 \select@language {english}
-\contentsline {chapter}{\numberline {1}Introduction}{7}
-\contentsline {section}{\numberline {1.1}Goal of this Thesis}{7}
-\contentsline {section}{\numberline {1.2}A Glimpse of DEC}{7}
-\contentsline {section}{\numberline {1.3}A Tour to this Thesis}{8}
-\contentsline {section}{\numberline {1.4}What this thesis is and what it is not}{8}
-\contentsline {chapter}{\numberline {2}Manifolds and Meshes}{9}
-\contentsline {section}{\numberline {2.1}Manifolds}{10}
-\contentsline {subsection}{\numberline {2.1.1}Describing Manifolds}{10}
-\contentsline {subsubsection}{Local Coordinates}{11}
-\contentsline {subsection}{\numberline {2.1.2}Tangential Spaces}{12}
-\contentsline {subsection}{\numberline {2.1.3}Orientations}{13}
-\contentsline {subsection}{\numberline {2.1.4}The Border Operator}{14}
-\contentsline {subsection}{\numberline {2.1.5}Differential Calculus on Manifolds}{16}
-\contentsline {subsubsection}{Total Derivative}{16}
-\contentsline {subsection}{\numberline {2.1.6}Summary}{18}
-\contentsline {section}{\numberline {2.2}Discrete Manifolds}{19}
-\contentsline {subsection}{\numberline {2.2.1}Simplices and Simplicial Complexes}{19}
-\contentsline {subsection}{\numberline {2.2.2}Orientations}{20}
-\contentsline {subsection}{\numberline {2.2.3}The Border Operator}{22}
-\contentsline {subsubsection}{The Border Operator as a Matrix}{22}
-\contentsline {subsection}{\numberline {2.2.4}Oriented Discrete Manifold}{24}
-\contentsline {subsection}{\numberline {2.2.5}Summary}{24}
-\contentsline {section}{\numberline {2.3}Implementation Notes}{25}
-\contentsline {subsection}{\numberline {2.3.1}A word on Sparse Matrices}{25}
-\contentsline {subsection}{\numberline {2.3.2}Implementing Simplicial 2-Complexes}{25}
-\contentsline {subsection}{\numberline {2.3.3}Implementing Simplicial k-Complexes }{26}
-\contentsline {subsubsection}{Setting Up a k-Complex}{27}
-\contentsline {subsection}{\numberline {2.3.4}Simple Example Applications}{28}
-\contentsline {subsubsection}{Orientation Test}{28}
-\contentsline {subsubsection}{Check if a 2-Complex is a Discrete Manifold}{28}
-\contentsline {subsubsection}{Find Borders}{29}
-\contentsline {chapter}{\numberline {3}Differential Forms}{31}
-\contentsline {section}{\numberline {3.1}Smooth Differential Forms}{31}
-\contentsline {subsection}{\numberline {3.1.1}The perfect thing to integrate}{32}
-\contentsline {subsection}{\numberline {3.1.2}Forms}{34}
-\contentsline {subsubsection}{Definition}{34}
-\contentsline {subsubsection}{Basis and Dimension of $\Lambda ^k(\mathbb R^l)$}{34}
-\contentsline {subsection}{\numberline {3.1.3}The Wedge Product}{36}
-\contentsline {subsubsection}{Definition of the Wedge Product}{36}
-\contentsline {subsubsection}{A Basis with the Wedge Product}{37}
-\contentsline {subsection}{\numberline {3.1.4}Differential Forms}{37}
-\contentsline {subsection}{\numberline {3.1.5}Interpretation of Differential Forms in $\mathbb {R}^3$}{38}
-\contentsline {subsubsection}{Differential 0-Forms}{38}
-\contentsline {subsection}{\numberline {3.1.6}Integration of Forms}{40}
-\contentsline {subsection}{\numberline {3.1.7}Pull-Backs}{40}
-\contentsline {section}{\numberline {3.2}Discrete Differential Forms}{41}
-\contentsline {subsection}{\numberline {3.2.1}Sampling Forms}{41}
-\contentsline {subsubsection}{Sampling 0-Forms}{42}
-\contentsline {subsubsection}{Sampling 1-Forms}{42}
-\contentsline {subsubsection}{Sampling 2-Forms}{43}
-\contentsline {subsection}{\numberline {3.2.2}Integration of Discrete Forms}{44}
-\contentsline {chapter}{\numberline {4}Exterior Calculus \& Discrete Exterior Calculus}{45}
-\contentsline {section}{\numberline {4.1}The Exterior Derivative $d$}{45}
-\contentsline {subsection}{\numberline {4.1.1}Definition}{46}
-\contentsline {subsection}{\numberline {4.1.2}Properties}{46}
-\contentsline {subsection}{\numberline {4.1.3}The Exterior Derivative in Euclidean Coordinates}{46}
-\contentsline {subsubsection}{0-Forms}{47}
-\contentsline {subsubsection}{1-Forms}{47}
-\contentsline {subsubsection}{$2$-Forms on $\mathbb R^3$}{48}
-\contentsline {section}{\numberline {4.2}Stokes Theorem}{48}
-\contentsline {subsection}{\numberline {4.2.1}Proof Sketch}{49}
-\contentsline {subsubsection}{Proof (sketch)}{50}
-\contentsline {subsection}{\numberline {4.2.2}Geometry of $d$}{51}
-\contentsline {subsection}{\numberline {4.2.3}The Geometry of Classical Differential Operators}{52}
-\contentsline {section}{\numberline {4.3}The Hodge Star}{52}
-\contentsline {subsection}{\numberline {4.3.1}Intuition}{53}
-\contentsline {subsection}{\numberline {4.3.2}Dual Forms}{54}
-\contentsline {subsubsection}{Definition of $\star $}{54}
-\contentsline {subsubsection}{Understanding $\star $}{55}
-\contentsline {subsection}{\numberline {4.3.3}Realization of $\star $ in Standard Calculus}{56}
-\contentsline {subsubsection}{0-forms and volume forms}{56}
-\contentsline {subsubsection}{1-forms and 2-forms in $\mathbb R^3$}{57}
-\contentsline {subsubsection}{1-forms in $\mathbb R^2$}{57}
-\contentsline {subsubsection}{The dual of the dual k-form}{57}
-\contentsline {section}{\numberline {4.4}Exterior Calculus}{58}
-\contentsline {subsection}{\numberline {4.4.1}The Coderivative}{59}
-\contentsline {section}{\numberline {4.5}Discrete Exterior Calculus}{60}
-\contentsline {subsection}{\numberline {4.5.1}The Discrete Exterior Derivative}{60}
-\contentsline {subsubsection}{Examples}{60}
-\contentsline {subsubsection}{Correctness}{61}
-\contentsline {subsection}{\numberline {4.5.2}Dual Mesh}{62}
-\contentsline {subsubsection}{Border Operator and Orientation of the Dual Mesh}{62}
-\contentsline {subsection}{\numberline {4.5.3}Discrete Dual Forms}{62}
-\contentsline {subsection}{\numberline {4.5.4}The Discrete Hodge Star}{64}
-\contentsline {subsubsection}{Correctness}{65}
-\contentsline {subsubsection}{Drawbacks of Voronoi Duality}{65}
-\contentsline {subsection}{\numberline {4.5.5}The Discrete Coderivative}{65}
-\contentsline {subsubsection}{Discrete Scalarproduct and Adjointness}{66}
-\contentsline {subsection}{\numberline {4.5.6}This is Discrete Exterior Calculus}{67}
-\contentsline {chapter}{\numberline {5}Application: Mesh Parametrization}{69}
-\contentsline {section}{\numberline {5.1}Problem Statement: Conformal Maps}{69}
-\contentsline {subsubsection}{Conformal parametrization}{70}
-\contentsline {section}{\numberline {5.2}Conformal Embedding with DEC}{71}
-\contentsline {subsection}{\numberline {5.2.1}Graph Theory}{72}
-\contentsline {subsection}{\numberline {5.2.2}Fixed Border Constraints}{74}
-\contentsline {subsubsection}{Neumann Border Constraints}{76}
-\contentsline {subsection}{\numberline {5.2.3}Multiple Borders}{76}
-\contentsline {subsubsection}{Exterior Border}{76}
-\contentsline {subsubsection}{Interior Borders}{77}
-\contentsline {subsubsection}{Overall linear equation}{77}
-\contentsline {subsection}{\numberline {5.2.4}Discussion}{78}
-\contentsline {chapter}{\numberline {6}Application: Vectorfield Design and the general Laplacian}{79}
+\contentsline {chapter}{\numberline {1}Introduction}{3}
+\contentsline {section}{\numberline {1.1}Goal of this Thesis}{3}
+\contentsline {section}{\numberline {1.2}A Glimpse of DEC}{3}
+\contentsline {section}{\numberline {1.3}Structure of this Thesis}{5}
+\contentsline {section}{\numberline {1.4}Disclaimer}{6}
+\contentsline {chapter}{\numberline {2}Manifolds and Meshes}{7}
+\contentsline {section}{\numberline {2.1}Manifolds}{8}
+\contentsline {subsection}{\numberline {2.1.1}Describing Manifolds}{8}
+\contentsline {subsubsection}{Local Coordinates}{9}
+\contentsline {subsection}{\numberline {2.1.2}Tangential Spaces}{10}
+\contentsline {subsection}{\numberline {2.1.3}Orientations}{11}
+\contentsline {subsection}{\numberline {2.1.4}The Border Operator}{12}
+\contentsline {subsection}{\numberline {2.1.5}Differential Calculus on Manifolds}{14}
+\contentsline {subsubsection}{Total Derivative}{14}
+\contentsline {subsection}{\numberline {2.1.6}Summary}{16}
+\contentsline {section}{\numberline {2.2}Discrete Manifolds}{17}
+\contentsline {subsection}{\numberline {2.2.1}Simplices and Simplicial Complexes}{17}
+\contentsline {subsection}{\numberline {2.2.2}Orientations}{18}
+\contentsline {subsection}{\numberline {2.2.3}The Border Operator}{20}
+\contentsline {subsubsection}{The Border Operator as a Matrix}{20}
+\contentsline {subsection}{\numberline {2.2.4}Oriented Discrete Manifold}{22}
+\contentsline {subsection}{\numberline {2.2.5}Summary}{22}
+\contentsline {section}{\numberline {2.3}Implementation Notes}{23}
+\contentsline {subsection}{\numberline {2.3.1}A word on Sparse Matrices}{23}
+\contentsline {subsection}{\numberline {2.3.2}Implementing Simplicial 2-Complexes}{23}
+\contentsline {subsection}{\numberline {2.3.3}Implementing Simplicial k-Complexes }{24}
+\contentsline {subsubsection}{Setting Up a k-Complex}{25}
+\contentsline {subsubsection}{Reordering tuples: }{25}
+\contentsline {subsubsection}{Setting up incidence matrices:}{26}
+\contentsline {subsection}{\numberline {2.3.4}Simple Example Applications}{26}
+\contentsline {subsubsection}{Orientation Test}{26}
+\contentsline {subsubsection}{Check if a 2-Complex is a Discrete Manifold}{27}
+\contentsline {subsubsection}{Finding Borders}{27}
+\contentsline {chapter}{\numberline {3}Differential Forms}{29}
+\contentsline {section}{\numberline {3.1}Smooth Differential Forms}{29}
+\contentsline {subsection}{\numberline {3.1.1}The perfect thing to integrate}{30}
+\contentsline {subsection}{\numberline {3.1.2}Forms}{32}
+\contentsline {subsubsection}{Definition}{32}
+\contentsline {subsubsection}{Basis and Dimension of $\Lambda ^k(\mathbb R^l)$}{32}
+\contentsline {subsection}{\numberline {3.1.3}The Wedge Product}{34}
+\contentsline {subsubsection}{Definition of the Wedge Product}{34}
+\contentsline {subsubsection}{A Basis with the Wedge Product}{35}
+\contentsline {subsection}{\numberline {3.1.4}Differential Forms}{35}
+\contentsline {subsection}{\numberline {3.1.5}Interpretation of Differential Forms in $\mathbb {R}^3$}{36}
+\contentsline {subsubsection}{Differential 0-Forms}{36}
+\contentsline {subsection}{\numberline {3.1.6}Integration of Forms}{38}
+\contentsline {subsection}{\numberline {3.1.7}Pull-Backs}{38}
+\contentsline {section}{\numberline {3.2}Discrete Differential Forms}{39}
+\contentsline {subsection}{\numberline {3.2.1}Sampling Forms}{39}
+\contentsline {subsubsection}{Sampling 0-Forms}{40}
+\contentsline {subsubsection}{Sampling 1-Forms}{40}
+\contentsline {subsubsection}{Sampling 2-Forms}{41}
+\contentsline {subsection}{\numberline {3.2.2}Integration of Discrete Forms}{42}
+\contentsline {chapter}{\numberline {4}Exterior Calculus \& Discrete Exterior Calculus}{43}
+\contentsline {section}{\numberline {4.1}The Exterior Derivative $d$}{43}
+\contentsline {subsection}{\numberline {4.1.1}Definition}{44}
+\contentsline {subsection}{\numberline {4.1.2}Properties}{44}
+\contentsline {subsection}{\numberline {4.1.3}The Exterior Derivative in Euclidean Coordinates}{45}
+\contentsline {subsubsection}{0-Forms}{45}
+\contentsline {subsubsection}{1-Forms}{45}
+\contentsline {subsubsection}{$2$-Forms on $\mathbb R^3$}{46}
+\contentsline {section}{\numberline {4.2}Stokes Theorem}{46}
+\contentsline {subsection}{\numberline {4.2.1}Proof Sketch}{47}
+\contentsline {subsubsection}{Proof (sketch)}{48}
+\contentsline {subsection}{\numberline {4.2.2}Geometry of $d$}{49}
+\contentsline {subsection}{\numberline {4.2.3}The Geometry of Classical Differential Operators}{50}
+\contentsline {section}{\numberline {4.3}The Hodge Star}{51}
+\contentsline {subsection}{\numberline {4.3.1}Intuition}{51}
+\contentsline {subsection}{\numberline {4.3.2}Dual Forms}{52}
+\contentsline {subsubsection}{Definition of $\star $}{52}
+\contentsline {subsubsection}{Understanding $\star $}{53}
+\contentsline {subsection}{\numberline {4.3.3}Realization of $\star $ in Standard Calculus}{54}
+\contentsline {subsubsection}{0-forms and volume forms}{54}
+\contentsline {subsubsection}{1-forms and 2-forms in $\mathbb R^3$}{55}
+\contentsline {subsubsection}{1-forms in $\mathbb R^2$}{55}
+\contentsline {subsubsection}{The dual of the dual k-form}{55}
+\contentsline {section}{\numberline {4.4}Exterior Calculus}{56}
+\contentsline {subsection}{\numberline {4.4.1}The Coderivative}{57}
+\contentsline {section}{\numberline {4.5}Discrete Exterior Calculus}{58}
+\contentsline {subsection}{\numberline {4.5.1}The Discrete Exterior Derivative}{58}
+\contentsline {subsubsection}{Examples}{58}
+\contentsline {subsubsection}{Correctness}{59}
+\contentsline {subsection}{\numberline {4.5.2}Dual Mesh}{60}
+\contentsline {subsubsection}{Border Operator and Orientation of the Dual Mesh}{60}
+\contentsline {subsection}{\numberline {4.5.3}Discrete Dual Forms}{60}
+\contentsline {subsection}{\numberline {4.5.4}The Discrete Hodge Star}{62}
+\contentsline {subsubsection}{Correctness}{63}
+\contentsline {subsubsection}{Drawbacks of Voronoi Duality}{63}
+\contentsline {subsection}{\numberline {4.5.5}The Discrete Coderivative}{63}
+\contentsline {subsubsection}{Discrete Scalarproduct and Adjointness}{64}
+\contentsline {subsection}{\numberline {4.5.6}This is Discrete Exterior Calculus}{65}
+\contentsline {chapter}{\numberline {5}Conformal Mesh Parametrization}{67}
+\contentsline {section}{\numberline {5.1}Problem Statement}{67}
+\contentsline {subsubsection}{Conformal parametrization}{68}
+\contentsline {section}{\numberline {5.2}Conformal Embedding with DEC}{69}
+\contentsline {subsection}{\numberline {5.2.1}Graph Theory}{70}
+\contentsline {subsection}{\numberline {5.2.2}Fixed Border Constraints}{72}
+\contentsline {subsection}{\numberline {5.2.3}Multiple Borders}{74}
+\contentsline {subsubsection}{Exterior Border}{74}
+\contentsline {subsubsection}{Interior Borders}{74}
+\contentsline {subsubsection}{Overall linear equation}{75}
+\contentsline {subsection}{\numberline {5.2.4}Results}{76}
+\contentsline {chapter}{\numberline {6}Vectorfield Design and the general Laplacian}{79}
 \contentsline {section}{\numberline {6.1}Problem Statement}{80}
-\contentsline {section}{\numberline {6.2}Theoretical Background}{80}
-\contentsline {subsection}{\numberline {6.2.1}Hopf Index Theorem}{80}
-\contentsline {subsection}{\numberline {6.2.2}General Laplacian}{82}
-\contentsline {subsection}{\numberline {6.2.3}Curl- and Divergence-Freeness}{83}
-\contentsline {subsection}{\numberline {6.2.4}Poincar\'e-Lemma}{83}
-\contentsline {subsubsection}{Examples}{84}
-\contentsline {subsection}{\numberline {6.2.5}Hodge Decomposition}{84}
-\contentsline {subsection}{\numberline {6.2.6}Discrete Hodge decomposition}{85}
-\contentsline {subsection}{\numberline {6.2.7}Dimension of Harmonic spaces }{86}
-\contentsline {subsection}{\numberline {6.2.8}Overall Picture}{87}
-\contentsline {section}{\numberline {6.3}Application: Vector Field Design}{87}
-\contentsline {subsection}{\numberline {6.3.1}1-Form to Vector Field}{88}
-\contentsline {subsection}{\numberline {6.3.2}Directional Constraints}{89}
-\contentsline {subsection}{\numberline {6.3.3}Results}{90}
-\contentsline {subsection}{\numberline {6.3.4}Border Constraints}{90}
-\contentsline {subsubsection}{Implementation}{91}
-\contentsline {subsubsection}{ Pros and Cons of this approach}{92}
-\contentsline {chapter}{\numberline {7}A Fluid Simulation with DEC}{95}
-\contentsline {section}{\numberline {7.1}Continuous Problem Statement}{95}
-\contentsline {subsection}{\numberline {7.1.1}Navier Stokes}{95}
-\contentsline {subsubsection}{Navier Stokes for Vorticities}{97}
-\contentsline {subsubsection}{Stirring}{97}
-\contentsline {subsection}{\numberline {7.1.2}A numerical integration scheme}{98}
-\contentsline {subsection}{\numberline {7.1.3}From Vorticities to Velocities}{98}
-\contentsline {section}{\numberline {7.2}Implementation}{100}
-\contentsline {subsection}{\numberline {7.2.1}Who is who}{100}
-\contentsline {subsection}{\numberline {7.2.2}Discrete Equations}{100}
-\contentsline {subsection}{\numberline {7.2.3}Interpolation and Pathtracing}{102}
-\contentsline {subsubsection}{A continuous vector field on the mesh}{102}
-\contentsline {subsubsection}{Pathtracing on a mesh}{103}
-\contentsline {subsubsection}{Backtracing Vorticities}{103}
-\contentsline {section}{\numberline {7.3}The harmonic component}{103}
-\contentsline {subsection}{\numberline {7.3.1}Fluid simulation on a sphere}{103}
-\contentsline {subsection}{\numberline {7.3.2}Flat Bordered Meshes}{103}
-\contentsline {section}{\numberline {7.4}?The complete algorithm?}{105}
-\contentsline {section}{\numberline {7.5}Influence of Mesh choice and parameter choice}{106}
-\contentsline {chapter}{\numberline {8}Further Literature}{107}
-\contentsline {subsection}{\numberline {8.0.1}?? Alternative $\star _0$ matrices ??}{107}
-\contentsline {subsubsection}{Mean value weights}{107}
-\contentsline {subsubsection}{Uniform weights}{107}
-\contentsline {subsubsection}{Alternative $\star _k$ matrices}{107}
-\contentsline {subsection}{\numberline {.0.2}Laplacian II}{108}
-\contentsline {chapter}{\numberline {A}The integral of differential forms}{109}
-\contentsline {subsubsection}{Example}{109}
-\contentsline {chapter}{\numberline {B}Primal and Dual Discrete Border Operator}{111}
-\contentsline {chapter}{\hbox to\@tempdima {.\hfil }Bibliography}{112}
+\contentsline {section}{\numberline {6.2}The Hopf Index Theorem}{80}
+\contentsline {section}{\numberline {6.3}Harmonic, Closed and Coclosed Forms}{82}
+\contentsline {subsection}{\numberline {6.3.1}General Laplacian}{82}
+\contentsline {subsection}{\numberline {6.3.2}Curl- and Divergence-Freeness}{83}
+\contentsline {subsection}{\numberline {6.3.3}Poincar\'e-Lemma}{83}
+\contentsline {subsubsection}{Example}{84}
+\contentsline {subsection}{\numberline {6.3.4}Hodge Decomposition}{84}
+\contentsline {subsection}{\numberline {6.3.5}Discrete Hodge decomposition}{85}
+\contentsline {subsection}{\numberline {6.3.6}Dimension of Harmonic spaces }{86}
+\contentsline {section}{\numberline {6.4}Application: Vector Field Design}{87}
+\contentsline {subsection}{\numberline {6.4.1}1-Form to Vector Field}{89}
+\contentsline {subsection}{\numberline {6.4.2}Directional Constraints}{90}
+\contentsline {subsection}{\numberline {6.4.3}Results}{90}
+\contentsline {subsection}{\numberline {6.4.4}Border Constraints}{92}
+\contentsline {subsubsection}{Implementation}{93}
+\contentsline {subsubsection}{ Pros and Cons of this approach}{95}
+\contentsline {chapter}{\numberline {7}A Fluid Simulation with DEC}{97}
+\contentsline {section}{\numberline {7.1}Problem Statement}{97}
+\contentsline {subsection}{\numberline {7.1.1}Navier Stokes}{98}
+\contentsline {subsubsection}{Navier Stokes for Vorticities}{99}
+\contentsline {subsubsection}{Stirring}{100}
+\contentsline {subsection}{\numberline {7.1.2}A numerical integration scheme}{100}
+\contentsline {subsection}{\numberline {7.1.3}From Vorticities to Velocities}{101}
+\contentsline {section}{\numberline {7.2}Implementation}{103}
+\contentsline {subsection}{\numberline {7.2.1}Sampling Scheme}{103}
+\contentsline {subsection}{\numberline {7.2.2}Algorithm Overview}{104}
+\contentsline {subsection}{\numberline {7.2.3}Interpolation and Pathtracing}{105}
+\contentsline {subsubsection}{A continuous vector field on the mesh}{105}
+\contentsline {subsubsection}{Pathtracing on a mesh}{107}
+\contentsline {subsubsection}{Backtracing Vorticities}{107}
+\contentsline {subsection}{\numberline {7.2.4}Additional forces and diffusion}{108}
+\contentsline {subsection}{\numberline {7.2.5}The Harmonic Component}{108}
+\contentsline {subsubsection}{Harmonic Forms and Cycles}{109}
+\contentsline {subsubsection}{Computing the Harmonic Component on Flat Bordered Meshes}{110}
+\contentsline {subsection}{\numberline {7.2.6}Recovering $d\textbf {a}$}{112}
+\contentsline {section}{\numberline {7.3}Results}{113}
+\contentsline {chapter}{\numberline {8}Discussion and Further Literature}{117}
+\contentsline {subsubsection}{Where to go from here}{117}
+\contentsline {chapter}{\numberline {A}Further Details}{119}
+\contentsline {section}{\numberline {A.1}The Well-Definedness of the Integral for Differential Forms}{119}
+\contentsline {subsubsection}{Example}{119}
+\contentsline {section}{\numberline {A.2}The Dual Discrete Border Operator}{120}
+\contentsline {chapter}{\hbox to\@tempdima {.\hfil }Bibliography}{121}

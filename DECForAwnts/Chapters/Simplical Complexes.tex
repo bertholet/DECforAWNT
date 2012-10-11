@@ -45,6 +45,7 @@ A $k$-dimensional discrete Manifold is a simplicial complex where for every vert
 On discrete manifolds we can define orientations and a border operator with the same geometric meaning as on smooth manifolds.
 
 \subsection{Orientations}
+\label{subsec:SC_orientations}
 As on manifolds we can treat orientations on discrete manifolds; they are quite of some practical importance and a notorious source of switched sign errors when implementing things using discrete exterior calculus. 
 
 We can assign one of two orientations to any simplex of any dimension, meaning that the volume represented by the simplex should be considered as positive or negative. While we coded orientation before via the enumeration of basis vectors, for simplices we encode orientation via the enumeration of their corner vertices.  For edges it is the most intuitive what this means: we assign a direction to the edge $\{p_1,p_2\}$ by saying the first vertex listed is the start vertex of the edge. Note that for an edge or any geometric object there is not a strict 'positive` or a 'negative` orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as

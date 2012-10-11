@@ -1,4 +1,4 @@
-\documentclass[]{scrbook}
+\documentclass[a4paper]{scrbook}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -8,13 +8,33 @@
 \usepackage{algorithmic}
 \usepackage[english]{babel}
 
-%\usepackage[latin1]{inputenc}
-\usepackage{tikz}
-\usepackage{longtable}
-\usetikzlibrary{shapes,arrows}
+\usepackage{natbib}
+\bibpunct{[}{]}{,}{a}{}{;}
+\usepackage{fancyheadings}
+\usepackage{iamdip}
 
-\title{Discrete Exterior Calculus in a Week}
-\author{Peter Bertholet}
+%\usepackage{tikz}
+%\usepackage{longtable}
+
+\headrulewidth 0.5pt \addtolength{\headheight}{5pt}
+
+\lhead[\fancyplain{}{\rm\thepage}]{\fancyplain{}{\rightmark}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{}{\rm\thepage}}
+\cfoot{}
+
+
+%%%%%%%%%%%%%%%%%%%%% Environments and commands %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{abstract}%
+    {\cleardoublepage\thispagestyle{empty}\null\vfill\begin{center}%
+    \bfseries\abstractname\end{center}}%
+    {\vfill\null}
+    
+\newenvironment{acknowledgements}%
+    {\cleardoublepage\thispagestyle{empty}\null\vfill\begin{center}%
+    \bfseries Acknowledgements\end{center}}%
+    {\vfill\null}
+
 
 \newenvironment{definition}[1][]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries Definition (#1)}]\begin{itshape}}{\end{itshape}\end{trivlist}}
@@ -34,32 +54,52 @@
 
 \newtheorem{thm}{Theorem}
 
-\newcommand{\note}[1]{\textcolor{red}{\textit{(#1)}}}
+%\newcommand{\note}[1]{\textcolor{red}{\textit{(#1)}}}
 \newcommand{\abs}[1]{\left| #1 \right|}
 \newcommand{\discrete}[1]{\textbf{#1}}
-%\newcommand{\eq}[2]{\begin{equation} #1 \label{#2} \end{equation}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\usepackage{float}\floatstyle{boxed}
-\newfloat{listing}{t}{lis}[chapter]
-\floatname{listing}{\vspace{0.5cm} Listing}
+
+
+
+%%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
+\pagestyle{fancyplain} \thispagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%% Title page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Discrete Exterior Calculus in a Week}
+\author{Peter Bertholet}
+\betreuer{Claude Knaus \\ Prof. Dr. Matthias Zwicker }
+\ort{Bern}
+\datum{2012}
+\pagenumbering{roman} \setcounter{page}{1}
 	\maketitle
-	\tableofcontents
 	
-%	\begin{abstract}
-%		Discrete Exterior Calculus...
-%\end{abstract}
+\input{Chapters/abstract.tex}
+
+\pagenumbering{roman} \setcounter{page}{1}
+
+%%%%%%%%%%%%%%%%% Acknowledgments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{acknowledgements}
+%
+%\end{acknowledgements}
+
+	
+\pagenumbering{roman} \setcounter{page}{1}
+\tableofcontents
+	
+\pagenumbering{arabic} \setcounter{page}{1}
+\pagestyle{fancy}
 	
 \input{Chapters/Intro.tex}
+
+
 \input{Chapters/BasicObjects.tex}	
-
-%\input{Chapters/TwoDimensionalSurfaces.tex}
-
-%\input{Chapters/DifferentialStructure.tex}
-
 
 %\newpage
 \input{Chapters/DifferentialForms.tex}
@@ -74,12 +114,12 @@
 \input{Chapters/VectorfieldDesign.tex}
 \newpage
 \input{Chapters/FluidSim.tex}
+\input{Chapters/Discussion.tex}
 	
-	
-	\input{Chapters/Appendix.tex}
+\input{Chapters/Appendix.tex}
 	
 	\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
-	\nocite{*}
+	%\nocite{*}
 	\bibliographystyle{alphadin}
 	\bibliography{chapters/thesis}
 	

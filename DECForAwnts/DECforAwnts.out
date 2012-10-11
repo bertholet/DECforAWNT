@@ -1,0 +1,98 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}
+\BOOKMARK [1][-]{section.1.1}{Goal of this Thesis}{chapter.1}
+\BOOKMARK [1][-]{section.1.2}{A Glimpse of DEC}{chapter.1}
+\BOOKMARK [1][-]{section.1.3}{Structure of this Thesis}{chapter.1}
+\BOOKMARK [1][-]{section.1.4}{Disclaimer}{chapter.1}
+\BOOKMARK [0][-]{chapter.2}{Manifolds and Meshes}{}
+\BOOKMARK [1][-]{section.2.1}{Manifolds}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.1.1}{Describing Manifolds}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.2}{Tangential Spaces}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.3}{Orientations}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.4}{The Border Operator}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.5}{Differential Calculus on Manifolds}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.6}{Summary}{section.2.1}
+\BOOKMARK [1][-]{section.2.2}{Discrete Manifolds}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.2.1}{Simplices and Simplicial Complexes}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.2}{Orientations}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.3}{The Border Operator}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.4}{Oriented Discrete Manifold}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.5}{Summary}{section.2.2}
+\BOOKMARK [1][-]{section.2.3}{Implementation Notes}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.3.1}{A word on Sparse Matrices}{section.2.3}
+\BOOKMARK [2][-]{subsection.2.3.2}{Implementing Simplicial 2-Complexes}{section.2.3}
+\BOOKMARK [2][-]{subsection.2.3.3}{Implementing Simplicial k-Complexes }{section.2.3}
+\BOOKMARK [2][-]{subsection.2.3.4}{Simple Example Applications}{section.2.3}
+\BOOKMARK [0][-]{chapter.3}{Differential Forms}{}
+\BOOKMARK [1][-]{section.3.1}{Smooth Differential Forms}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.1.1}{The perfect thing to integrate}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.2}{Forms}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.3}{The Wedge Product}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.4}{Differential Forms}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.5}{Interpretation of Differential Forms in R3}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.6}{Integration of Forms}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.7}{Pull-Backs}{section.3.1}
+\BOOKMARK [1][-]{section.3.2}{Discrete Differential Forms}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.2.1}{Sampling Forms}{section.3.2}
+\BOOKMARK [2][-]{subsection.3.2.2}{Integration of Discrete Forms}{section.3.2}
+\BOOKMARK [0][-]{chapter.4}{Exterior Calculus \046 Discrete Exterior Calculus}{}
+\BOOKMARK [1][-]{section.4.1}{The Exterior Derivative d}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.1.1}{Definition}{section.4.1}
+\BOOKMARK [2][-]{subsection.4.1.2}{Properties}{section.4.1}
+\BOOKMARK [2][-]{subsection.4.1.3}{The Exterior Derivative in Euclidean Coordinates}{section.4.1}
+\BOOKMARK [1][-]{section.4.2}{Stokes Theorem}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.2.1}{Proof Sketch}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.2}{Geometry of d}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.3}{The Geometry of Classical Differential Operators}{section.4.2}
+\BOOKMARK [1][-]{section.4.3}{The Hodge Star}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.3.1}{Intuition}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.2}{Dual Forms}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.3}{Realization of \040in Standard Calculus}{section.4.3}
+\BOOKMARK [1][-]{section.4.4}{Exterior Calculus}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.4.1}{The Coderivative}{section.4.4}
+\BOOKMARK [1][-]{section.4.5}{Discrete Exterior Calculus}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.5.1}{The Discrete Exterior Derivative}{section.4.5}
+\BOOKMARK [2][-]{subsection.4.5.2}{Dual Mesh}{section.4.5}
+\BOOKMARK [2][-]{subsection.4.5.3}{Discrete Dual Forms}{section.4.5}
+\BOOKMARK [2][-]{subsection.4.5.4}{The Discrete Hodge Star}{section.4.5}
+\BOOKMARK [2][-]{subsection.4.5.5}{The Discrete Coderivative}{section.4.5}
+\BOOKMARK [2][-]{subsection.4.5.6}{This is Discrete Exterior Calculus}{section.4.5}
+\BOOKMARK [0][-]{chapter.5}{Conformal Mesh Parametrization}{}
+\BOOKMARK [1][-]{section.5.1}{Problem Statement}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Conformal Embedding with DEC}{chapter.5}
+\BOOKMARK [2][-]{subsection.5.2.1}{Graph Theory}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.2}{Fixed Border Constraints}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.3}{Multiple Borders}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.4}{Results}{section.5.2}
+\BOOKMARK [0][-]{chapter.6}{Vectorfield Design and the general Laplacian}{}
+\BOOKMARK [1][-]{section.6.1}{Problem Statement}{chapter.6}
+\BOOKMARK [1][-]{section.6.2}{The Hopf Index Theorem}{chapter.6}
+\BOOKMARK [1][-]{section.6.3}{Harmonic, Closed and Coclosed Forms}{chapter.6}
+\BOOKMARK [2][-]{subsection.6.3.1}{General Laplacian}{section.6.3}
+\BOOKMARK [2][-]{subsection.6.3.2}{Curl- and Divergence-Freeness}{section.6.3}
+\BOOKMARK [2][-]{subsection.6.3.3}{Poincar\351-Lemma}{section.6.3}
+\BOOKMARK [2][-]{subsection.6.3.4}{Hodge Decomposition}{section.6.3}
+\BOOKMARK [2][-]{subsection.6.3.5}{Discrete Hodge decomposition}{section.6.3}
+\BOOKMARK [2][-]{subsection.6.3.6}{Dimension of Harmonic spaces }{section.6.3}
+\BOOKMARK [1][-]{section.6.4}{Application: Vector Field Design}{chapter.6}
+\BOOKMARK [2][-]{subsection.6.4.1}{1-Form to Vector Field}{section.6.4}
+\BOOKMARK [2][-]{subsection.6.4.2}{Directional Constraints}{section.6.4}
+\BOOKMARK [2][-]{subsection.6.4.3}{Results}{section.6.4}
+\BOOKMARK [2][-]{subsection.6.4.4}{Border Constraints}{section.6.4}
+\BOOKMARK [0][-]{chapter.7}{A Fluid Simulation with DEC}{}
+\BOOKMARK [1][-]{section.7.1}{Problem Statement}{chapter.7}
+\BOOKMARK [2][-]{subsection.7.1.1}{Navier Stokes}{section.7.1}
+\BOOKMARK [2][-]{subsection.7.1.2}{A numerical integration scheme}{section.7.1}
+\BOOKMARK [2][-]{subsection.7.1.3}{From Vorticities to Velocities}{section.7.1}
+\BOOKMARK [1][-]{section.7.2}{Implementation}{chapter.7}
+\BOOKMARK [2][-]{subsection.7.2.1}{Sampling Scheme}{section.7.2}
+\BOOKMARK [2][-]{subsection.7.2.2}{Algorithm Overview}{section.7.2}
+\BOOKMARK [2][-]{subsection.7.2.3}{Interpolation and Pathtracing}{section.7.2}
+\BOOKMARK [2][-]{subsection.7.2.4}{Additional forces and diffusion}{section.7.2}
+\BOOKMARK [2][-]{subsection.7.2.5}{The Harmonic Component}{section.7.2}
+\BOOKMARK [2][-]{subsection.7.2.6}{Recovering da}{section.7.2}
+\BOOKMARK [1][-]{section.7.3}{Results}{chapter.7}
+\BOOKMARK [0][-]{chapter.8}{Discussion and Further Literature}{}
+\BOOKMARK [0][-]{appendix.A}{Further Details}{}
+\BOOKMARK [1][-]{section.A.1}{Well-Definedness of the Integral of Differential Forms}{appendix.A}
+\BOOKMARK [1][-]{section.A.2}{Primal and Dual Discrete Border Operator}{appendix.A}
+\BOOKMARK [0][-]{figure.A.1}{Bibliography}{}

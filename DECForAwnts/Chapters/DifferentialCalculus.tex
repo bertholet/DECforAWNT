@@ -1,15 +1,26 @@
 \chapter{Exterior Calculus \& Discrete Exterior Calculus}
 \label{chap:EC}
 
-This chapter constitutes the core of the theory of this thesis. We introduce the exterior derivative, describe its geometry and use its geometry to build discrete exterior calculus on discrete manifolds. Yet, the main argument of this chapter can be summed up in the following three lines:
-\begin{equation} \int_{\delta \Omega} \omega = \int_{\Omega} d \omega \label{eq:stokes}\end{equation}
-therefore
-\[d_{discrete} := \delta_{discrete}^T.\]
-These three lines are rather compact and use most of the concepts introduced up to now. While manifolds ($\Omega$), the border operators ($\delta, \delta_{discrete}$), forms ($\omega$) and their integrals have already been treated, the discrete exterior derivative $d$ has yet to be introduced. The three line argument above says, that according to Stokes theorem (Equation \ref{eq:stokes}), the discrete exterior derivative should be defined as the transposed of the discrete border operator. 
-Discretizing the differential operator $d$ is interesting, because $d$ generalizes various operators like the divergence and curl. By discretizing $d$ we directly get discrete versions of these operators. 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height = 3.5cm]{imgs/6_ecVsdec1_5.eps}%	
+\end{center}
+\end{figure}
+In this chapter we introduce exterior calculus and discrete exterior calculus. Exterior calculus  is calculus for differential forms on manifolds. The three operations we introduce for differential forms are the exterior derivative $d$, the Hodge star $\star$ and the coderivative $\partial$, which is a concatenation of the $\star$ and $d$ operator. Discrete exterior calculus will consist of the same operators, but defined for discrete differential forms.
 
-This chapter begins with an introduction of the exterior derivative in Section \ref{sec:EC_exteriorDerivative} and an explanation of Stokes theorem and the geometry of $d$ in Section \ref{sec:EC_stokes}. Then follows a description of
-how $d$ is discretized. In the fourth section, Section \ref{sec:hodgeStar}, we introduce the Hodge star operator $\star$ and its discrete version, the last missing elements needed to formulate various operators known from classical calculus.
+This chapter is structured as follows: in the Sections \ref{sec:EC_exteriorDerivative} to \ref{sec:EC_EC} we introduce exterior calculus, with an emphasis on the geometric structure of the operators and in Section \ref{sec:EC_DEC} we use the geometry of the operators to define the corresponding discrete operators. In more details: Section \ref{sec:EC_exteriorDerivative} treats the exterior derivative $d$ and relates it to the standard calculus operators $div$ $curl$ and $grad$. In Section \ref{sec:EC_stokes} we consider the geometry of the exterior derivative and its related standard calculus operators. Their geometry is captured by Stokes theorem. In Section \ref{sec:hodgeStar} the Hodge star operator is introduced, which allows the formulation of higher order derivatives and the coderivative. In Section \ref{sec:EC_EC} the exterior calculus operators are summarized in the de Rham complex. 
+
+In the Section \ref{sec:EC_DEC} finally everything comes together and we use the geometry of the exterior calculus operators to discretize them and build DEC.
+%
+%This chapter constitutes the core of the theory of this thesis. We introduce the exterior derivative, describe its geometry and use its geometry to build discrete exterior calculus on discrete manifolds. Yet, the main argument of this chapter can be summed up in the following three lines:
+%\begin{equation} \int_{\delta \Omega} \omega = \int_{\Omega} d \omega \label{eq:stokes}\end{equation}
+%therefore
+%\[d_{discrete} := \delta_{discrete}^T.\]
+%These three lines are rather compact and use most of the concepts introduced up to now. While manifolds ($\Omega$), the border operators ($\delta, \delta_{discrete}$), forms ($\omega$) and their integrals have already been treated, the discrete exterior derivative $d$ has yet to be introduced. The three line argument above says, that according to Stokes theorem (Equation \ref{eq:stokes}), the discrete exterior derivative should be defined as the transposed of the discrete border operator. 
+Discretizing the differential operators $d$ and $\star$ is interesting, because they can be used to formulate various operators like the divergence and curl or the Laplacian. By discretizing them we directly get discrete versions of all these operators. 
+%
+%This chapter begins with an introduction of the exterior derivative in Section \ref{sec:EC_exteriorDerivative} and an explanation of Stokes theorem and the geometry of $d$ in Section \ref{sec:EC_stokes}. Then follows a description of
+%how $d$ is discretized. In the fourth section, Section \ref{sec:hodgeStar}, we introduce the Hodge star operator $\star$ and its discrete version, the last missing elements needed to formulate various operators known from classical calculus.
 
 %\begin{longtable}{|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
 %\hline
@@ -175,9 +186,11 @@ where the second step is the Stokes theorem for singular cubes and the last step
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[height=3cm]{imgs/6_1_singularCubeChain.eps}
+%\includegraphics[height=3cm]{imgs/6_1_singularCubeChain.eps}
+\def\svgwidth{11cm}
+\input{imgs/6_1_singularCubeChain.eps_tex}
 \end{center}
-\caption{Some random bordered manifold that can be made out of 3 singular cubes. Some integral $\int_O$ over this object amounts to the sum of integrals over the singular cubes. For every cube the Stokes theorem is true. So the integral $\int_O$ is given by the sum of border integrals of the cubes. But inner edges cancel out because of their opposite orientations. Therefore $\int_O d\omega= \int_{\delta O}\omega$} 
+\caption{The bordered manifold $M$ (a) can be built out of 3 singular cubes (b). An integral $\int_M$ equals the sum of integrals over the singular cubes. For every cube Stokes theorem holds, so the integral $\int_M$ is given by the sum of border integrals of the cubes: $\int_M = \sum \int_{\delta c}$. But integrals over inner edges cancel out because of their opposite orientations (c). Therefore $\int_M d\omega= \sum \int_{\delta c} \omega =\int_{\delta M}\omega$} 
 \label{fig::6_1_singularCubes}
 \end{figure}
 
@@ -193,13 +206,13 @@ and
 \[\int_{I^{k+1}} d \omega^k = \sum_{i=1}^{k+1}(-1)^{i-1} \int_{[0,1]^{k+1}} \frac{\partial f}{\partial x_i} dx_1 \wedge...\wedge dx_{k+1}\]
 
 
-Now we can simply use the known fundamental theorem to integrate the single terms in the sum relative to $x_i$
+Now we can use the known fundamental theorem to integrate the single terms in the sum relative to $x_i$
 \[\int_{0}^1 \frac{\partial f}{\partial x_i} (x_1,...,x_{i-1},t,x_{i+1},...) dt = f(x_1,...x_{i-1},1,x_{i+1},...) - f(x_1,...x_{i-1},0,x_{i+1},...)\]
-getting 
-\[\int_{[0,1]^{k+1}} d \omega^k = \sum_{i=1}^{k+1}(-1)^{i-1} \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k+1 integrals}} \frac{\partial f}{\partial x_i} dx_1...dx_{k+1}\]
-\[= \sum_{i=1}^{k+1}(-1)^{i-1} \left(\underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},1,x_{i+1}...,x_{k+1}) dx \right.\]
-\[- \left. \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},0,x_{i+1}...,x_{k+1}) dx \right)\]
-where the integrals used are the 'common' integrals. Every term in the last sum integrates $f$ over one side of the cube $[0,1]^{k+1}$, because plugging in a $1$ or a $0$ for one parameter and integrating over the others has exactly that effect. The factors $(-1)^{i-1}$ together with the minus from the fundamental theorem, result exactly in assigning to every term a sign matching the orientation of the respective cube side induced by the border operator applied to $[0,1]^{k+1}$, see Figure \ref{fig:6_stokesproof}. Therefore
+such that the innermost integral is dropped and we get
+\begin{align*}\int_{[0,1]^{k+1}} d \omega^k &= \sum_{i=1}^{k+1}(-1)^{i-1} \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k+1 integrals}} \frac{\partial f}{\partial x_i} dx_1...dx_{k+1}\\
+&= \sum_{i=1}^{k+1}(-1)^{i-1} \left(\underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},1,x_{i+1}...,x_{k+1}) dx \right.\\
+&- \left. \underbrace{\int_{0}^1...\int_{0}^1}_{\textit{k integrals}} f(x_1,...,x_{i-1},0,x_{i+1}...,x_{k+1}) dx \right)\end{align*}
+Every term in the last sum integrates $f$ over one side of the cube $[0,1]^{k+1}$, because plugging in a $1$ or a $0$ for one parameter and integrating over the others has exactly that effect. The factors $(-1)^{i-1}$ together with the minus from the fundamental theorem, result exactly in assigning to every term a sign matching the orientation of the respective cube side induced by the border operator applied to $[0,1]^{k+1}$, see Figure \ref{fig:6_stokesproof}. Therefore
 \[\int_{[0,1]^{k+1}} d \omega^k = \int_{\delta [0,1]^{k+1}}\omega^k\]
 \qed
 
@@ -353,6 +366,7 @@ Applying $\star$ twice will switch the orientation of $\omega^k$ exactly when $k
 
 
 \section{Exterior Calculus}
+\label{sec:EC_EC}
 
 \begin{figure}[t]
 \begin{center}
@@ -403,6 +417,8 @@ where the scalar for forms is extended to differential forms via
 
 \newpage
 \section{Discrete Exterior Calculus}
+\label{sec:EC_DEC}
+
 \begin{figure}[h]%
 \begin{center}
 \includegraphics[height=4cm]{imgs/6_ECVsDEC2.eps}%	
@@ -529,7 +545,7 @@ This simple $\star^{discrete}$ operator still proves to be quite good. From a nu
 \caption{The Voronoi dual of the obtuse simplex lies face away from the primary simplex. Here estimating the value of a dual form at the dual vertex by using the sampled value on the primary triangle can be arbitrarly bad.}%
 \label{fig:6_obtuse}%
 \end{figure}
-Another drawback when choosing the dual mesh and discrete star as described is that Voronoi cells degenerate in the presence of obtuse simplices. The circumcenter of a simplex can lie arbitrarily far away from the simplex such that $\star_{discrete}\textbf{w}^k$ is not a good estimation for a sampled dual form, see Figure \ref{fig:6_obtuse}.Entsprechend Adapting the dual mesh and star matrices as with the Laplacian in Section \note{...}. Also using a different dual mesh and star operator might be beneficial. But this was not investigated in this thesis. 
+Another drawback when choosing the dual mesh and discrete star as described is that Voronoi cells degenerate in the presence of obtuse simplices. The circumcenter of a simplex can lie arbitrarily far away from the simplex such that $\star_{discrete}\textbf{w}^k$ is not a good estimation for a sampled dual form, see Figure \ref{fig:6_obtuse}. Adapting the dual mesh and star matrices as done by Desbrun et Al. to derive a Laplacian in \cite{laplacebeltrami} or using a different dual mesh and star operator might be beneficial. But this was not investigated in this thesis. 
 
 \subsection{The Discrete Coderivative}
 The coderivative is given by
@@ -597,6 +613,6 @@ In DEC all discrete operators are simple sparse matrices and they can be used di
 \begin{center}
 \includegraphics[width=0.98\columnwidth]{imgs/6_DEC}%	
 \end{center}
-\caption{A summary of the DEC operators}%
+\caption{A summary of the DEC operators and their most important properties}%
 \label{fig:DEC}%
 \end{figure}

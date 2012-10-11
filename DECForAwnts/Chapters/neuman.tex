@@ -1,0 +1,30 @@
+\subsubsection{Neumann Border Constraints}
+An alternative to fixed border constraints that fits very well in this setting is a boundary condition derived by Desbrun et Al. in \cite{meshpar1}. It uses that applying the discrete Laplacian to the coordinates of a mesh is the gradient of the area of the mesh, as described in Section \note{[...]}:
+\[\Delta_{discrete}\begin{pmatrix}x_p\\y_p\\z_p\end{pmatrix} = grad(Area\begin{pmatrix}x_p\\y_p\\z_p\end{pmatrix})\]
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height=3cm]{imgs/7_trianglesketch.eps}%	
+\end{center}
+\caption{}%
+\label{fig:7_neumansketch}%
+\end{figure}
+
+%You can also compute the gradient of the area of the mesh embedded in $[0,1]^2$, where the coordinates of the embedded mesh are given by $v = (v.x,v.y)$. 
+
+Desbrun et Al. then propose to enforce this equation for the parametrization
+\begin{equation}
+\Delta_{discrete}\begin{pmatrix}v.x\\v.y\end{pmatrix} = grad(Area\begin{pmatrix}v.x\\v.y\end{pmatrix})
+\label{eq:neuman}
+\end{equation}
+on boundary vertices. The gradient of the are of the mapped mesh at a fixed vertex $i$ is given by the following sum over the neighbor triangles $N_i$ of the vertex $i$
+\begin{equation}grad(Area\begin{pmatrix}v.x\\v.y\end{pmatrix}) = \frac{1}{2}\sum_{(v_i,v_j,v_k)\in N_{i}}rot^{90}(v_k-v_j).\label{eq:7_grad}\end{equation}
+To derive this you consider the single triangles. For a triangle mapped to $(v_i,v_j,v_k)$ in $[0,1]^2$  you fix two of its vertices $v_j, v_k$ and take the area as a function of $v_i$.
+The area of the triangle is $\abs{v_j-v_k}\cdot\abs{v_i-p}/2$ (with $p$ as in sketch \ref{fig:7_neumansketch}), and the gradient of $area_{v_j,v_k}(v_i)$ simply is
+\begin{align*}\nabla area_{v_j,v_k}(v_i) &=  (\nabla \abs{v_i-p})\frac{\abs{v_j-v_k}}{2}\\
+&=  \frac{v_i-p}{\abs{v_i-p}}\frac{\abs{v_j-v_k}}{2}\end{align*}
+But  $\abs{v_j-v_k}/2 \frac{p-v_i}{\abs{p-v_i}}$ is exactly $rot^{90}(v_k-v_j)/2$ and we get:
+\[ \nabla area_{v_j,v_k}(v_i) = rot^{90}(v_k-v_j)/2.\]
+The gradient of the area of the embeded mesh at some vertex $i$ is then given by summing up the $\nabla area_{v_j,v_k}(v_i)$ over the neighbor triangles of $i$ as in Equation \ref{eq:7_grad}.
+
+When using the linear constraint from Equation \ref{eq:neuman} there is no need to precompute any border positions, they are solved for together with the positions of the inner vertices. Only two arbitrary vertices have to be fixed as the linear system using these constraints has two degrees of freedom, one for scale and one for orientation. This constraint can be used as it is if multiple borders are present, without further adaptations. But again there is no guaranty that Gortler's conditions are met, in practice the border often has a winding number greater than $2\pi$.

@@ -1,4 +1,5 @@
 \chapter{A Fluid Simulation with DEC}
+\label{chap:FS}
 
 \begin{figure}[h]%
 \begin{center}
@@ -31,28 +32,37 @@
 %		 \\		
 %	\hline
 %\end{longtable}
-In this chapter a fluid simultation using DEC is presented, following the approach from \note{names [reference]}. 
+In this chapter a fluid simultation using DEC is presented, following the approach from Elcott et Al. \cite{simplicialFluids}. 
 All theory but fluid dynamics has been introduced, so this chapter is a demonstration of DEC in use. 
 
-One of the challenges when simulating fluids is to keep geometric features like incompressibility or vortices. Because of the geometric nature of DEC and because DEC conserves the geometry of the curl and divergence operator, these difficulties drop away. On the other hand simplifying assumptions are taken, and together with the interpolation scheme used, it is not clear how accurate the simulation is. The authors of \note{reference} have taken the pragmatic point of view that their simulation is designed to preserve visually important features of fluids and left thoughts about accuracy for future work. 
+One of the challenges when simulating fluids is to keep geometric features like incompressibility or vortices. Because of the geometric nature of DEC and because DEC conserves the geometry of the curl and divergence operator, these difficulties drop away. On the other hand simplifying assumptions are taken, and together with the interpolation scheme used, it is not clear how accurate the simulation is. The authors of \cite{simplicialFluids} have taken the pragmatic point of view that their simulation is designed to preserve visually important features of fluids and left thoughts about accuracy for future work. 
 
 %Problem of standard fluid simulations.
 
 %\newpage
-\section{Continuous Problem Statement}
+\section{Problem Statement}
 
 %\subsection{Properties of Fluids}
 %Formally, fluids are described by the Navier Stokes equation in the next section. Viscosity, incompressibility, vorticity.  \note{Todo: The Karman Vortex street. Viscous fluids have an interesting behaviour close to boundaries of non moving objects. As they have internal friction the velocity on the boundaries of such objects is zero. This leads to some vorticity which then are carried away}
 
-\subsection{Navier Stokes}
+%\subsection{Viscosity and Vorticity}
 
 \begin{figure}%
 \begin{center}
-\includegraphics[height=3cm]{imgs/7_vfvarying2.eps}%	
+\includegraphics[height = 3cm]{imgs/7_vortAndVisc.eps}%	
 \end{center}
-\caption{A comparision of the derivative and the derivative along the motion. The velocity field is constant over time and its derivative $\frac{\partial u}{\partial t}$ is zero. But the velocity of a tracked particle changes; the material derivative describes this change.}%
-\label{fig:fsmaterialderivative}%
+\caption{A parcel without any rotation (1) moves along of the border of an obstacle and picks up vorticity due to the viscosity of the fluid (2). The vorticity then is diffused and slowly decreases, again because of the viscosity of the fluid (3).}%
+\label{fig:fd_vortAndVisc}%
 \end{figure}
+
+The two features this simulation concentrates on are the viscosity and vorticity of fluids. Viscosity measures the internal friction of a fluid. If a fluid parcel moves with some speed, the neighboring fluid is affected by friction and dragged along to some extent, while the fluid parcel itself is slowed down. 
+Vortices are fluid parcels that have picked up rotation. If a fluid parcel picked up some rotation it keeps rotating when moving along the flow. The rotation is only damped by the internal friction of the fluid. 
+
+In combination with obstacles the viscosity of a fluid also induces new vorticities. If a fluid has internal friction, it has zero velocity on the boundary of a fixed obstacle. A parcel moving  along the obstacle then picks up vorticity, as depicted in Figure \ref{fig:fd_vortAndVisc}.
+
+Vorticity is measured by the curl of the velocity field. As seen in Section \ref{subsec:geometryCDO},  the geometric meaning of curl is that it measures how much rotation a velocity field induces locally.
+
+\subsection{Navier Stokes}
 
 The first step is to formulate the behaviour of fluids appropriately with vector calculus and exterior calculus. 
 Physics provide the following description of incompressible viscous fluids, that is fluids with interior friction; the Navier-Stokes equation:
@@ -80,22 +90,30 @@ u(\alpha(t),t) \\
 \item The factor $\nu \Delta u$ is the diffusion factor and $\nu$ is the viscosity, a real valued material dependent constant. The viscosity $\nu$ describes how 'thick` the fluid is, how much internal friction it has. For example honey is thicker than water and its viscosity $\nu$ is higher; water having a viscosity of $0.001$. The term $\nu \Delta u$ describes that the higher the friction is, the more the velocities get diffused.
 \end{itemize}
 
+\begin{figure}%
+\begin{center}
+\includegraphics[height=3cm]{imgs/7_vfvarying2.eps}%	
+\end{center}
+\caption{A comparision of the derivative and the derivative along the motion: the velocity field is constant over time and its derivative $\frac{\partial u}{\partial t}$ is zero. But the velocity of a tracked particle changes; the material derivative describes this change.}%
+\label{fig:fsmaterialderivative}%
+\end{figure}
+
 The Navier-Stokes equation therefore states that the movement of small parcels is influenced by pressure differences and a diffusion term. Every particle is pulled both in the direction of the largest pressure decrease and in a direction such that curl and divergence are decreased (diffusion), where the influence of the diffusion depends on the fluid's viscosity.
 
 \subsubsection{Navier Stokes for Vorticities}
-To put an emphasis on the behavior of vortices in the fluid simulation, the authors of \note{[Fluid sim]} use the Navier Stokes equation reformulated in terms of vorticities. You get such a description by applying $\nabla \times$ to both sides of Equation \ref{eq:NS}
+To put an emphasis on the behavior of vortices in the fluid simulation, the authors of \cite{simplicialFluids} use the Navier Stokes equation reformulated in terms of vorticities. You get such a description by applying $\nabla \times$ to both sides of Equation \ref{eq:NS}
 \[\nabla \times \frac{\partial u}{ \partial{t}} + \nabla \times (u \cdot \nabla u) = - \underbrace{\nabla\times \nabla}_{=0} p + \nu \nabla \times \Delta u,\]
 leading to\footnote{You need to use $\nabla u = 0$ to show the identity $\nabla \times (Du \cdot u) = D w \cdot u - Du \cdot w$ where $w = \nabla \times u$. Also $\nabla \times \Delta u = \Delta (\nabla \times u)$ is used. Both identities are easy to check by writing them out. }
-\[\frac{\partial w}{\partial t} + Dw\cdot u - Du \cdot w =  \nu \Delta w,\]
-\begin{equation}w = \nabla \times u,\hspace{0.5cm} div(u) = 0.\label{eq:NS2}\end{equation}
+\begin{equation}\frac{\partial w}{\partial t} + Dw\cdot u - Du \cdot w =  \nu \Delta w,\label{eq:NS2}\end{equation}
+\[w = \nabla \times u,\hspace{0.5cm} div(u) = 0.\]
 Simulating the curl $\nabla \times u$ of the velocity field instead of the velocities $u$ has benefits. The pressure term disappears. And simulating the curl leads to a better simulation of the vortices. 
 
-The left hand side of Equation \ref{eq:NS2} describes the derivative of curl along the motion, similarly to the derivative of $u$ along the motion that appeared in Equation \ref{eq:NS}. Equation \ref{eq:NS2} therefore states that  vorticity is carried along the flow while being diffused with time. The viscosity $\nu$ controls how fast vorticities get diffused. For an inviscid fluid there is no internal friction,  the viscosity $\nu = 0$ and the derivative of the curl along the motion is 0. Therefore the curl along the motion is constant and vorticities are carried with the flow without being diminished.
+The left hand side of Equation \ref{eq:NS2} describes the derivative of curl along the motion, similarly to the derivative of $u$ along the motion that appeared in Equation \ref{eq:NS}. Equation \ref{eq:NS2} therefore states that  vorticity is carried along the flow while being diffused with time. The viscosity $\nu$ controls how fast vorticities get diffused. The extreme is an inviscid fluid, a fluid with no internal friction. There the viscosity is $\nu = 0$ and the derivative of the curl along the motion is 0. Therefore the curl along the motion is constant and vorticities are carried with the flow without being diminished.
 
 \subsubsection{Stirring}
 To take account of additional forces $F$, for example induced by stirring, the Equations \ref{eq:NS} and \ref{eq:NS2} need to be slightly adapted to
 \[\frac{\partial u}{\partial t} + Du \cdot u = -\nabla p + \nu \Delta u + F\]
-and
+such that the change of velocity also depends on $F$. The formulation for vorticities then becomes
 \begin{equation}\frac{\partial w}{\partial t} + Dw\cdot u - Du \cdot w =  \nu \Delta w + \nabla \times F \label{eq:NS3},\end{equation}
 where $F$ is a vector valued function.
 
@@ -112,33 +130,32 @@ where $F$ is a vector valued function.
 	\item Use $u_{t_n}$ to compute $w_{t_n}(p,t_n)$.
 	\item Solve $w_{t_{n+1}}(p',t_{n+1}) = w_{t_n}(p,t_n) + (t_{n+1} - t_n)\Delta w_{t_{n+1}}(p',t_{n+1})$ for $w_{t_{n+1}}(p',t_{n+1})$ to add diffusion.
 \end{enumerate}
-\item Add forces $\omega_{t_{n+1}} += (t_{n+1}-t_n)\cdot\nabla \times F$
-\item Use the vorticities $w_{t_{n+1}}$ to compute a velocity field $u_{t_{n+1}}$
+\item Add forces $\omega_{t_{n+1}} += (t_{n+1}-t_n)\cdot\nabla \times F_{t_{n+1}}$
+\item Recover the velocity field $u_{t_{n+1}}$ from the vorticities $w_{t_{n+1}}$.
 \end{enumerate}}
 }}\end{center}
-\caption{The numerical integration scheme}
+\caption{The numerical integration scheme.}
 \label{fig:fd_numericalIntegration}
 \end{figure}
 
 
-The authors of \note{...} propose to solve the equation \ref{eq:NS3} for the simulation of the fluid, using what they call a geometric integration scheme. The scheme is a combination of implicit numerical integration and the tracking of particles and mimics the geometric behavior of the flow. Suppose a fluid parcel with space time position $(p_{t_n},t_n)$ is carried to the position $(p_{t_{n+1}},t_{n+1})$. Then Equation \ref{eq:NS3} means that
-\begin{align}w(p_{t_{n+1}},t_{n+1}) \approx \;& w(p_{t_n},t_n) + (t_{n+1}-t_n) \cdot \nu \Delta w(p_{t_{n+1}},t_{n+1}) \nonumber \\ &{}+ (t_{n+1}-t_n) \cdot\nabla \times F_{t_{n+1}}\label{eq:vortDiffusion}\end{align}
-
-
-%They compute the vorticity at some time $t_{n+1}$ by using that vorticity is simply carried along the flow plus some diffusion. Assuming that all velocities are known at the time $t$ and the fluid parcel at position $p$ is carried to some position $p'$ at some time $t'$. Then implicit numerical integration according to the Equation \ref{eq:NS3} amounts to
-%\begin{equation}w(p',t') \approx w(p,t) + (t'-t) \cdot \nu \Delta w(p',t')\label{eq:vortDiffusion}\end{equation}
-This leads to the integration procedure listed in Figure \ref{fig:fd_numericalIntegration}. Its greatest issue is that in step 4 a velocity field needs to be computed from vorticities alone. Before we discretize the equation we will consider this step.
+The authors of \cite{simplicialFluids} propose to solve the equation \ref{eq:NS3} for the simulation of the fluid, using what they call a geometric integration scheme. The scheme is a combination of implicit numerical integration and the tracking of particles and mimics the geometric behavior of the flow. Suppose a fluid parcel with space time position $(p',t_{n+1})$ was at the position $(p,t_{n})$ in the timestep before. Then, because 
+\[\frac{\partial w}{\partial t} + Dw\cdot u - Du \cdot w \approx  \frac{(w(p^\prime,t_{n+1}) - w(p^\prime,t_{n}))}{t_{n+1}-t_n},\]  
+Equation \ref{eq:NS3} means that
+\begin{align}w(p^\prime,t_{n+1}) \approx \;& w(p,t_n) + (t_{n+1}-t_n) \cdot \nu \Delta w(p',t_{n+1}) \nonumber \\ &{}+ (t_{n+1}-t_n) \cdot\nabla \times F_{t_{n+1}}\label{eq:vortDiffusion},\end{align}
+where $F_{t_{n+1}}$ are the additional forces at the time $t_{n+1}$. This leads to the integration procedure listed in Figure \ref{fig:fd_numericalIntegration}. Its greatest issue is that in step 4 a velocity field needs to be computed from vorticities alone. Before we discretize the equation we will consider this step.
 
 \subsection{From Vorticities to Velocities}
 \label{subsec:fd_vort2vel}
-%\note{Constraint on border to get the adjointness of the operators, hodge decomp?}
-This step is the most problematic of the algorithm. From the Pointcarr\'e Lemma we know that   in general  the problem $\partial u = w$ can not uniquely be solved for $u$. But by using the incompressibility of fluids and making additional assumptions about $u$, $u$ can be computed. The setting is the following: given a $2$-form $w$ we want to solve for $u$ such that
+The velocities can be represented by a $1$-form $u$ and the vorticities by a $2$-form $w$.
+ The problem statement then is the following: given a $2$-form $w$ we want to solve for $u$ such that
 \begin{equation*}\left.\begin{aligned}\partial u &= 0 \;\; (incompressibility) \\ 
 du &= w \end{aligned}\right\}\end{equation*}
+From the Pointcarr\'e Lemma we know that   in general  the problem $\partial u = w$ can not uniquely be solved for $u$. But by using the incompressibility of fluids and making additional assumptions about $u$, $u$ can be computed. We will 
 
 The first step is to apply the Hodge decomposition theorem to $u$:
 \[u = \partial a + db + c \]
-where $c$ is harmonic. But from the incommpressibility condition $\partial u = 0$ we know that the non divergence free part $db$ above needs to be zero.\nobreak
+where $c$ is harmonic. But from the incommpressibility condition $\partial u = 0$ we know that the non divergence free part $db$ needs to be zero.\nobreak
 %
 \footnote{ We can get this by the usual argument using the no divergence constraint: $0 = \partial u = \partial \partial a + \partial db + \partial c = \partial d b$ and then the adjointness of $d$ and $\partial$: $\partial d b = 0 \Rightarrow \langle \partial d b , b \rangle = 0 \Rightarrow \langle db, db \rangle = 0 \Rightarrow db = 0 $}
 %
@@ -146,90 +163,112 @@ Therefore:
 \[u = \partial a + c\]
 And as the harmonic part $c$ fulfils $dc = 0$,
 \begin{equation} w = du = d\partial a \label{eq:fd_vort2vel0}\end{equation}
-There is no way to get the harmonic component $c$ out of the vorticities $w$. This is not astonishing, as by the Hodge decomposition it is orthogonal to vorticities. The harmonic part $c$ of $u$ therefore needs to be computed separately. From $w = d \partial a$ not even $a$ is well defined. But we are solely interested in $\partial a$ and using the adjointness of $d$ and $\partial$ you can show 
+There is no way to get the harmonic component $c$ out of the vorticities $w$. This is not astonishing, as by the Hodge decomposition it is orthogonal to vorticities. The harmonic part $c$ of $u$ therefore needs to be computed separately. From $w = d \partial a$ not even $a$ is well defined. But we are only interested in $\partial a$, and using the adjointness of $d$ and $\partial$ one can show\nobreak 
 %
-\footnote{If $ d \partial a = d \partial b$, then $d \partial (a- b) = 0$ and therefore, using the adjointness of $d$ and $\partial$ $\partial (a-b) = 0.$}
+\footnote{If $ d \partial a = d \partial b$, then $d \partial (a- b) = 0$ and therefore, using the adjointness of $d$ and $\partial$, we get $\partial (a-b) = 0.$}
 %
 $$d \partial a = d \partial b \;\;\;\Rightarrow\;\;\; \partial a = \partial b$$
 %
-So it does not matter what $a$ with $w = d \partial a$ we choose. From the Hodge decomposition theorem we also know that we can constrain $da$ independently from $\partial a$, so we can add the constraint $da = 0$ to Equation \ref{eq:fd_vort2vel0}. Then the term $\partial d a$ vanishes, and Equation \ref{eq:fd_vort2vel0} can be transformed to
+So it does not matter what $a$ with $w = d \partial a$ is chosen, as any such $a$ describes the same factor $\partial a$. From the Hodge decomposition theorem we also know that we can constrain $da$ independently from $\partial a$, so we can add the constraint $da = 0$ to Equation \ref{eq:fd_vort2vel0}. But if $da = 0$, then the term $\partial d a$ is zero too, and we can add $\partial d a$ to Equation \ref{eq:fd_vort2vel0}, getting
 \begin{equation} w = d\partial a + \partial d a = \Delta a .\label{eq:fd_vort2vel}\end{equation}
-This is the Poisson problem, which we are able to solve for $a$.
+But this is the Poisson problem, which we are able to solve for $a$.
 
-So from the vorticities $w$ we can get the vorticity part $da$ of the velocity field $u$, but not the harmonic part $c$. The authors of \note{[...]} simply assume that the harmonic part $c$ is not time dependent and can be computed once and for all from application dependent constraints. Lets reformulate this section in a Theorem:
+So from the vorticities $w$ we can get the vorticity part $da$ of the velocity field $u$, but not the harmonic part $c$. The authors of \cite{simplicialFluids} simply assume that the harmonic part $c$ is not time dependent and can be computed once and for all from application dependent constraints. We can capture this section in a Theorem:
 
 \begin{thm} \label{thm:vort2vel}(Vorticity to Velocity) If the harmonic component $c$ of a $1$-form $u$ is given, the space of forms allows a Hodge decomposition and the operators $d$ and $\partial$ are adjoint, then the system
 \begin{equation}\left.\begin{aligned}\partial u &= 0 \;\; (incompressibility) \\ 
 du &= w \end{aligned}\right\}\end{equation}
-can be solved by solving for $a$:
+can be solved by solving 
 \[\Delta a = w\]
+for $a$ and setting
 \[u = \partial a + c\]
 \end{thm}
 
 From Section \ref{subsec:vf_dimHarm} we know that depending on the topology of the manifold harmonic forms $c$ do not need to exist. Namely on the surface of a sphere there are no harmonic 1-forms. A fluid simulation on the surface of a sphere therefore is less complicated than one on a plane with borders. 
 
-From Sections \note{[coderiv]} and \note{[hodge dcomp]} we also know that on manifolds with borders, the operators $d$ and $\partial$ need not to be adjoint and the Hodge decomposition needs not to hold either. In \note{[Physics Book]14.34 p377} more general results are mentioned. The Hodge decomposition does for example hold for 'tangential' forms, that is forms $\omega$ for which $\star\omega$ restricted to the border $\delta M$ is 0. One example of a tangential form would be vector fields whose vectors are tangential to borders. Tangential forms arises naturally in this setting, as the boundary of the mesh often represents a impenetrable wall through which a fluid can not flow.
+From the Section \ref{sec:EC_EC} where the coderivative was introduced and the Section \ref{sec:VF_hodgeDecomp} about the Hodge decomposition, we know that on manifolds with borders, the operators $d$ and $\partial$ need not to be adjoint and the Hodge decomposition needs not to hold either. In \cite{FRANKEL11} (p377ff) more general results are mentioned. The Hodge decomposition does for example hold for 'tangential` forms, that is forms $\omega$ for which $\star\omega$ restricted to the border $\delta M$ is 0. One example of a tangential form would be $1$-forms represented by vector fields whose vectors are tangential to borders. Tangential forms arises naturally in the fluid simulation setting, as the boundary of the mesh often represents an impenetrable wall through which a fluid cannot flow.
 
 \section{Implementation}
-We restrict ourselves to simulations of fluids on two dimensional surfaces. There is no difference in the theory or the algorithm when working on three dimensions, but the display of flow that is restricted to two dimensions is simpler. And that DEC works just as well on curved manifolds can only be demonstrated in two dimensions. 
+We restrict ourselves to simulations of fluids on two dimensional surfaces. There is no difference in the theory or the algorithm when working on three dimensions, but the display of flow that is restricted to two dimensions is simpler. And in two dimensions the fluid simulation can be demonstrated on curved manifolds. 
 
-%Vectorfields and vorticities can directly be mapped to discrete forms and the steps $2 c)$ and $3)$ of \note{...} can be directly translated to DEC. The backtracing of vorticities is described in Section \note{...}
-\subsection{Who is who}
-To simplify the specification of border constraints the role of the dual mesh and the primary mesh are switched such that what we interpreted so far as dual forms are stored on the primary mesh and vice versa.  Then primary edges store the flow through them instead of the flow along them, see also the different sampling schemes from Section \ref{subsec:samplingForms}. As a result of changing the interpretation of the discrete forms, the operators $d$ and $\partial$ also have  different interpretation in vector calculus, see Figure \ref{fig:fd_whoiswho}. 
+While many steps in the geometric integration scheme in Figure \ref{fig:fd_numericalIntegration} are easy to translate into DEC terms, there are many details that need to be handled correctly for the fluid simulation to work properly. In comparision to the other applications the sampling schemes of discrete primary and dual forms need to be swapped to allow the correct enforcement of boundary constraints. The discrete $1$-forms needs to be transformed into a \emph{continuous} velocity field and throughout the algorithm the boundary constraints need to be enforced carefully. And the harmonic component of the flow needs to be computed for some border constraints.
 
-The changed roles make it is easy to constrain the flow through edges and boundaries. For example the constraint on obstacles and walls is that there is no flow across the boundary. This is enforced by $\discrete{v}^1(e_{boundary}) = 0$.
+\subsection{Sampling Scheme}
 
 \begin{figure}%
 \includegraphics[width=\columnwidth]{imgs/8_fd_dualpprimalproblem.eps}%
-\caption{By switching the roles of the dual and primal mesh, vector fields are sampled differently. This results in the operators $d$ and $\partial$ also changing their meaning. }%
+\caption{By switching the roles of the dual and primal mesh, vector fields are sampled differently such that primary edges store flux, the flow through them, instead of the flow along them. This results in the operators $d$ and $\partial$ also changing their meaning.}%
 \label{fig:fd_whoiswho}%
 \end{figure}
 
-Changing the roles of the dual and primal mesh is consistent with the remark, that tangential forms have the property $\star w |_{\delta M} = 0 $. This can not be inforced on the dual mesh, as the border of the dual mesh is not the geometric border of the mesh. Therefore the change of roles is necessary.
+To simplify the specification of border constraints, the role of the dual mesh and the primary mesh are switched such that what we interpreted so far as dual forms are stored on the primary mesh and vice versa.  Primary edges store the flow through them instead of the flow along them, see also the different sampling schemes from Section \ref{subsec:samplingForms}. As a result of the swapped , the operators $d$ and $\partial$ also have  different interpretation in vector calculus, see Figure \ref{fig:fd_whoiswho}. Vorticities then are stored on vertices as $0$-forms or equivalently as dual 2-forms on dual faces and divergence is stored triangles or dual vertices.
 
-\subsection{Discrete Equations}
-We now translate the vector calculus equation \ref{eq:NS3} and the integration scheme into DEC terms. 
-The velocity field $u$ is described as a discrete  $1$-form $\discrete{v}^1$, as is the user provided forces $\discrete{f}^1$ and the precomputed harmonic part of the flow $\discrete{c}^1$. %But instead of associating $\discrete{v}^1$ to the velocity $u$ as representing flows along edges according to the first sampling scheme described in \note{...} $\discrete{v}^1$ is associated to $u$ using the second sampling scheme \note{...} where $\discrete{v}^1$ describes the flux through the edges. In comparison to the vector field design implementation the roles of the dual and primary mesh gets switched, what were the discrete dual forms are now stored on the primary mesh. Accordingly the role of the operators $d$ and $\partial$ switch, as depicted in the schematic \note{img: Todo standard operators and relation to ec now}.
-%The reason to chose to represent the velocity field by fluxes on the primary mesh is that it greatly facilitates the enforcement of border constrains. Boundaries of obstacles then simply consist of edges, where no flux passes, i.e. $\discrete{v}^1$ will be constrained to $\discrete{v}^1(e_{obstacle}) = 0$. \note{img}.
+The changed roles allow it to constrain the flow through the boundaries of the mesh. For example the constraint on impenetrable obstacles and walls is that there is no flow across the boundary. This is enforced by $\discrete{v}^1(e_{boundary}) = 0$.
 
-The vorticity of $u$  is a discrete $0$-form $ \discrete{w}^0 = \delta_{discrete}^1 \discrete{v}^{1}$, consisting of values defined on vertices. Steps $(2a)$ and $(2b)$ of the integration scheme, i.e. the backtracking of parcels and computation of vorticities are described in the next section. All other parts of the numerical integration are straight forward to translate. The step $(2 c)$, the diffusion of vorticity as given by the Equation \ref{eq:vortDiffusion},
-\[\discrete{w}^0_{t_{n+1}} = \discrete{w}^0 + \nu t \Delta \discrete{w}^0_{t_{n+1}}\]
-i.e.
-\begin{equation}(Id - \nu t  \star_0 d^{dual}_0\star_1d_0)\discrete{w}^0_{t_{n+1}} = \discrete{w}^0 \label{eq:fd_discreteDiffusion}\end{equation}
-The step $(3)$, the addition of forces is given by
-\begin{equation}\discrete{w}^0_{t_{n+1}} += \partial^1_{discrete} \discrete{f}^1\end{equation}
-The step $(4)$, the reconstruction of the updated $1$-form $\discrete{v}^1$ works as described in Theorem \ref{thm:vort2vel} in Section \ref{subsec:fd_vort2vel}:
-\begin{equation}\Delta \discrete{a}^1 = \discrete{w}^0_{t_{n+1}}\label{eq:fd_discreteVort2Vel}\end{equation}
-\begin{equation}\discrete{v}^1_{updated} =  d_0 \discrete{a}^1 + \discrete{c}^1\end{equation}
-where $c$ is the precomputed harmonic solution, $\Delta$ is the discrete Laplacian. Equations \ref{eq:fd_discreteDiffusion} and \ref{eq:fd_discreteVort2Vel} are to be solved with a sparse solver.
+Changing the roles of the dual and primal mesh is consistent with the remark, that tangential forms have the property $\star w |_{\delta M} = 0 $. This can not be enforced on the dual mesh, as the border of the dual mesh is not the geometric border of the mesh. %Therefore the change of roles is necessary.
+
+\subsection{Algorithm Overview}
+
+\begin{figure}%
+\begin{center}
+\includegraphics[width=0.95\columnwidth]{imgs/8_algorithm_overview2.eps}%	
+\end{center}
+\caption{A schematic representation of one time step of the fluid simulation. The harmonic component \textbf{c} is computed separately during a set up stage.}%
+\label{fig:fd_algorithm}%
+\end{figure}
+
+Figure \ref{fig:fd_algorithm} sketches one time step of the algorithm that implements the integration scheme \ref{fig:fd_numericalIntegration} to solve the equation 
+\begin{align*}w(p_{t_{n+1}},t_{n+1}) \approx \;& w(p_{t_n},t_n) + (t_{n+1}-t_n) \cdot \nu \Delta w(p_{t_{n+1}},t_{n+1}) \nonumber \\ &{}+ (t_{n+1}-t_n) \cdot\nabla \times F_{t_{n+1}}\end{align*}
+The details of the single steps are given in the following sections.
+
+During a set up step a harmonic component $\discrete{c}$ (Section \ref{ssec:fd_harmonic}) and the dual mesh need to be computed explicitely. The non vorticity free part $d\discrete{a}$ of the velocity field $\discrete{u}$ is initially set to zero and $\discrete{u}$ is set to be the harmonic field $\discrete{c}$. Forces $\discrete{F}$ induced by stirring are captured between time steps, as done in the vector field design chapter.
+
+A single integration time step consists of the following substeps: first the dual vertices are traced back using a continuous interpolation of the velocity field $\discrete{u}$ in order to compute the back traced vorticites (Section \ref{ssec:fd_interpolation_and_PT}). Vorticites are defined by dual face and the back traced vorticites are computed by summing up the flow of $\discrete{u}$ around the back traced dual faces. Then the vorticity $\partial F$ of the additional forces $\discrete{F}$ is added and the vorticities diffused (Section \ref{ssec:fd_diffusion_and_forces}). Finally the vorticity part $d\discrete{a}$ of the velocity field $\discrete{u}$ is recovered (Section \ref{ssec:fd_recovering_da}) and $\discrete{u}$ is updated.
 
 \subsection{Interpolation and Pathtracing}
-Vorticities are calculated by summing up the flow around dual faces \note{specify...}. To calculate the backtraced vorticities we therefore backtrace the dual faces, or more specifically the dual vertices. To trace the path of a particle, we need a continuous vector field defined on the mesh \note{img}. Note that therefore the interpolation scheme using Whitney forms described in Section \note{vfDesing} is not suited, as it does not produce a continuous vector field. 
+\label{ssec:fd_interpolation_and_PT}
+The first step is to backtrace the vorticities. Vorticities are calculated by summing up the flow around dual faces. To compute the backtraced vorticities the dual faces, or more specifically the dual vertices, are backtraced. To trace the path of a particle, we need a continuous vector field defined on the mesh. Note that the interpolation scheme using Whitney forms described in Section \ref{sec:vf_1form2vf} is not suited, as it does not produce a continuous vector field. 
 
 \subsubsection{A continuous vector field on the mesh}
-The authors of \note{...} propose the following interpolation scheme to get a  continuous vector field. First, velocity vectors are computed at all the positions of dual vertices; this can be done using the sharp operator from \note{vf}. A velocity vector at an arbitrary position $p$ on the mesh then is calculated by first identifying the dual face the position $p$ lies in, i.e. identifying the closest vertex,  and then smoothly interpolating the velocity vectors given on the corners of the dual face.
-The smooth interpolation of vectors of the velocities given on the dual face are done using weights given in \note{Baricentric coords}. For a flat convex polygon with vertices $p_1,...,p_k$ the normalized  weight of a value given on the vertex $p_j$, where the incident edges have normals $n_{j1}$ and $n_{j2}$, is given by $w_j$
+The authors of \cite{simplicialFluids} propose the following interpolation scheme to get a  continuous vector field. First, velocity vectors are computed at all the positions of dual vertices; this can be done using the sharp operator from \ref{sec:vf_1form2vf}. A velocity vector at an arbitrary position $p$ on the mesh then is calculated by first identifying the dual face the position $p$ lies in, i.e. identifying the closest vertex,  and then smoothly interpolating the velocity vectors given on the corners of the dual face.
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3.5cm]{imgs/8_bariweight.eps}%	
+\end{center}
+\caption{The baricentric weight function for one vertex in a pentagon, once as shaded surface, once as color plot.}%
+\label{fig:fd_bariweight}%
+\end{figure}
+
+The smooth interpolation of vectors of the velocities given on the dual face are done using weights given in \cite{citeulike:2398873}. For a flat convex polygon with vertices $p_1,...,p_k$ the normalized  weight of a value given on the vertex $p_j$, where the incident edges have normals $n_{j1}$ and $n_{j2}$, is given by $w_j$
 \[c_j(x) = \frac{\abs{n_{j1} \times n_{j2}}}{\langle n_{j1}, p_j -x\rangle\cdot\langle n_{j2}, p_j -x\rangle}\]
 \[w_j(x) = \frac{c_j}{\sum_{i=1}^k c_i}\]
-On the edges of the polygon, these weights interpolate the values on the vertices linearly and thus the weights can be used to get a continuous vector field on the mesh. While these weights are designed for flat polygons they work well for the potentially curved dual faces \note{img}.
+On the edges of the polygon, these weights interpolate the values on the vertices linearly and thus the weights can be used to get a continuous vector field on the mesh. One weight function is depicted in Figure \ref{fig:fd_bariweight}.
 
 On flat meshes these weights can be used directly to interpolated the velocities computed on dual vertices via
 \[u(x) = \sum_{j} w_j(x) u_j\] 
-On a curved mesh such an interpolation will not lead to a tangential vector. To reproject the interpolated vector on the appropriate triangle leads to a uncontinous vector field which might lead to problems in the pathtracing step. In general we propose to  flatten  the dual face the velocities by projecting them along the curvature normal from Section \note{...} associated to the dual face, do the interpolation with the projected vector field and then project the interpolated vector back to the appropriate triangle. \note{img problem and solved problem: peak where vf does not vanish}
+On a curved mesh such an interpolation will not lead to a tangential vector. To reproject the interpolated vector on the appropriate triangle leads to a non continous vector field, see Figure \ref{fig:fd_flatteninterpolation}. In general we propose to  flatten  the dual face and the velocities by projecting them along the curvature normal described in \cite{laplacebeltrami} associated to the dual face, do the interpolation with the projected vector field and then project the interpolated vector back to the appropriate triangle. 
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height= 3cm]{imgs/8_curvedinterpolation.eps}%	
+\end{center}
+\caption{On curved meshes dual faces are not flat, they need to be flattened in the interpolation step to get a continuous interpolation of the vector field.}%
+\label{fig:fd_flatteninterpolation}%
+\end{figure}
+
 \[u_{flat}(x) = \sum (u_j - N_{curv} \langle N_{curv}, u_j \rangle) w_j\]
 \[= (\sum u_j w_j )- N_{curv} (\sum \langle N_{curv}, w_j u_j \rangle)\]
 The reprojection onto a triangle $t$ with normal $N_t$ along $N_{curv}$ is given by
 \[u(x) = u_{flat}(x) - N_{curv} \frac{\langle u_{flat}(x), N_{t}\rangle}{ \langle N_{curv}, N_t \rangle}\]
 
-
-\note{These weights are defined similarely for higher dimensional convex polygons too, see \note{Bari coordinates}.}
- \note{image of the4 weights}
-
 \subsubsection{Pathtracing on a mesh}
-Given a continuous vector field on the mesh, the pathtracing step is straight forward. Let $u(x)$ be the interpolated velocity field, then this field can be pathtraced by doing small steps of size $h$ according to $u$ \note{img}. A simple pathtracing algorithm is also given in Listing \ref{fig:fd_pathtracing}. %The only issue when pathtracing a point is that you need to closely keep track what triangle you actually are on and when you change triangle, as you need this information to correctly compute $u$, and $u$ has to always be a tangential vector.
+Given a continuous vector field on the mesh, the pathtracing step is straight forward. Let $u(x)$ be the interpolated velocity field, then this field can be pathtraced by doing small steps of size $h$ according to $u$. A simple pathtracing algorithm is also given in Figure \ref{fig:fd_pathtracing}. 
 
-\begin{listing}
+\begin{figure}
 %\caption{backtrace a position}
+\begin{center}
+\fbox{\parbox{10cm}{
 \begin{algorithmic} %\REQUIRE T , stepSize  
 \STATE \hspace{-0.3cm}\textbf{backtrace}:
 \STATE t = T;
@@ -248,52 +287,123 @@ Given a continuous vector field on the mesh, the pathtracing step is straight fo
 \IF{triangle boundary reached}
 \STATE $triangle = neighborTriangle$; %//or stop tracing if border of the mesh is hit.
 \ENDIF
-\end{algorithmic}
+\end{algorithmic}}}
+\end{center}
 \caption{A straight forward algorithm to trace  the trajectory of a particle. $u(...)$ is the interpolated vector field and $maxt$ is a helper function that computes the maximal possible time step before hitting the border of the current triangle.}
 \label{fig:fd_pathtracing}
-\end{listing}
+\end{figure}
 
 \subsubsection{Backtracing Vorticities}
 
+When the dual vertices have been traced back, the vorticity is calculated on the backtraced dual mesh. Additional 'dual vertices` are introduced on the midpoints of border edges such that the dual border faces are complete. These dual vertices are treated separately: as viscous fluids have by definition zero velocity on borders the midpoints of border edges don't need to be traced back, as they don't move. Their velocity is defined to be zero, which is also used when interpolating the velocity field. This separate treatment of the dual vertices on the boundary is the reason why obstacles induce vorticity in our simulation. 
+
+On the backtraced dual faces the vorticity is computed by integrating the velocity field along their boundary. If $p_0$,...,$p_n$ are the boundary vertices of the the backtraced dual face this is
+\[\sum_{i=0}^n\langle u(p_i) + u(p_{i+1}), p_{i+1}-p_{i}\rangle/2\]
+where $u(p)$ denotes the interpolated velocity field $u$ at the position $p$. A further improvement is to use the harmonic component $\discrete{c}$ of $u$ only if at least one backtraced  dual vertex lies on the boundary of the mesh. By definition a harmonic field has no vorticity and therefore is irrelevant for the vorticity calculation away from obstacle boundaries. But due to floating point errors the vorticity of the harmonic component will never totally vanish. This introduces artifacts and vorticity erroneously induced by the harmonic field can accumulate over time. Therefore dual boundary faces and dual inner faces are treated separately:
+
+\begin{align*}
+&\sum_{i=0}^n\langle d\discrete{a}(p_i) + d\discrete{a}(p_{i+1}), p_{i+1}-p_{i}\rangle/2 & \text{for inner dual faces}\\
+&\sum_{i=0}^n\langle u(p_i) + u(p_{i+1}), p_{i+1}-p_{i}\rangle/2& \text{for boundary dual faces}
+\end{align*}
+
+These are values defined on the dual faces -which means that this is a dual 2-form. To get the vorticities as a primary $0$-form they additionally need to be $\star_0^{-1}$-ed.
+
+\subsection{Additional forces and diffusion}
+\label{ssec:fd_diffusion_and_forces}
+The addition of forces and diffusion of vorticities is simple and can be implemented directly using the DEC operators. The addition of forces to the vorticities is given by
+$$\discrete{w}^{backtraced}_{t_{n+1}} += (t_{n+1}-t_n)\cdot\partial^1_{discrete} \discrete{f}^1$$
+and the diffusion of vorticity, as described by Equation \ref{eq:vortDiffusion},
+\[\discrete{w}_{t_{n+1}} = \discrete{w}^{backtraced} + \nu t \Delta \discrete{w}_{t_{n+1}}\]
+is given by solving the following sparse linear system for $\discrete{w}^0_{t_{n+1}}$:
+$$(Id - \nu (t_{n+1}-t_n)  \star_0^{-1} d^{dual}_0\star_1d_0)\discrete{w}_{t_{n+1}} = \discrete{w}^{backtraced}$$
 
 
-\section{The harmonic component} 
+\subsection{The Harmonic Component}
+\label{ssec:fd_harmonic}
+What is left is the recovery of $u$ from the vorticities. This involves the precomputed harmonic form and the recovery of the vorticity part $da$; the computation of both is related. We derive here constraints for the harmonic form that lead to solutions with higher quality than using the adapted matrices from the vector design chapter. 
 
-\subsection{Fluid simulation on a sphere}
-On a sphere there are no borders and there is no harmonic $1$-form, therefore no harmonic part $c$ needs to be considered in the reconstruction step and the computation of the harmonic field falls away.
+\subsubsection{Harmonic Forms and Cycles}
+The problem statement '$\omega^1$ is harmonic` has degrees of freedom depending only on the topology of the manifold (Section \ref{subsec:vf_dimHarm}). The following result mentioned in \cite{FRANKEL11} (p377) explains these degrees of freedom for 1-forms on borderless manifolds and \emph{tangential} 1-forms on manifolds with boundary. In \cite{FRANKEL11} it is formulated more generally for $k$-forms using the notion of $k$-cycles.
 
-\subsection{Flat Bordered Meshes}
-On a flat mesh with boundaries the harmonic part $c$ of the flow can be determined through boundary constraints. Rather than using the boundary adapted matrices introduced for vector field design in Section \note{...} to compute a harmonic $1$-Form, we propose here to bundle up all border vertices and define that their dual face is one outer face. 
+\begin{thm}
+Let $M$ be a compact manifold with boundary. Let $z_1,...,z_\beta$ be a basis of 1-cycles on the manifold. Then there exists a unique tangent harmonic 1-form $\alpha^1$ with prescribed periods $p_1,...,p_{\beta}$
+\[\int_{z_1}\alpha^1 = p_1\]
+\[\int_{z_2}\alpha^1 =p_2\]
+\[...\]
+\[\int_{z_\beta}\alpha^1 = p_{\beta}\]
+\end{thm}
 
-In the vector field design context the matrix was adapted to correctly enforce divergence constraint on boundary vertices, or rather their dual faces. Here the roles of the primary and dual mesh being switched, this corresponds to a correct zero curl enforcement on the boundary. The adaptation of the matrices introduces an error by assuming that half of the flow over a boundary edge is a correct guess for the flow through the part of the edge belonging to the dual face, as depicted in \note{img...}. Adding an outer face results in more accurate harmonic fields, as depicted in Figure \note{...}.
+For a correct definition of cycles see \cite{FRANKEL11}. A basis of $1$-cycles is basically a set of closed curves from which you can build any closed curve on the manifold by concatenation. In Figure \ref{fig:fd_cycles} a torus and a bordered manifold are depicted where two cycles that form the basis of 1-cycles. This means that a harmonic tangential differential 1-form is well defined if the flow along the two cycles, i.e. the period on the two cycles, is fixed. 
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3cm]{imgs/8_cyclebases.eps}%	
+\end{center}
+\caption{The degree of freedom of harmonicity for  tangential 1-forms is their periods on a basis of cycles. On the torus and the manifold with boundary depicted here two cycles form a basis. A tangential harmonic 1-form is uniquely defined if the flow along the basis cycles is fixed. }%
+\label{fig:fd_cycles}%
+\end{figure}
 
 
-We interprete the border vertices as one vertex with one dual face with a closed boundary, as depicted in Figure \note{todo}. The boundary of this dual face is closed. Then the dual border operator matrix $\delta^{dual}_2$ needs to encode the border relation of the additional faces. The border of the dual outer face is the union of the borders of the dual faces of the border vertices. Therefore for every border component $border$ a column $\delta_{border}$ has to be added to $\delta_0^{dual}$
-\[\delta_{border} = \delta_0^{dual} \cdot 1_{border}\]
-where $1_{border}$ describes the set of vertices of $border$, i.e. is one for every vertex in $border$ and 0 else.
-The dual derivative $d_1^{dual}$ is therefore adapted by adding one line per 
+On manifolds without boundaries one additional constraint for each 1-cycle in the basis of 1-cycles for the computation of a harmonic component. If only objects with sphere topology are considered there is no need to compute any harmonic component, as the space of harmonic 1-forms is zero dimensional- there are no harmonic 1-forms on spheres. 
+
+The only type of meshes with boundary we consider are flat meshes with one or more holes that describe impenetrable obstacles.
+
+\subsubsection{Computing the Harmonic Component on Flat Bordered Meshes}
+
+%\note{type of constraints: 0 flux and fixed flux}
+%On a flat mesh with boundaries the harmonic part $c$ of the flow can be determined through boundary constraints. Rather than using the boundary adapted matrices introduced for vector field design in Section \note{...} to compute a harmonic $1$-Form, we propose here to bundle up all border vertices and define that their dual face is one outer face. 
+We assume that all inner boundaries describe obstacles and only the outer boundary has sections that allow flow to pass. The goal is to find a harmonic 1-form
+\begin{align}
+\partial \textbf{c} &= 0 & \text{(zero vorticity)}\nonumber\\ 
+d \textbf{c} &= 0 & \text{(zero divergence)}\nonumber\\
+\textbf{c} &= 0 & \text{on inner boundaries}\nonumber\\
+\textbf{c} &= \textbf{u} & \text{on the exterior boundary}
+\label{eq:fd_harmonic}
+\end{align}
+The constraints $\textbf{u}$ on the exterior border can not be chosen arbitrarily. At the very least summing up the flux over the exterior border should be zero, else the zero divergence condition is impossible to fulfill. A simple consistent constraint can be obtained by choosing a fixed direction $v$ and setting all edges of the exterior boundary to
+\begin{equation}\discrete{c}(edge) = \langle edge^\perp, v\rangle=: \discrete{u}(edge) \label{eq:fspermeable}.\end{equation}
+
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3cm]{imgs/8_constraints.eps}%	
+\end{center}
+\caption{Example constraints for a harmonic component. The period around every obstacle has to be fixed by fixing the flow along the blue circles and the exterior boundary allows incoming flow on one side and outcoming flow on the other following Equation \ref{eq:fspermeable}, all other boundaries allow no flux.}%
+\label{fig:fd_harmconstraints}%
+\end{figure}
+
+
+Constraining only the values on boundaries does not get rid of all degrees of freedom. For any two solutions $v$, $w$ of the system \ref{eq:fd_harmonic}, the difference $v-w$ is a $1$-form tangential on all boundaries. This means that the theorem described in the last section applies to the difference of solutions.  If the system \ref{eq:fd_harmonic} has a solution there exists a solution with arbitrary prescribed periods on a system of independent cycles. 
+
+%At the moment we ignore the exterior boundary. The inner boundaries are impenetrable, the flow on their boundaries has to be tangential and the theorem described in the last section applies. 
+Every inner border introduces one new cycle and an additional degree of freedom. Therefore for every obstacle one additional constraint has to be provided that fixes the period around the obstacles. We will constrain these periods to be zero. The overall constraints are depicted in Figure \ref{fig:fd_harmconstraints}.
+
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3.5cm]{imgs/8_dualborderface.eps}%	
+\end{center}
+\caption{The border vertices of the inner border (red) are interpreted as one vertex with a single dual face (blue).}%
+\label{fig:fd_dualborderface}%
+\end{figure}
+
+This can be done by slightly changing the dual mesh and adapting the DEC matrices. The vertices on an inner border are interpreted as one vertex and their dual faces are combined to one single dual face, as depicted in Figure \ref{fig:fd_dualborderface}. The boundary of this dual face is the closed cycle on which the zero periodicity is enforced. The dual derivative computes the flow along dual faces. If it is adapted according to the changed dual mesh the zero vorticity constraint for harmonic 1-forms
+\[\widetilde{d^{dual}_1} \star_1 \textbf{c} =0\]
+naturally enforces a zero period around inner borders. The dual derivative $d_1^{dual}$ is adapted by adding one line per border component
 \[\widetilde{d_1^{dual}} = \begin{pmatrix} d_1^{dual} \\
 (1_{border_1})^T \cdot d_1^{dual} \\
 \vdots \\
 (1_{border_k})^T \cdot d_1^{dual} \\
 \end{pmatrix}\]
-As the old dual faces of boundary vertices are ignored, the corresponding lines need to be dropped out of the matrices as well. Or equivalently the corresponding values of $\star_0$ can be set to zero:
-\[(\star_0)_{borderVertex} = 0\]
-additionally some positive dual primal weight $W$ for the newly added composed outer faces has to be added, leading to
-\[\widetilde{\star_0} = \begin{pmatrix}((\star_0)_{=0\;for\; border\; vertices} \\
-W\\
-\vdots \\
-W \end{pmatrix}\]
-The weight $W$ could be taken to be the combined area of the dual faces of border vertices, which would be a consistent thing to to, but any weight will work.
-Note that it is enough to do so for each 'hole' and not for the 'outer' border, as a no curl constraint is then automatically enforced on the outer border too.
+and dropping the matrix columns corresponding to the dual faces of single boundary vertices. Equivalently the corresponding values of $\star_0$ can be set to zero, as we only consider $\widetilde{d_1^{dual}}^t\star^0 \widetilde{d_1^{dual}}$.
+Additionally some positive dual primal weights $W$ for the newly composed dual faces have to be appended to $\star_0$. The weight $W$ can be chosen to be the combined area of the dual faces of border vertices, but any positive weights will work. This leads to
+\[\widetilde{\star_0} = \begin{pmatrix}\star_0& & &\\
+&W& &\\
+& &\ddots &\\
+& & & W \end{pmatrix}\]
 
-The values of the harmonic 1-Form on the boundaries need to be carefully constrained such that the no divergence and no curl constraints for harmonicity can be met. At the very least the border constraints have to fulfill $\sum_{border} a_j = 0$, else it is impossible to have a no divergence field. The simplest constrains are to set for all edges of a border component
-\begin{equation}\discrete{w}(edge) = 0 = \discrete{a}_{edge} \label{eq:fsobstacle}\end{equation}
-to describe obstacles with no flow through its border, or to set for all edges
-\begin{equation}\discrete{w}(edge) = \langle edge^\perp, v\rangle= \discrete{a}_{edge} \label{eq:fspermeable}\end{equation}
-with a fixed direction $v$. This second constraint can be used for example to describe a flow that flows in on one side of a rectangular region and out on the other \note{img}. 
 
-With these adapted matrices we use the same formulation as in the vector field chapter to get an equation for the harmonic field:
+With these adapted matrices the system \ref{eq:fd_harmonic} can be solved by solving
 \begin{equation}\begin{pmatrix} d^T & \widetilde{\partial}^T & Id_{border}^T \end{pmatrix} \begin{pmatrix}
 \star_2 & & \\
  & \widetilde{\star_0} & \\
@@ -301,39 +411,102 @@ With these adapted matrices we use the same formulation as in the vector field c
 \end{pmatrix} \begin{pmatrix} d \\
 \widetilde{\partial}\\
 Id_{border}
-\end{pmatrix} \discrete{w}^1= \lambda\discrete{a}.\label{eq:fsharmonic}\end{equation}
-Here $\lambda$ is some positive weight for the constraints from Equations \ref{eq:fsobstacle} and \ref{eq:fspermeable} and $\discrete{a}$ has according values for boundary edges and is zero for all internal edges. 
-Note that the adapted matrix $\widetilde{d_1^{dual}}^T \star_0 \widetilde{d_1^{dual}}$ is considerably less sparse than the matrix used in the vector field design chapter, but in practice this was not an issue.
+\end{pmatrix} \discrete{c}^1= \lambda\discrete{u}.\label{eq:fsharmonic}\end{equation}
+Here $\lambda$ is a positive weight for the boundary constraints and $\discrete{u}$ is zero on inner edges and the chosen constraint on the exterior boundary, for example given by Equation \ref{eq:fspermeable}. 
 
-\note{Rather than to enforce a no curl constraint on the bordering dual faces with non closed borders, these are discarded from the equations and replaced by one constraint per border component, i.e. per outer face. \note{img}. 
-To get a perfect discrete harmonic field to some border constraints, the border constraints have to lie in the kernel of the Laplacian, they have to fulfil }
+\subsection{Recovering $d\textbf{a}$}
+\label{ssec:fd_recovering_da}
 
-\section{?The complete algorithm?}
-\note{Direct force input is missing!}
-\section{Influence of Mesh choice and parameter choice}
-Results and problems.
+\begin{figure}%
+\begin{center}
+\includegraphics[height=3cm]{imgs/8_boundaryconstraintsInduceCycles}%	
+\end{center}
+\caption{The constraints on the exterior boundary induce new 'cycles` (red) on which the period of the harmonic form is non zero. How these cycles look and how many there are depends on the boundary condition. A vorticity part $d\discrete{a}$ has to be constrained to have a zero period along these induced cycles, else it is not orthogonal to the harmonic form.}%
+\label{fig:fd_boundaryinducedCycles}%
+\end{figure}
 
-\chapter{Further Literature}
-This section gives a short overview where to go from here, after reading this thesis. The thesis should have helped a reader to develop a feeling for DEC while covering the most important theoretical foundations. There is a plenty of interesting topics related to DEC either not mentioned or only superficially treated here. 
+The last missing element, the reconstruction of the vorticity part $d\discrete{a}$ from the vorticites $\discrete{w}$ works as described in Theorem \ref{thm:vort2vel} in Section \ref{subsec:fd_vort2vel}, by solving 
+\begin{equation}\Delta \discrete{a}^1 = \discrete{w}^0_{t_{n+1}}\label{eq:fd_discreteVort2Vel}\end{equation}
+\begin{equation}\discrete{v}^1_{updated} =  d_0 \discrete{a}^1 + \discrete{c}^1\end{equation}
+There is one hick up. The condition of the theorem is that consistent DEC matrices are used that allow a Hodge decomposition, such that the harmonic component $\discrete{c}$ is orthogonal to $d\discrete{a}$. 
 
-Various texts introduce DEC rigorously as an independent theory, targeting an audience well acquainted with differential forms and possible applications of differential forms. After reading this thesis you should have enough background to understand the relevance and context of the different DEC operators for these texts being of interest. \note{....}
+The harmonic component is computed with adapted DEC matrices and by additionally enforcing some values on the outer border.  These constraints on the exterior boundary actually introduce new 'cycles` and fix the additional periods of the harmonic form. These additional 'cycles` and their number depend on the boundary constraint, see Figure \ref{fig:fd_boundaryinducedCycles}.
 
-\subsection{?? Alternative $\star_0$ matrices ??}
-\note{Where to put this section? And i don't know how to put mean value coordinates in the perspective}
-As mentioned when introducing it, the discrete $\star$ is less than perfect. That it is a simple diagonal matrix is a great strength, but as seen there are some issues. For one, other than the discrete $d$ operator, it is not wholly consistent with the theoretical sampling scheme. But more importantly the weights degenerate if the mesh degenerates because of choosing the Voronoi mesh as dual mesh: the Voronoi cells for obtuse simplices are not bounded and therefore the approximation of the $\star$ operator which relies on a guess of the dual form integrated over the dual cell, gets arbitrary bad.
+For $da$ to be orthogonal to $c$, $\partial d a = 0$ should enforce that $da$ has a zero period on all cycles where $c$ has a non zero period. Applying $\partial$ to $da$ sums up the flow of $da$ around dual faces. As the cycles induced by the exterior boundary constraint are not accounted in the DEC matrix $\partial$, $\partial d a = 0$ fails to enforce zero periodicity on them. While the correct thing would be to identify such induced cycles and add additional constraints on them, a much simpler approach is to add the constraint $da = 0$ on \emph{all} boundary edges, this seems also to be the approach taken in \cite{simplicialFluids}. This constraint can be enforced by additionally minimizing $\mu(d^TId_{boundaryedges} d)\cdot a$ for some large weight $\mu$, which leads to the equation
+\begin{equation}(\Delta + \mu(d^T Id_{boundaryedges} d)) \discrete{a}^1 = \discrete{w}^0_{t_{n+1}}\end{equation}
+\begin{equation}\discrete{v}^1_{updated} =  d_0 \discrete{a}^1 + \discrete{c}^1\end{equation}
+This leads to a slightly incorrect behavior close to boundaries presumed to be permeable. As in this vorticity reconstruction step they are treated like obstacle boundaries, they will reflect flow. If the permeable boundaries are in regions with no vorticity or they are sufficiently far away from the areas of interest, this can be ignored.
 
-We have considered exactly this problem in Section \note{...} and came up with the mixed area weights \note{...}. In DEC the interpretation is ...
+%The harmonic component is computed with adapted DEC matrices and by additionally enforcing some values on the outer border. The additional enforcement of fluxes on the outer border are a bit of a hack. They make it necessary to enforce boundary constraints during the recovery of $d\discrete{a}$ as well. These constraints on the exterior boundary actually fix the period of the harmonic form on bordered meshes but this is kind of very application dependent. in the example showed here we can reduce the problem to a problem with only inpenetrable walls and the harmonic form has two free periods that can be chosen. The inner one for the obstacle is enforced correctly by adapting the DEC matrix, the outer one is replaced by fixing the boundary values and thereby fixing the period. But these boundary constraints are then not reflected in the DEC matrices as they should and therefore the Hodge decomposition does not work. The problem in example would be that divergence along the object is not taken into account. The correct thing would be to enforce a zero periodicity but we and the authors of ... simply enforce a zero flux constraint on all boundaries, thereby fixing the period as well and guaranteeing orthogonality. Nevertheless this leads to a slightly incorrect behavior on penetrable boundaries.
 
-But even thought the mixed area weights are pretty good we want to mention some further alternatives:
+%This leads to a slightly incorrect behavior on pesumedly durchlaessigen kanten. For the vorticity reconstruction and the ... spiegeln, bild. But this effect is not important in the example displayed... as boundary a has nothing to mirror, the vorticities being zero and boundary 2 is far away enough from the obstacle not to influence the ....
 
-\subsubsection{Mean value weights}
+%\[\]
+%\[\]
+%We now translate the vector calculus equation \ref{eq:NS3} and the integration scheme into DEC terms. 
+%The velocity field $u$ is described as a discrete  $1$-form $\discrete{v}^1$, as are the user provided forces $\discrete{f}^1$ and the precomputed harmonic part of the flow $\discrete{c}^1$. %But instead of associating $\discrete{v}^1$ to the velocity $u$ as representing flows along edges according to the first sampling scheme described in \note{...} $\discrete{v}^1$ is associated to $u$ using the second sampling scheme \note{...} where $\discrete{v}^1$ describes the flux through the edges. In comparison to the vector field design implementation the roles of the dual and primary mesh gets switched, what were the discrete dual forms are now stored on the primary mesh. Accordingly the role of the operators $d$ and $\partial$ switch, as depicted in the schematic \note{img: Todo standard operators and relation to ec now}.
+%%The reason to chose to represent the velocity field by fluxes on the primary mesh is that it greatly facilitates the enforcement of border constrains. Boundaries of obstacles then simply consist of edges, where no flux passes, i.e. $\discrete{v}^1$ will be constrained to $\discrete{v}^1(e_{obstacle}) = 0$. \note{img}.
+%
+%The vorticity of $u$  is a discrete $0$-form $ \discrete{w}^0 = \delta_{discrete}^1 \discrete{v}^{1}$, consisting of values defined on vertices. Steps $(2a)$ and $(2b)$ of the integration scheme, i.e. the backtracking of parcels and computation of vorticities are described in the next section. All other parts of the numerical integration are straight forward to translate. The step $(2 c)$, the diffusion of vorticity as given by the Equation \ref{eq:vortDiffusion},
+%\[\discrete{w}^0_{t_{n+1}} = \discrete{w}^0 + \nu t \Delta \discrete{w}^0_{t_{n+1}}\]
+%i.e.
+%\begin{equation}(Id - \nu t  \star_0 d^{dual}_0\star_1d_0)\discrete{w}^0_{t_{n+1}} = \discrete{w}^0 \label{eq:fd_discreteDiffusion}\end{equation}
+%The step $(3)$, the addition of forces is given by
+%\begin{equation}\discrete{w}^0_{t_{n+1}} += \partial^1_{discrete} \discrete{f}^1\end{equation}
+%The step $(4)$, the reconstruction of the updated $1$-form $\discrete{v}^1$ works as described in Theorem \ref{thm:vort2vel} in Section \ref{subsec:fd_vort2vel}: \note{enforce 0 border flux ....}
+%\begin{equation}\Delta \discrete{a}^1 = \discrete{w}^0_{t_{n+1}}\end{equation}
+%\begin{equation}\discrete{v}^1_{updated} =  d_0 \discrete{a}^1 + \discrete{c}^1\end{equation}
+%where $c$ is the precomputed harmonic solution, $\Delta$ is the discrete Laplacian. Equations \ref{eq:fd_discreteDiffusion} and \ref{eq:fd_discreteVort2Vel} are to be solved with a sparse solver.
 
-\subsubsection{Uniform weights}
 
-\subsubsection{Alternative $\star_k$ matrices}
 
-On the advanced pure math side a more rigorous study of chain complexes and co chain complexes will give a more abstract view on DEC emphasising the important common properties that EC and DEC share, as they are always what you call 'exact sequences`. 
-Hodge theory and the de-Rham complex will give deeper insights but the mathematics are very involved. \note{...}
-Interesting in this context also is the relation to Differential topology where DEC can be used  to get nearly equivalent discrete results on simplicial complexes.\note{...}
+\section{Results}
 
-No less intersting is the relation between DEC and standard finite element methods \note{....}
+The algorithm gives plausible results if the meshes are of good quality. Because Voronoi duality is used and the dual mesh is used explicitly, all triangles have to be non-obtuse. The algorithm was tested on spheres and on flat meshes with one obstacle. Both  were generated such that there are no obtuse triangles. The quality of the results is much increased if the meshes have a higher resolution around the obstacles, as the most complex processes happen there. All flat meshes used are adaptive meshes, generated with the Matlab tool described in \cite{meshmatlab}, like the mesh displayed in Figure \ref{fig:fd_meshes}.
+
+
+\begin{figure}%
+\begin{center}
+\includegraphics[height = 3cm]{imgs/8_adaptivemesh1p4k.eps}%	
+\end{center}
+\caption{An adaptive mesh generated with \cite{meshmatlab} in Matlab, with 1 400 faces.}%
+\label{fig:fd_meshes}%
+\end{figure}
+
+It is hard to tell how accurate the simulations are. The time step size and the sampling density of the mesh have a huge influence on the simulation. As in every step velocities are interpolated, each time step induces some unwanted diffusion. The sparser the mesh is, the more diffusion is introduced by the interpolation in every step. Choosing a larger time step reduces this effect but also leads to less exact numerical integration; and if the steps are too large, the simulation becomes unstable. 
+
+In Figure \ref{fig:fd_timevsmesh} the influence of the time step size and the mesh density are demonstrated. On meshes with a low sample density the result is governed by the diffusion introduced by the interpolation and higher time steps pay off; on meshes with a high vertex density the higher time steps already lead to unstable behavior. Figure \ref{fig:fd_timesteps} shows the influence of the time step size on a single mesh.
+
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/8_results_timestepvsmeshsize.eps}%
+\caption{The algorithms was run with different time step sizes on meshes with different densities, while keeping the vorticity fixed. The velocity from left to right is 10 units per second and the mesh is 2 units wide. The time step size, listed from left to right, was selected to be 0.025, 0.005 and 0.075. The meshes have, listed from top to bottom, 1 400, 2 800, 5 300 and 12 000 faces. All meshes are adaptive and were generated using the same vertex distribution as for the mesh in Figure \ref{fig:fd_meshes}.
+The meshes are colored with the vorticity of the flow. Gray is a low absolute vorticity, light blue denotes high counter clockwise vorticity and yellow denotes high clockwise velocity.
+}%
+\label{fig:fd_timevsmesh}%
+\end{figure}
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/8_results_timesteps.eps}%
+\caption{On a mesh with 12 000 faces the time step was varied while keeping the viscosity at $0.02$. Velocity and coloring are the same as in Figure \ref{fig:fd_timevsmesh}. The behavior of the simulation depends on the time step; for the time step of 0.0075 the simulation begins to be unstable.}%
+\label{fig:fd_timesteps}%
+\end{figure}
+
+For an optimal solution the size of the time step would have to be adapted to the mesh resolution such that the two influences, additional diffusion and incorrect integration, are minimal.
+Independently the viscosity $\nu$ can be varied and controls the diffusion rather well, as depicted in Figure \ref{fig:fd_viscosities}.
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/8_results_viscosities.eps}%
+\caption{On a mesh with 12 000 faces the viscosity was varied while keeping the the time step at $0.02$. Velocity and coloring are the same as in Figure \ref{fig:fd_timevsmesh}.}%
+\label{fig:fd_viscosities}%
+\end{figure}
+
+Apart from the simulation being highly dependent on the mesh and time step, visually interesting results can be achieved by tweaking the parameters. And the simulation works well on curved meshes, as for example the simulation on the sphere in Figure \ref{fig:fd_sphere}.
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/8_fluidsphere_demo.eps}%
+\caption{A fluid simulation on a sphere with about 1500 faces. The timestep was selected to be 0.005 and motion was induced by stirring, the viscosity was set to 0.03. }%
+\label{fig:fd_sphere}%
+\end{figure}
+
+

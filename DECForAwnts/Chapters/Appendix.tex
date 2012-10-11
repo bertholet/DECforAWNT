@@ -1,16 +1,9 @@
 \begin{appendix}
-
-\subsection{Laplacian II}
-\note{put this somewhere}
-$E(\omega) = \int_M \langle d\omega, d\omega \rangle + \langle \partial\omega, \partial\omega \rangle$. Then $E(\omega + \epsilon\phi) = \epsilon^2\int_M \langle d\phi, d\phi \rangle + 2\epsilon\int_M \langle d\phi, d\omega \rangle + \int_M \langle d\omega, d\omega \rangle$. Taking $\frac{\partial}{\partial \epsilon} |_{\epsilon = 0}$ we have $=2\int_M \langle d\phi, d\omega \rangle$. But if $\phi = 0$ on borders or $M$ has no borders $\langle d\phi, d\omega \rangle + \langle \partial\phi, \partial\omega \rangle= \langle \phi, \partial d + d \partial\omega \rangle$. This means that any equation 
-\[\frac{\partial \omega}{ \partial t} = - \Delta \omega \]
-describes a flow that minimizes the energy $E$, i.e. smoothing $\omega$ and describes a diffusion. Example $1D$...
-	
-
-\chapter{The integral of differential forms}
+\chapter{Further Details}
+\section{The Well-Definedness of the Integral for Differential Forms}
 \label{app:integrals}
 
-That the integral definition of Section \ref{sec:integralOfForms} really is independent of the chosen map $\phi$ follows directly from the common transformation formula. Say we use a different map $\psi: V \rightarrow \Omega \subset M$, then $\psi = \phi \circ h$ for some mapping $h:U \subset \mathbb R^k \rightarrow V \subset \mathbb R^k$ \note {image}. 
+That the integral definition of Section \ref{sec:integralOfForms} really is independent of the chosen map $\phi$ follows directly from the common transformation formula. Say we use a different map $\psi: V \rightarrow \Omega \subset M$, then $\psi = \phi \circ h$ for some mapping $h:U \subset \mathbb R^k \rightarrow V \subset \mathbb R^k$ and 
 \[\int_{\psi(V)} \omega^k = \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \psi}{\partial x_1},...,\frac{\partial \psi}{\partial x_k}) d x_1...d x_k\]
 \[= \int_V \omega_{\psi(x_1,...,x_k)}(\frac{\partial \phi \circ h}{\partial x_1},...,\frac{\partial \phi \circ h}{\partial x_k}) d x_1...d x_k\]
 \[= \int_V \omega_{\phi\circ h(x_1,...,x_k)}(D\phi \cdot Dh) d x_1...d x_k\]
@@ -24,11 +17,13 @@ The integral of a $k$-form $\omega^k = f(x) \cdot dVol $ over a $k$-dimensional 
 And as $dVol(\frac{\partial \phi}{\partial x_1},...,\frac{\partial \phi}{\partial x_k}) = \sqrt{det((D\phi)^TD\phi)}$ this is
 \[\int_{\phi(U)} f dVol = \int_{U} f(\phi(x)) \sqrt{det((D\phi)^TD\phi)} dx_1...dx_k\]
 
-\chapter{Primal and Dual Discrete Border Operator}
+
+
+\section{The Dual Discrete Border Operator}
+
 \label{app:dualborder}
-\note{What follows now comes in the Appendix - this is already a much clearer formulation than anything i found anywhere, but still a bit technical. Could put a short note on orientation definition using forms in Appendix too} 
-[Inspired by Discrete Exterior Calculus by Desbrun et al.]
-The setting is the following: we are on an $n$-dimensional (discrete) manifold and the $n$-simplex $\sigma^n$ is oriented according to the orientation of the manifold. $\sigma^k$ is some face on $\sigma^n$ with an arbitrary orientation and $\sigma^{k-1}$ is a face of $\sigma^k$. On the dual-mesh side we have the cells $\star \sigma^k$ that lies on the border of $\star \sigma^{k-1}$; both these dual have an orientation induced by the primary cells. Our goal is to relate the primary border matrix $\delta_k$ which stores the relative orientation of $\sigma^k$ and $\sigma^{k-1}$ 
+%(Inspired by \cite{DECdesbrunEtAl})
+The setting is the following: we are on an $n$-dimensional (discrete) manifold and the $n$-simplex $\sigma^n$ is oriented according to the orientation of the manifold. $\sigma^k$ is some face on $\sigma^n$ with an arbitrary orientation and $\sigma^{k-1}$ is a face of $\sigma^k$. On the dual-mesh side we have the cell $\star \sigma^k$ that lies on the border of $\star \sigma^{k-1}$; both dual cells have an orientation induced by the primary cells. Our goal is to relate the primary border matrix $\delta_k$ which stores the relative orientation of $\sigma^k$ and $\sigma^{k-1}$ 
 and the dual border matrix $\delta_{n-k+1}^{dual}$ that stores the relative orientation of the (n-k+1)-cell $\star \sigma^{k-1}$ and $\star \sigma^{k}$.
 
 \begin{figure}[h]
@@ -39,7 +34,7 @@ and the dual border matrix $\delta_{n-k+1}^{dual}$ that stores the relative orie
 \end{figure}
 
 First of all notice that orientation can be treated very neatly by using forms, as volume forms measure signed volume.
-We saw in Section \note{...}, that a $k$ simplex $\sigma^k$ encodes orientation by the ordering of its vertices, and that induces an oriented basis $v_1,...,v_k$ that spans its volume. In terms of forms the ordering defines a volume form
+We saw in Section \ref{subsec:SC_orientations}, that a $k$ simplex $\sigma^k$ encodes orientation by the ordering of its vertices, and that induces an oriented basis $v_1,...,v_k$ that spans its volume. In terms of forms the ordering defines a volume form
 \[dv_1\wedge...\wedge dv_k\]
 to the $k$-simplex. The $k$-simplex lies in an $n$-simplex $\sigma^n$, oriented according to the orientation of the discrete manifold; it induces a volume form
 \[dv_1\wedge ... \wedge dv_n\]
@@ -60,7 +55,5 @@ Therefore, if the border matrix
 \[\delta_k\]
 stores the relative orientations of $k$ and $k-1$ simplices $\sigma^k$ and $\sigma^{k-1}$, then the relative orientation of $n-k-1$ and $n-k$-dimensional dual cells $\star \sigma^{k-1}$  and $\star \sigma^k$, with orientations induced by the primary simplices, is given by the dual border matrix
 \[\delta_{n-k+1}^{dual} = (-1)^{k} (\delta_k)^T\]
-
-\note{End of Appendix part}
 
 \end{appendix}

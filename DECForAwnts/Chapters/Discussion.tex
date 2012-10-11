@@ -1,0 +1,24 @@
+\chapter{Discussion and Further Literature}
+\label{chap:discussion}
+
+Discrete Exterior Calculus aims to discretize the operators of exterior calculus while staying close to their geometric nature. And it succeeds; the DEC operators can be a valuable tool in various applications on meshes. Like their continuous counter parts, the DEC operators are closely bound to geometric operations and are coordinate free: there is no need to introduce local coordinates on triangles or similar. 
+
+The strength of DEC lies in that some EC features are conserved exactly. The discrete operators form a discrete de Rham complex very similar to the continuous one. Stokes theorem is designed to be conserved, the adjointness of derivative and coderivative are preserved just as the exactness of the operators $d$ and $\delta$, i.e. $dd = 0$ and $\delta\delta = 0$. Keeping these fundamental properties allows elegant reasoning in DEC terms along the lines of the continuous reasonings, such that results like the hodge decomposition hold in DEC, not approximately, but exactly. This pays off in practice.
+
+One might be tempted to see DEC as an automatism for the discretization of differential equations: just formulate a problem in EC and replace the operators by DEC operators. This approach will often fail. The different treatment of duality in the continuous and the discrete theory is a key issue. Because discrete dual forms are defined on a different geometric object, they can not be compared or mixed directly with primary forms. This implies that a problem must be carefully reformulated before DEC is applicable.
+
+Furthermore, using DEC to solve a problem requires a clear understanding of the problem and of its geometry to correctly implement constraints and combine DEC with other methods. This is best demonstrated with the fluid simulation in Chapter \ref{chap:FS}, where the problem is first reformulated in terms of vorticities to develop an integration scheme that respects the geometry of the problem and combines well with DEC.
+
+\subsubsection{Where to go from here}
+
+This thesis is designed to be an introductory text. It covers the  basics on manifolds, forms, differential forms and exterior calculus, emphasizing geometric aspects. The goal is to show the huge potential of EC and DEC and also help building a strong intuition for the various operators and their relations. But covering that much ground with an emphasis on intuition has its costs; important aspects are only mentioned and most issues are not treated rigorously.
+
+%In the following I mention some texts covering important topics omitted, that I found relatively easy to read.
+
+There are many rigorous introductions to Differential Forms, for example the the textbook 'Global Analysis` \cite{globalAnalysis}. 
+
+The texts \cite{hirani03} and \cite{DECdesbrunEtAl} introduce DEC rigorously as an independent theory, targeting an audience well acquainted with differential forms and possible applications of differential forms. This thesis should give enough background to understand these texts. 
+
+A more rigorous study of chain complexes and co chain complexes will give a more abstract view on DEC, emphasizing the important common properties that EC and DEC share. Important in this context are also cohomology groups together with the de Rham complex, but the theory is rather involved. In 'The Geometry of Physics` \cite{FRANKEL11}, Chapters 13 and 14 you can find a nice introduction of the most important concepts. See also \cite{DMK08}, where a discrete result about cohomolgy groups is proven. 
+
+One important omission of this thesis is error analysis, variational calculus and finite element methods. Finite element methods are closely related to DEC and has a very developed error analysis. There is a wealth of literature on FEM; for example the text book \cite{citeulike:4388136}.

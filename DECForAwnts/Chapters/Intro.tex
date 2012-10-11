@@ -2,39 +2,98 @@
 	
 	\section{Goal of this Thesis}
 	
-	The goal of this thesis is twofold. One goal is to introduce the reader to exterior calculus, which provides a very elegant way to formulate many things from standard calculus and leads to deeper insights about various differential operators. The second goal is to introduce discrete exterior calculus, which allows to reformulate and approximate equations from exterior calculus with matrices, such that the equations can be solved computationally (at least approximately). 
+	This thesis introduces the reader to exterior calculus (EC) and discrete exterior calculus (DEC). Exterior calculus provides a very elegant way to formulate important operators and relations from standard calculus and leads to deeper insights about various differential operators. Discrete exterior calculus mirrors exterior calculus, but is defined directly on triangle meshes and simplicial complexes. It allows to reformulate and approximate equations from exterior calculus with matrices, such that the equations can be solved computationally directly on the meshes. 
 	
-	After reading this thesis you should have a working knowledge of both exterior calculus and discrete exterior calculus (DEC), such that you can apply DEC to problems and reason (or at least follow reasonings) using exterior calculus. 
+After reading this thesis a reader should have a working knowledge of both exterior calculus and discrete exterior calculus, such that you can apply discrete exterior calculus to problems and reason (or at least follow reasonings) using exterior calculus. 
 	
-	
+Both EC and DEC are, under a layer of abstraction, of a very geometric nature. This thesis also attempts to help a reader see the simplicity and beauty of the underlying relations used by and described by EC and DEC.
 
 		
-	\section{A Glimpse of DEC}
+\section{A Glimpse of DEC}
+\label{sec:1_example}
+\begin{figure}
+\begin{center}
+\includegraphics[height = 5cm]{imgs/1_1_SolvingProcessUsingDEC.eps}
+\end{center}
+\caption{Ideal solution process using DEC}
+\label{fig:1_solutionprocess}
+\end{figure}
 	
-	\begin{figure}[h]
-	\begin{center}
-	\includegraphics[height = 7cm]{imgs/1_1_SolvingProcessUsingDEC.eps}
-	\end{center}
-	\caption{General solution process using DEC}
-	\end{figure}
-	
-	
-		\begin{itemize}
-			\item Derivative as a simple example 
-			\item vs FEM 
-			\item show a picture of the deRahm complex saying that this diagram helps you translate Differential Operators into Matrices.
-		\end{itemize}
-				\begin{itemize}
-			\item From equations to Meshes.
-		\end{itemize}
+Ideally DEC is very simple to use. We start with a problem statement or solution process expressed in standard calculus terms and reformulate the standard calculus equations using exterior calculus operators. Then the exterior calculus operators are substituted with discrete exterior calculus matrices. This produces a linear equation that can be solved computationally. This process is sketched in Figure \ref{fig:1_solutionprocess}.
 
-	\section{A Tour to this Thesis}
-		\begin{itemize}
-		\item	Structure of this Thesis: Goal: acquire founded knowledge about DEC. The Thesis as three pillars: smooth Theory, discrete theory and application/implementation of example problems. The Smooth Theory we try to discretize is introduced alongside the corresponding discrete version of the Theory, such that you understand  the reasons and assumptions behind it. With an emphasis to get an intuitive understanding of the smooth theory rather than giving a rigorous mathematical introduction. Every chapter gets a table describing what is introduced and where it belongs to.
-		
-		\item Short trailer like chapter by chapter overview, one image per chapter.
-		\end{itemize}
-		
-	\section{What this thesis is and what it is not}
-		Disclaimer, no error analysis, no FEM. Not a rigorous introduction to EC
+We illustrate this with an application from Desbrun et Al. \cite{Desbrun:1999:IFI:311535.311576} and \cite{laplacebeltrami}. In the setting of minimal surfaces a so called area minimizing flow, or mean curvature flow arises, see e.g. \cite{carmo1992differentialgeometrie} or \cite{2011arXiv1102.1411C}. This flow is basically a set of vectors orthogonal to a curved surface for which is guaranteed that if the whole surface is slightly moved in these directions, the area of the surface is decreased everywhere. Lets say $M$ is our surface and $V$ is the set of directions describing the mean curvature flow, then in a sloppy notation
+\[\left. \frac{\partial}{\partial t} area(M + t\cdot V) \right|_{t=0}\leq 0\]
+Now it turns out that the mean curvature flow can be described by applying the Laplace operator $\Delta_M$ defined on the surface $M$, to the coordinates of the surface $M$. 
+\[V = \begin{pmatrix}
+\Delta_M M.x \\
+\Delta_M M.y \\
+\Delta_M M.z
+\end{pmatrix}\]
+For the moment it is not important how a Laplacian is defined \emph{on} a surface, this will be described in Chapter \ref{chap:EC}. Important is only, that $\Delta$ is a differential operator that can be expressed using some exterior calculus operators, namely $d$ and $\partial$: 
+\[\Delta = \partial d\]
+This gives us a description of the area minimizing process in exterior calculus terms: if the surface positions are changed overt time according to the following equation, its area gets minimized:
+\[\frac{\partial}{\partial t} \begin{pmatrix}
+M_t.x \\
+M_t.y \\
+ M_t.z
+\end{pmatrix} = \begin{pmatrix}
+\partial d \,M_t.x \\
+\partial d\, M_t.y \\
+\partial d\, M_t.z
+\end{pmatrix}\]
+Now suppose we have a triangle mesh and we want to minimize its surface. Wanting to minimize the surface of a mesh is not an exotic idea. For example this can be used to smooth a surface. If a surface is bumpy, minimizing the surface locally will flatten the bumps. We have a description of the area minimizing process in exterior calculus terms. Discrete exterior calculus mirrors exterior calculus: it provides two matrices $\partial^{discrete}$ and $d^{discrete}$. Then we simply replace the exterior calculus operator $\Delta = \partial d$ with the  discrete exterior calculus matrix $\Delta^{discrete} = \partial^{discrete} \cdot d^{discrete}$ and the surface coordinates of $M$ by the coordinates of the mesh vertices $v$ and we get
+\[\frac{\partial}{\partial t} \begin{pmatrix}
+v_t.x \\
+v_t.y\\ 
+v_t.z
+\end{pmatrix} = \begin{pmatrix}
+\Delta^{discrete} v_t.x \\
+\Delta^{discrete} v_t.y \\
+\Delta^{discrete} v_t.z
+\end{pmatrix}\]
+This describes three equations, one for each coordinate, that need to be integrated. These equations can be integrated computationally, either using explicit integration
+\[v_{t_{n+1}}.x = v_{t_n}.x + (t_{n+1}-t_n) \Delta^{discrete} v_{t_n}.x\]
+or using implicit integration
+\[v_{t_{n+1}}.x = v_{t_n}.x + (t_{n+1}-t_n) \Delta^{discrete} v_{t_{n+1}}.x\]
+which means solving the following sparse linear equation for $v_{t_{n+1}}.x $ in every time step, solving for the $x$-coordinates of all vertices at once
+\[\underbrace{(Id - (t_{n+1}-t_n) \Delta^{discrete})}_{square\; matrix\; of \; dim \; \# vertices} v_{t_{n+1}}.x = v_{t_n}.x\]
+Implicit integration is much more stable than explicit integration and is the option that should be chosen. Lastly the mesh needs to be rescaled after every step, because it shrinks. For example it could be rescaled such that its volume stays constant. And then... this is it! This is all it takes to smooth surfaces as in Figure \ref{fig:1_dragonsmoothing}  For implementation details see \cite{Desbrun:1999:IFI:311535.311576} and \cite{laplacebeltrami}; note that there the application is derived without the use of DEC.
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{imgs/1_dragon_smoothing.eps}%
+\caption{Smoothing a dragon mesh, using the implicit integration scheme.}%
+\label{fig:1_dragonsmoothing}%
+\end{figure}
+
+This is the ideal case and nothing is ever as simple as motivational examples make believe. The formulation with EC must be chosen carefully such that a translation to DEC works. In order to choose a good formulation a good knowledge of EC and its relation to DEC is vital. Often the DEC matrices need to be adapted before they can be used. %And this is why you need read this thesis; to understand the single steps and where they go wrong and why all this should work at all. %And you might wonder what the de Rham complex is. Or you might never have heard of it.
+
+
+%		\begin{itemize}
+%			\item Derivative as a simple example 
+%			\item vs FEM 
+%			\item show a picture of the deRahm complex saying that this diagram helps you translate Differential Operators into Matrices.
+%		\end{itemize}
+%				\begin{itemize}
+%			\item From equations to Meshes.
+%		\end{itemize}
+
+\section{Structure of this Thesis}
+The thesis has three pillars: smooth theory, discrete theory and applications/implementations of example problems. As far as it is possible, the smooth theory is introduced alongside the corresponding discrete theory, such that the reasons and assumptions behind the discretizations become clear. The emphasis is to convey an intuitive understanding of the smooth theory rather than giving a rigorous mathematical introduction. 
+
+Chapter \ref{chap:mfs_and_mshs} introduces manifolds and discrete manifolds, or more generally simplicial complexes. We cover orientations and border operators and sketch how manifolds allow calculus \emph{on} them. We also give some suggestions on how to implement discrete manifolds in a DEC setting.
+
+In Chapter \ref{chap:diffforms} we explain differential forms and discrete differential forms. We introduce the $\wedge$ and $\sharp$ operators and tie  differential forms to standard calculus objects. We also consider integrals of differential forms and how discrete differential forms can be interpreted as sampled differential forms.
+
+Chapter \ref{chap:EC} introduces the remaining exterior calculus operators, the exterior derivative $d$, the coderivative $\partial$ and the Hodge star $\star$. We look at Stokes theorem, which explains the geometry of the exterior derivative and the standard calculus operators $curl$ and $div$ and focus on understanding the geometry of the Hodge star. These insights then are used for the definition of the DEC operators. 
+
+The Chapters \ref{chap:meshparam}, \ref{chap:vfs} and \ref{chap:FS} then use EC and DEC for different computer graphic applications. We broaden the understanding of EC and DEC by explaining application dependent results and also shortly introduce application dependent theory.
+
+In Chapter \ref{chap:meshparam} we consider conformal parameterizations of mesh patches with DEC. We mention Gortler's extension of Tutte's theorem and give simple boundary constraints to compute parametrizations. The computation of mesh parametrizations is for example useful to generate texture maps. 
+
+In chapter \ref{chap:vfs} we use  DEC for vector field design. Being able to design vector fields can be a useful element for various applications, for example texture generation, as it is used in the original paper \cite{vField} or guided surface crack generation, as in \cite{kirtap}. In this context we present the Hodge decomposition and its discrete variant, results about harmonic forms and look at the Poincar\'e Hopf index theorem to highlight the influence of surface topology on solution spaces of problem statements.
+
+Chapter \ref{chap:FS} describes a fluid simulation with DEC. Here DEC in a more complex setting; this application highlights best how problem statements need to be carefully reformulated for DEC to be applicable. We consider harmonic forms once more, and look at a result from de Rham which describes the degrees of freedom of harmonicity depending on the topology of the manifold, and how the degrees of freedom can be controlled on closed manifolds. 
+
+\section{Disclaimer}
+We omit many important subjects in this introduction to EC and DEC.  We do not consider any error analysis or compare DEC to finite element methods or any other alternative. Furthermore, EC is not introduced rigorously, many technical details are omitted or only sketched. We refer to standard works for details, see also the discussion in Chapter \ref{chap:discussion}.
 	
