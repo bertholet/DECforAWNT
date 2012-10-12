@@ -4,8 +4,8 @@ Version=2
 
 [SessionInfo]
 ActiveTab=2
-FrameCount=16
-ActiveFrame=1
+FrameCount=17
+ActiveFrame=13
 
 [Frame0]
 Columns=1
@@ -32,15 +32,15 @@ cxCur=1361
 cxMin=10
 
 [Frame0_View0,0]
-Cursor.row=115
-Cursor.column=18
+Cursor.row=0
+Cursor.column=0
 TopSubLine=112
 
 [Frame1]
 Columns=1
 Rows=1
-Flags=2
-ShowCmd=3
+Flags=0
+ShowCmd=1
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -53,17 +53,17 @@ Class=CLatexEdit
 Document=DECforAwnts.tex
 
 [Frame1_Row0]
-cyCur=576
+cyCur=127
 cyMin=10
 
 [Frame1_Col0]
-cxCur=1552
+cxCur=835
 cxMin=10
 
 [Frame1_View0,0]
-Cursor.row=92
-Cursor.column=42
-TopSubLine=66
+Cursor.row=0
+Cursor.column=0
+TopSubLine=0
 
 [Frame2]
 Columns=1
@@ -208,7 +208,7 @@ cxMin=10
 [Frame6_View0,0]
 Cursor.row=375
 Cursor.column=0
-TopSubLine=452
+TopSubLine=487
 
 [Frame7]
 Columns=1
@@ -235,8 +235,8 @@ cxCur=1361
 cxMin=10
 
 [Frame7_View0,0]
-Cursor.row=1
-Cursor.column=16
+Cursor.row=0
+Cursor.column=0
 TopSubLine=0
 
 [Frame8]
@@ -266,7 +266,7 @@ cxMin=10
 [Frame8_View0,0]
 Cursor.row=512
 Cursor.column=0
-TopSubLine=710
+TopSubLine=737
 
 [Frame9]
 Columns=1
@@ -351,9 +351,9 @@ cxCur=1361
 cxMin=10
 
 [Frame11_View0,0]
-Cursor.row=97
-Cursor.column=274
-TopSubLine=118
+Cursor.row=15
+Cursor.column=0
+TopSubLine=22
 
 [Frame12]
 Columns=1
@@ -380,15 +380,15 @@ cxCur=1352
 cxMin=10
 
 [Frame12_View0,0]
-Cursor.row=1
-Cursor.column=22
+Cursor.row=0
+Cursor.column=0
 TopSubLine=0
 
 [Frame13]
 Columns=1
 Rows=1
-Flags=0
-ShowCmd=1
+Flags=2
+ShowCmd=3
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-8
@@ -401,17 +401,17 @@ Class=CLatexEdit
 Document=Chapters\Simplical Complexes.tex
 
 [Frame13_Row0]
-cyCur=356
+cyCur=721
 cyMin=10
 
 [Frame13_Col0]
-cxCur=1352
+cxCur=1607
 cxMin=10
 
 [Frame13_View0,0]
-Cursor.row=47
-Cursor.column=6
-TopSubLine=52
+Cursor.row=104
+Cursor.column=19
+TopSubLine=145
 
 [Frame14]
 Columns=1
@@ -438,8 +438,8 @@ cxCur=1352
 cxMin=10
 
 [Frame14_View0,0]
-Cursor.row=12
-Cursor.column=14
+Cursor.row=0
+Cursor.column=0
 TopSubLine=0
 
 [Frame15]
@@ -467,7 +467,36 @@ cxCur=1352
 cxMin=10
 
 [Frame15_View0,0]
-Cursor.row=23
-Cursor.column=288
-TopSubLine=19
+Cursor.row=0
+Cursor.column=0
+TopSubLine=0
+
+[Frame16]
+Columns=1
+Rows=1
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-8
+MaxPos.y=-28
+NormalPos.left=161
+NormalPos.top=161
+NormalPos.right=1559
+NormalPos.bottom=673
+Class=CLatexEdit
+Document=imgs\2_2_complexEnumeration.tex
+
+[Frame16_Row0]
+cyCur=455
+cyMin=10
+
+[Frame16_Col0]
+cxCur=1361
+cxMin=10
+
+[Frame16_View0,0]
+Cursor.row=51
+Cursor.column=81
+TopSubLine=27
 

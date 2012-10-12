@@ -46,20 +46,19 @@ On discrete manifolds we can define orientations and a border operator with the 
 
 \subsection{Orientations}
 \label{subsec:SC_orientations}
-As on manifolds we can treat orientations on discrete manifolds; they are quite of some practical importance and a notorious source of switched sign errors when implementing things using discrete exterior calculus. 
+Orientations can be treated on discrete manifolds similarly as on continuous manifolds. Orientations are quite of  practical importance and a notorious source of switched sign errors in the context of discrete exterior calculus. 
 
-We can assign one of two orientations to any simplex of any dimension, meaning that the volume represented by the simplex should be considered as positive or negative. While we coded orientation before via the enumeration of basis vectors, for simplices we encode orientation via the enumeration of their corner vertices.  For edges it is the most intuitive what this means: we assign a direction to the edge $\{p_1,p_2\}$ by saying the first vertex listed is the start vertex of the edge. Note that for an edge or any geometric object there is not a strict 'positive` or a 'negative` orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as
+We can assign one of two orientations to a simplex of any dimension, meaning that the volume represented by the simplex should be considered as positive or negative. While we coded orientation before in the enumeration of basis vectors, we encode the orientation of simplices in the enumeration of their corner vertices.  For edges it is the most intuitive what this means: we assign a direction to the edge $\{p_1,p_2\}$ by saying that the first vertex listed is the start vertex of the edge. Note that for an edge or any geometric object there is not a strict 'positive` or a 'negative` orientation; we can only say how something is oriented relative to something else. For example the edge $\{p_1,p_2\}$ is oriented negatively to the edge $\{p_2,p_1\}$; this is noted as
 \[-\{p_1,p_2\} = \{p_2,p_1\}.\]
 So the orientation of a $k$-simplex depends on the way its corner vertices are enumerated. Two enumerations of corner vertices result in the same orientation if they are related by an even permutation. A permutation is called even, if it can be reproduced by switching pairs of vertices an even number of times. E.g.
 \[\{a,b,c,d\} = \{c,a,b,d\}\]
 \[\{a,b,c,d\} \rightarrow \{c,b,a,d\}\rightarrow \{c,a,b,d\}\]
-by using two swaps,swapping  $a$ and $c$ and then $a$ and $b$.
-You can also use the determinant to determine the sign of the permutation; just calculate the determinant of the permutation matrix
+where we get from the first tuple to the second by swapping  $a$ and $c$ and then $a$ and $b$, i.e. with two swaps. Alternatively, determinants can be used to determine the sign of a permutation; just calculate the determinant of the permutation matrix
 \[\{a,b,c,d\} \rightarrow \{c,a,b,d\}\]
 \[\begin{pmatrix}c\\a\\b\\d \end{pmatrix}=\begin{pmatrix} 0 & 0 & 1 &0 \\ 1 &0&0&0 \\ 0&1&0&0 \\ 0&0&0&1 \end{pmatrix}\begin{pmatrix} a\\b\\c\\d \end{pmatrix}\]
-Or again you can use the simplex to induce a base to the affine space it is aligned to
+Or again you can use the simplex to induce a base to the affine vector space it is aligned to
 \[p_1 -p_2,...,p_{k}-p_{k+1}\]
-and two enumerations induce the same orientation if these bases have the same orientation. This also shows that defining the orientation of a simplex by looking at the ordering of its corner vertices amounts to the same as orienting volumes by choosing bases.
+and two vertex enumerations induce the same orientation if the induced bases have the same orientation. This also shows that defining the orientation of a simplex by looking at the ordering of its corner vertices amounts to the same as orienting volumes by choosing bases.
 
 \begin{figure}
 \begin{center}
@@ -75,19 +74,49 @@ One exception are vertices or 0-simplices $\{v_0\}$, where orientation is not en
 As long as you stick with calculations in $\mathbb R^3$ it stays pretty simple to determine if two orientations a simplex are the same, if you stick with triangle meshes it is trivial. Just make sure you always remember to respect orientations. In Section \ref{sec::2_handsOnSimplicialComplexes} we will also come back to the question of how to compute relative orientations in practice.
 
 
-\subsection{The Border Operator}
-\label{sec::2_borderOrientation}
+\subsection{Formal Sums, k-Chains and Vectors}
+\label{subsec::formalsums}
 
-Just as with manifolds we have a border operator for discrete manifolds. And just like with manifolds an oriented discrete manifold induces an orientation to its border.
-
-We first introduce some notation: we can respresent collections of simplices as \emph{formal sums}, as depicted in Figure \ref{fig::2_2_formalsum}. The simplices are represented as tuples, a negaitve sign means a change of orientation. Simplices that are different from each other are not summed up, only if two tuples describe the same simplex but for orientation, the sum is taken. Particularly simplices of opposed orientation cancel out.
 \begin{figure}
 \begin{center}
 \includegraphics[width = 12cm]{imgs/2_2_formalsum.eps}
 \end{center}
-\caption{Two sets of edges expressed as formal sums that get summed up}
+\caption{Two sets of edges expressed as formal sums that get summed up.}
 \label{fig::2_2_formalsum}
 \end{figure}
+
+Single oriented $k$-simplices are represented as ordered tuples of vertices, optionally with a sign to denote switched orientation. A set of $k$-simplices can then be described by a \emph{formal sum}, and is also called a \emph{simplicial $k$-chain}. For example the set of the three edges $\{v_0, v_1\}$, $\{v_1, v_2\}$ and $\{v_2, v_0\}$ written as a formal sum is
+\[\{v_0,v_1\} + \{v_1,v_2\} +\{v_2,v_0\}.\]
+Additionally, a simplicial $k$-chain is allowed to have multiple 'copies' or negatively oriented copies of some simplex. This is taken account of by associating integer values from $\mathbb Z$ to the simplices, for example
+\[3\{v_0,v_1\} -2\{v_1,v_2\} +\{v_2,v_0\}\]
+would have three copies of $\{v_0,v_1\}$ and so on. The negative integers denote a change of orientation as described in the last section; the formal sum could be rewritten without the use of negative integers as
+\[3\{v_0,v_1\} +2\{v_2,v_1\} +\{v_2,v_0\}.\]
+Two $k$-Chains can be combined by summing them up
+$$c = \sum_{i=1}^N c_i \sigma_i,\;\;\; d= \sum_{i=1}^N d_i \sigma_i$$
+$$c+d = \sum_{i=1}^N (c_i + d_i)\sigma_i$$
+where the $c_i$ and $d_i$ are integers from $\mathbb Z$ and the $\sigma_i$ are $k$-simplices. This reflects that if in the set $c$ there are $c_i$ copies of $\sigma_i$ and in $d$ there are $d_i$ copies, then in the combined set $c+d$ there have to be $c_i+d_i$ copies of $\sigma_i$. In particular, oppositely oriented simplices cancel out, see also Figure \ref{fig::2_2_formalsum}.
+
+Formal sums are one way to describe sets of oriented $k$-simplices. Equivalently the $k$-chains can be written as a vector of integers if a global enumeration of all $k$-simplices has been chosen and one reference orientation has been assigned to every simplex. For example consider the enumeration of vertices, edges and faces in Figure \ref{fig::2_2_complexenum}. Note that every kind of simplices is enumerated separately. With this fixed enumeration a set of vertices can be described as vector in $\mathbb Z^4$, a set of edges as a vector in $\mathbb Z^5$ and a set of faces as a vector in $\mathbb Z^2$. Generally a set of $k$-simplices can then be identified with an integer vector with the dimension of the number of occuring $k$-simplices, i.e. a vector from $\mathbb Z^{\#k\text{-}simplices}$. The $i$th value in such a vector then denotes the number of occurences of the $i$th simplex. For example, using the enumeration of Figure \ref{fig::2_2_complexenum}, the formal sum $e_0 -e_1 + 2e_2$ would be described by the vector $(1,-1,2,0,0)$.
+
+For computations the vector notation for $k$-chains is the most useful; but in order to use it a global enumeration and fixed reference orientations of the simplices need to be chosen first.
+
+\begin{figure}%
+
+\begin{center}
+\def\svgwidth{13cm}
+\input{imgs/2_2_complexEnumeration.eps_tex}
+\end{center}
+\vspace{-0.5cm}
+
+\caption{A simple simplicial complex with a fixed enumeration of the occuring simplices; for each simplex a reference orientation has been chosen.}%
+\label{fig::2_2_complexenum}%
+\end{figure}
+
+\subsection{The Border Operator}
+\label{sec::2_borderOrientation}
+Discrete manifolds or any set of simplices allow the definition of a border operator similar to the border operator defined on continuous manifolds. And just on continuous manifolds, an oriented discrete manifold induces an orientation to its border.
+
+%We first introduce some notation: we can respresent collections of simplices as \emph{formal sums}, as depicted in Figure \ref{fig::2_2_formalsum}. The simplices are represented as tuples, a negaitve sign means a change of orientation. Simplices that are different from each other are not summed up, only if two tuples describe the same simplex but for orientation, the sum is taken. Particularly simplices of opposed orientation cancel out.
 
 The border of a single $k$-simplex is  the following formal sum
 \[\delta\{v_0,v_1,...,v_k\} = \sum_{j=0}^k (-1)^j\{v_0,...,\widehat{v_j},...,v_k\}\]
@@ -95,7 +124,9 @@ where  the $\widehat{v_j}$ means omitting $v_j$. This expresses that the border 
 
 For example the border of a triangle $\{a,b,c\}$ is \[\{b,c\} -\{a,c\} + \{a,b\} = \{a,b\} + \{b,c\} + \{c,a\},\] just as it should be.
 
-But if we can take the border of single simplices, we can also take the border of a set of simplices or of discrete manifolds; it is simply the formal sum of the borders of the $k$-simplices the discrete $k$-manifold is made out of. As you see in the Figure \ref{fig::2_2_borderUnoriented} this can go 'wrong` when the discrete manifold is oriented inconsistently. 
+But if we can take the border of single simplices, we can also take the border of a set of simplices or of discrete manifolds; it is simply the formal sum of the borders of the $k$-simplices the discrete $k$-manifold is made out of. Formally, the border operator maps simplicial $k$-chains to simplicial $k-1$-chains and is a linear mapping; if $c$ and $\widetilde{c}$ are two $k$-chains, the border operator fulfills
+\[\delta (c+\widetilde{c}) = \delta c + \delta \widetilde{c}\]
+Another point is that, as you see in the Figure \ref{fig::2_2_borderUnoriented}, the border operator gives a 'wrong` result when a discrete manifold is oriented inconsistently. 
 
 \begin{figure}
 \begin{center}
@@ -106,26 +137,34 @@ But if we can take the border of single simplices, we can also take the border o
 \end{figure}
 
 \subsubsection{The Border Operator as a Matrix}
-If all simplices occurring in a complex are enumerated and have a fixed orientation, the border operator can be expressed as a matrix, the incidence matrix. A set of $j$ simplices is represented as vector of integers of dimension $\#(j\;simplices)$. The $k$-th entry of this vector represents the number of times the $k$-th $j$-simplex occurs. 
-For example in the following enumeration
+Instead of representing the border operator as a formal sum we can write it as a matrix, provided that an enumeration and reference orientation of the simplices has been chosen. The sets of $k$-simplices are described by integer verctors as introduced in Section \ref{subsec::formalsums}. The border operator $\delta_k$ \emph{for $k$-simplices} is a linear mapping from the simplicial $k$-chains to the simplicial $k-1$-chains and therefore is a linear mapping  \[\delta_k:\mathbb Z^{\#k\text{-}simplices} \rightarrow \mathbb Z^{\#k-1\text{-}simplices}.\]
+Note that we explicitly make a distinction between the border operators for simplices of different dimensions and annotate the border operators with a subscript $k$ that describes the dimensionality of the simplices the border operator can be applied to. 
+
+These border operator matrices form the backbone of DEC and they will be used excessively throughout this thesis. Also it is very important to understand that they describe a purely geometric operation, namely the operation of going from a $k$-dimensional set of simplices to a $k-1$-dimensional set describing the boundary. The border operator matrices are relatively easy to compute and store the relative orientations of $k$-simplices and $k-1$-simplices. Consider the following toy-example: we look at the simplicial complex with fixed simplex enumerations and reference orientations from Figure \ref{fig::2_2_complexenum}, which is inlined here once more for convenience.
+
+%If all simplices occurring in a complex are enumerated and have a fixed orientation, the border operator can be expressed as a matrix, the incidence matrix. A set of $j$ simplices is represented as vector of integers of dimension $\#(j\;simplices)$. The $k$-th entry of this vector represents the number of times the $k$-th $j$-simplex occurs. 
+%For example in the following enumeration
 \begin{center}
 \def\svgwidth{13cm}
-\input{imgs/2_2_complexEnumeration.tex}
+\input{imgs/2_2_complexEnumeration.eps_tex}
 \end{center}
-the set of edges $e0 - e1 + e2 $ is represented by the vector $(1,-1,1,0,0)$.
-In this example there are two border matrices, one to compute the border of edge sets 
+%the set of edges $e0 - e1 + e2 $ is represented by the vector $(1,-1,1,0,0)$.
+Here we have two 2-simplices (triangles), five 1-simplices (edges) and four 0-simplices (vertices). There are two border operator matrices: one to compute boundaries of $2$-dimensional sets and one to compute the boundary of 1-dimensional sets. The first one, $\delta_2$, maps 2-chains to 1-chains and therefore has to be a linear mapping from $\mathbb Z^2$ to $\mathbb Z^5$, i.e. a $5 \times 2$ matrix.
+
+The first row of $\delta_2$ describes the result of applying the border operator to the first face $f_0$, i.e. $\delta_2 \cdot (1,0)^T$. The boundary of the face $f_0$ is the formal sum $e_0 + e_2 - e_1$, which is described by the integer vector $(1,-1,1,0,0)^T$. The second row $\delta_2 \cdot (0,1)^T$ of $\delta_2$ describes the boundary of $f_1$ and is given by the formal sum $-e_2 -e_4 + e_3$, i.e. $(0,0,-1,1,-1)^T$. Therefore the complete matrix is given by
+\[\delta_2 = \begin{pmatrix}
+1 & -1 & 1 &0&0\\
+0& 0& -1 & 1 & -1
+\end{pmatrix}^T.\]
+The other border operator matrix, $\delta_1$, is a linear mapping from simplicial $1$-chains to $0$-chains and therefore is a $4 \times 5$ matrix. Here the $i$th matrix row describes the border of the $i$th edge $e_i$; for example the border of the edge $e_0$ is the formal sum $v_2 -v_0$ and therefore the first row of $\delta_1$ has to be $(-1,0,1,0)^T$. The complete matrix is given by
 \[\delta_1 = \begin{pmatrix}
 -1&-1&0 &0 & 0\\
 0&1&1 &1 & 0\\
 1&0&-1 &0&1\\
 0&0&0&-1&-1\\
-\end{pmatrix} \]
-and one to compute the border of face sets:
-\[\delta_2 = \begin{pmatrix}
-1 & -1 & 1 &0&0\\
-0& 0& -1 & 1 & -1
-\end{pmatrix}^T\]
-For example the border of the line segment $e_0 -e_4 + e_3$ is then given by
+\end{pmatrix}. \]
+
+Of course, the border matrices can be applied to more complex chains. For example the border of the line segment $e_0 -e_4 + e_3$ or would be given by
 \[\begin{pmatrix}
 -1\\ 1\\ 0 \\0 
 \end{pmatrix} = \delta_1\begin{pmatrix}
@@ -133,9 +172,8 @@ For example the border of the line segment $e_0 -e_4 + e_3$ is then given by
 \end{pmatrix}\]
 which is $-v_0 + v_1$, saying that $v_0$ is the 'start` and $v_1$ the 'end` border of the line. 
 
-For a $k$-complex there is a total of $k$ border matrices: one border operator for sets of 1-simplices (edges), one for 2-simplices (triangle faces), one for 3-simplices and so on. We will always make the difference between these border operators; we add a $j$ as subscript to the border operator of $j$-simplices : $\delta_j$. 
-
-The entry $(i,j)$ in a border matrix is the relative orientation of the two simplices concerned. For example $\delta_1(0,1) = -1$ because the vertex $v_0$ is oriented negatively relative to the edge $e_1$, considering the border induced orientation.
+Generally, for a $k$-complex there is a total of $k$ border matrices: the border operator $\delta_1$ for sets of 1-simplices (edges), the operator $\delta_2$ for 2-simplices (triangle faces), $\delta_3$ for 3-simplices and so on. %We will always make the difference between these border operators; we add a $j$ as subscript to the border operator of $j$-simplices : $\delta_j$. 
+The entry $(i,j)$ in a border matrix is the relative orientation of the two simplices concerned. In the example above $\delta_1(0,1) = -1$ because the vertex $v_0$ is oriented negatively relative to the edge $e_1$, considering the border induced orientation.
 
 \subsection{Oriented Discrete Manifold}
 \label{sec::2_orientedDiscreteMF}
